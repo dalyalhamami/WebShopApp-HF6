@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace WebAppShop_CL
+namespace WebShopApp_CL
 {
     // This class provides an example of how JavaScript functionality can be wrapped
     // in a .NET class for easy consumption. The associated JavaScript module is
@@ -16,7 +16,7 @@ namespace WebAppShop_CL
         public ExampleJsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/WebAppShop_CL/exampleJsInterop.js").AsTask());
+                "import", "./_content/WebShopApp_CL/exampleJsInterop.js").AsTask());
         }
 
         public async ValueTask<string> Prompt(string message)

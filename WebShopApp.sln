@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopApp-Maui", "WebShopA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopApp-Blazor", "WebShopApp-Blazor\WebShopApp-Blazor.csproj", "{93D0336D-CBE2-42BE-B46C-A968BF0D1BB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppShop-CL", "WebAppShop-CL\WebAppShop-CL.csproj", "{C857069D-6B98-40A1-9F37-9865B6CE1FDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopApp-API", "WebShopApp-API\WebShopApp-API.csproj", "{C374D5EB-1749-40D7-9EA4-7CBF5B29795F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShopApp-API", "WebShopApp-API\WebShopApp-API.csproj", "{C374D5EB-1749-40D7-9EA4-7CBF5B29795F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShopApp-CL", "WebShopApp-CL\WebShopApp-CL.csproj", "{29C53570-D9D7-456E-9ACC-17E3E9949ACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,14 +27,14 @@ Global
 		{93D0336D-CBE2-42BE-B46C-A968BF0D1BB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93D0336D-CBE2-42BE-B46C-A968BF0D1BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93D0336D-CBE2-42BE-B46C-A968BF0D1BB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C857069D-6B98-40A1-9F37-9865B6CE1FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C857069D-6B98-40A1-9F37-9865B6CE1FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C857069D-6B98-40A1-9F37-9865B6CE1FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C857069D-6B98-40A1-9F37-9865B6CE1FDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C374D5EB-1749-40D7-9EA4-7CBF5B29795F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C374D5EB-1749-40D7-9EA4-7CBF5B29795F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C374D5EB-1749-40D7-9EA4-7CBF5B29795F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C374D5EB-1749-40D7-9EA4-7CBF5B29795F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29C53570-D9D7-456E-9ACC-17E3E9949ACF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29C53570-D9D7-456E-9ACC-17E3E9949ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29C53570-D9D7-456E-9ACC-17E3E9949ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29C53570-D9D7-456E-9ACC-17E3E9949ACF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

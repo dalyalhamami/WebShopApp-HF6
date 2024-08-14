@@ -65,7 +65,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebAppShop-CL\WebAppShop-CL.csproj" />
+      <ProjectReference Include="..\WebShopApp-CL\WebShopApp-CL.csproj" />
     </ItemGroup>
 
 </Project>
