@@ -10,6 +10,31 @@ public class ProductController : ControllerBase
         this.webShopAppDBContext = webShopAppDBContext;
     }
 
+    // Create a new product
+    [HttpPost("SaveProduct")]
+    public async Task<ActionResult<Product>> SaveProduct(Product product)
+    {
+        if (product != null)
+        {
+            var newProduct = new Product
+            {
+                Name = product.Name,
+                Price = product.Price,
+                StockId = product.StockId,
+                CategoryId = product.CategoryId,
+                ImageUrl = product.ImageUrl,
+                Description = product.Description,
+            };
+            webShopAppDBContext.Product.Add(newProduct);
+            await webShopAppDBContext.SaveChangesAsync();
+            return Ok(product);
+        }
+        else
+        {
+            return BadRequest("Category not found.");
+        }
+    }
+
     // Get all products
     [HttpGet("GetProducts")]
     public async Task<ActionResult<List<Product>>> GetProducts()
@@ -24,5 +49,4 @@ public class ProductController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-
 }

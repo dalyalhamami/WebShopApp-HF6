@@ -7,8 +7,4 @@
     <RootNamespace>WebShopApp_Blazor</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WebShopApp-CL\WebShopApp-CL.csproj" />
-  </ItemGroup>
-
 </Project>

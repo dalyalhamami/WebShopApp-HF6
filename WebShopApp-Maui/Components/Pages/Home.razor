@@ -1,5 +1,34 @@
 ﻿@page "/"
-@using WebShopApp_CL
+@using WebShopApp_Maui.Models
+@using WebShopApp_Maui.Services
+@inject IWebShopAppService webShopAppService
+
+<h3>ProductComponent</h3>
+
+@if (products == null)
+{
+    <p>Loading products...</p>
+}
+else if (products.Count == 0)
+{
+    <p>No products available.</p>
+}
+else
+{
+    <ul>
+        @foreach (var product in products)
+        {
+            <li>@product.Name - @product.Price $</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<ProductModel> products;
 
 
-<ProductComponent/>
+    protected override async Task OnInitializedAsync()
+    {
+        products = await webShopAppService.GetProductsAsync();
+    }
+}

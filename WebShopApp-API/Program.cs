@@ -11,6 +11,17 @@ builder.Services.AddDbContext<WebShopAppDBContext>(options =>
         throw new InvalidOperationException("Connection string 'Default Connection' not found"));
 });
 
+// Allow all origins in development
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +31,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapControllers();
 
+// Use HTTPS redirection only when necessary (may interfere with emulator)
+#if !DEBUG
+app.UseHttpsRedirection();
+#endif
+
+app.UseRouting();
+app.UseCors("AllowAll"); // Make sure CORS is configured
+app.UseAuthorization();
+app.MapControllers();
 app.Run();
