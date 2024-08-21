@@ -1,9 +1,10 @@
-﻿using WebShopApp_Maui.Models;
-
-namespace WebShopApp_Maui.Services
+﻿namespace WebShopApp_Maui.Services;
+public interface IWebShopAppService
 {
-    public interface IWebShopAppService
-    {
-        Task<List<ProductModel>> GetProductsAsync();
-    }
+    //...................................................... Products ......................................................//
+    Task<List<ProductModel>> GetProductsAsync();
+
+    //....................................................... User ........................................................//
+
+    Task<(UserModel user, string errorMessage)> RegisterUser(UserModel userModel);
 }

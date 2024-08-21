@@ -11,8 +11,8 @@ public class ProductController : ControllerBase
     }
 
     // Create a new product
-    [HttpPost("SaveProduct")]
-    public async Task<ActionResult<Product>> SaveProduct(Product product)
+    [HttpPost("CreateProduct")]
+    public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
         if (product != null)
         {

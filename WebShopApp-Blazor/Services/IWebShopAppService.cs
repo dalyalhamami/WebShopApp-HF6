@@ -1,9 +1,5 @@
-﻿using WebShopApp_Blazor.Models;
-
-namespace WebShopApp_Blazor.Services
+﻿namespace WebShopApp_Blazor.Services;
+public interface IWebShopAppService
 {
-    public interface IWebShopAppService
-    {
-        Task<List<ProductModel>> GetProductsAsync();
-    }
+    Task<List<ProductModel>> GetProductsAsync();
 }
