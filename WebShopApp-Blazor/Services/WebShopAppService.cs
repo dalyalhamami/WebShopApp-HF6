@@ -8,6 +8,8 @@ public class WebShopAppService : IWebShopAppService
         httpClient.BaseAddress = new Uri("http://localhost:5031/");
     }
 
+    //...................................................... Product ......................................................//
+
     // Get all products
     public async Task<List<ProductModel>> GetProductsAsync()
     {
@@ -29,6 +31,32 @@ public class WebShopAppService : IWebShopAppService
             Console.WriteLine($"Exception occurred: {ex.Message}");
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             return null;
+        }
+    }
+
+    //....................................................... User .......................................................//
+
+    public async Task<(UserModel user, string errorMessage)> RegisterUser(UserModel userModel)
+    {
+        try
+        {
+            var jsonContent = JsonContent.Create(userModel);
+            var response = await httpClient.PostAsync("api/User/CreateUser", jsonContent);
+            if (response.IsSuccessStatusCode)
+            {
+                var savedUser = await response.Content.ReadFromJsonAsync<UserModel>();
+                return (savedUser, null);
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return (null, errorContent);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return (null, "Exception occurred: " + ex.Message);
         }
     }
 }
