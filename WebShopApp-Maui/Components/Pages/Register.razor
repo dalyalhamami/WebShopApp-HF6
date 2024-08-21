@@ -2,7 +2,7 @@
 @using WebShopApp_Maui.Services
 @using Microsoft.Maui.Storage;
 @using Newtonsoft.Json;
-@inject IWebShopAppService webAppService;
+@inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
 <div style="min-height: 700px;">
@@ -77,7 +77,7 @@
         userModel.Password = hashedPassword;
         userModel.ConfirmPassword = hashedPassword;
 
-        var result = await webAppService.RegisterUser(userModel);
+        var result = await webShopAppService.RegisterUser(userModel);
 
         if (result.user != null)
         {
