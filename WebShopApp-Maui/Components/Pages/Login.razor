@@ -65,8 +65,10 @@
             return;
         }
 
+        string hashedPassword = ComputeSha256Hash(userModel.Password);
+
         // Proceed with login if validation passes
-        var user = await webShopAppService.LoginAsync(userModel.Email, userModel.Password);
+        var user = await webShopAppService.LoginAsync(userModel.Email, hashedPassword);
 
         if (user != null)
         {
@@ -80,6 +82,20 @@
             // Incorrect email or password
             alertMessage = "Your email or password is incorrect. Please try again.";
             StateHasChanged();
+        }
+    }
+
+    private string ComputeSha256Hash(string rawData)
+    {
+        using (var sha256Hash = System.Security.Cryptography.SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+            var builder = new System.Text.StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
         }
     }
 }

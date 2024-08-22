@@ -114,7 +114,11 @@
             return;
         }
 
-        // If all validations pass, proceed with registration
+        // Hash the password
+        string hashedPassword = ComputeSha256Hash(userModel.Password);
+        userModel.Password = hashedPassword;
+        userModel.ConfirmPassword = hashedPassword;
+
         var result = await webShopAppService.RegisterUser(userModel);
 
         if (result.user != null)
@@ -131,5 +135,19 @@
                 : $"Error: {result.errorMessage}";
         }
         StateHasChanged();
+    }
+
+    private string ComputeSha256Hash(string rawData)
+    {
+        using (var sha256Hash = System.Security.Cryptography.SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+            var builder = new System.Text.StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
     }
 }
