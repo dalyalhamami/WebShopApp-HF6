@@ -1,4 +1,5 @@
-﻿namespace Controller;
+﻿
+namespace Controller;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -10,22 +11,23 @@ public class UserController : ControllerBase
         this.webShopAppDBContext = webShopAppDBContext;
     }
 
-    // Create a new user
     [HttpPost("CreateUser")]
-    public async Task<ActionResult<User>> CreateUser(User user)
+    public async Task<ActionResult<UserResponseDto>> CreateUser(User user)
     {
         if (user == null)
         {
             return BadRequest("Invalid Request");
         }
 
-        var existingUser = await webShopAppDBContext.User.FirstOrDefaultAsync(u => u.Email!.ToLower() == user.Email!.ToLower());
+        var existingUser = await webShopAppDBContext.User
+            .FirstOrDefaultAsync(u => u.Email!.ToLower() == user.Email!.ToLower());
         if (existingUser != null)
         {
             return BadRequest("Email already exists");
         }
 
-        var existingPassword = await webShopAppDBContext.User.FirstOrDefaultAsync(p => p.Password == user.Password);
+        var existingPassword = await webShopAppDBContext.User
+            .FirstOrDefaultAsync(p => p.Password == user.Password);
         if (existingPassword != null)
         {
             return BadRequest("You can't use that password. Please choose another");
@@ -33,6 +35,43 @@ public class UserController : ControllerBase
 
         var result = webShopAppDBContext.User.Add(user).Entity;
         await webShopAppDBContext.SaveChangesAsync();
-        return Ok(result);
+
+        var response = new UserResponseDto
+        {
+            Id = result.Id,
+            Name = result.Name,
+            Email = result.Email,
+            Mobile = result.Mobile,
+            Address = result.Address,
+            Roles = result.Roles
+        };
+
+        return Ok(response);
+    }
+
+    [HttpPost("Login")]
+    public async Task<ActionResult<UserResponseDto>> Login([FromBody] UserLoginDto loginDto)
+    {
+        var user = await webShopAppDBContext.User
+            .Where(x => x.Email!.ToLower().Equals(loginDto.Email.ToLower()) &&
+                        x.Password == loginDto.Password)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        var response = new UserResponseDto
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Mobile = user.Mobile,
+            Address = user.Address,
+            Roles = user.Roles
+        };
+
+        return Ok(response);
     }
 }

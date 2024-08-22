@@ -1,44 +1,48 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Add services to the container
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+// Database context configuration
 builder.Services.AddDbContext<WebShopAppDBContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ??
-        throw new InvalidOperationException("Connection string 'Default Connection' not found"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found"));
 });
 
-// Allow all origins in development
+// CORS configuration to allow all origins in development
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowAll", corsBuilder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        corsBuilder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
     });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-
-// Use HTTPS redirection only when necessary (may interfere with emulator)
 #if !DEBUG
 app.UseHttpsRedirection();
 #endif
 
 app.UseRouting();
-app.UseCors("AllowAll"); // Make sure CORS is configured
+
+// Apply the CORS policy to make sure CORS is configured
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();

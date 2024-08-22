@@ -1,12 +1,9 @@
-﻿namespace WebShopApp_Maui.Models;
-
-public class UserModel
+﻿namespace WebShopApp_API.DTO;
+public class UserResponseDto
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public string Email { get; set; }
-    public string Password { get; set; }
-    public string ConfirmPassword { get; set; }
     public string Mobile { get; set; }
     public string Address { get; set; }
     public int Roles { get; set; }

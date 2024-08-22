@@ -1,7 +1,85 @@
 ﻿@page "/login"
+@using WebShopApp_Maui.Services
+@using Microsoft.Maui.Storage;
+@using Newtonsoft.Json;
+@inject IWebShopAppService webShopAppService;
+@inject NavigationManager navManager;
 
-<h3>Login</h3>
+<div style="min-height:700px;">
+    <div class="loginBox">
+        <div class="box">
+            <h1>Login</h1>
+
+            <EditForm Model="@userModel" OnValidSubmit="Login_Click">
+                <ValidationSummary />
+
+                <InputText type="email" name="email" class="email" placeholder="Email" @bind-Value="userModel.Email" autocomplete="off" />
+                <ValidationMessage For="@(() => userModel.Email)" class="validation-message" />
+                <br /><br />
+                <InputText type="password" name="password" class="password" placeholder="Password" @bind-Value="userModel.Password" />
+                <ValidationMessage For="@(() => userModel.Password)" class="validation-message" />
+                <br /><br />
+                <input type="submit" class="btn-primary" value="Login" />
+            </EditForm>
+        </div>
+
+        <div>
+            <br /><br />
+            <p style="color: #e52e50;">
+                <h4>@alertMessage</h4>
+            </p>
+        </div>
+    </div>
+</div>
 
 @code {
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
 
+    public UserModel userModel { get; set; } = new UserModel();
+    public string alertMessage { get; set; }
+
+    private async Task Login_Click()
+    {
+        alertMessage = "";
+
+        // Validate Email
+        if (string.IsNullOrEmpty(userModel.Email))
+        {
+            alertMessage = "Email is required";
+            StateHasChanged();
+            return;
+        }
+        else if (!new EmailAddressAttribute().IsValid(userModel.Email))
+        {
+            alertMessage = "Invalid email address";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password
+        if (string.IsNullOrEmpty(userModel.Password))
+        {
+            alertMessage = "Password is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Proceed with login if validation passes
+        var user = await webShopAppService.LoginAsync(userModel.Email, userModel.Password);
+
+        if (user != null)
+        {
+            // Successful login, store user info and navigate
+            await SecureStorage.Default.SetAsync("User", JsonConvert.SerializeObject(user));
+            await notify.InvokeAsync();
+            navManager.NavigateTo("/");
+        }
+        else
+        {
+            // Incorrect email or password
+            alertMessage = "Your email or password is incorrect. Please try again.";
+            StateHasChanged();
+        }
+    }
 }

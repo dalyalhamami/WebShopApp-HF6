@@ -40,12 +40,14 @@ public class WebShopAppService : IWebShopAppService
 
     //....................................................... User .......................................................//
 
+    // Create user
     public async Task<(UserModel user, string errorMessage)> RegisterUser(UserModel userModel)
     {
         try
         {
             var jsonContent = JsonContent.Create(userModel);
             var response = await httpClient.PostAsync("api/User/CreateUser", jsonContent);
+
             if (response.IsSuccessStatusCode)
             {
                 var savedUser = await response.Content.ReadFromJsonAsync<UserModel>();
@@ -64,4 +66,28 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
+    // Login
+    public async Task<UserModel> LoginAsync(string email, string password)
+    {
+        var loginUrl = "api/User/Login";
+        var loginData = new { Email = email, Password = password };
+
+        var response = await httpClient.PostAsJsonAsync(loginUrl, loginData);
+
+        if (response != null)
+        {
+            var user = await response.Content.ReadFromJsonAsync<UserModel>();
+            return user;
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Console.WriteLine("User not found");
+        }
+        else
+        {
+            Console.WriteLine($"Error: {response.StatusCode}");
+        }
+        return null;
+    }
 }
+

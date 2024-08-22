@@ -10,7 +10,8 @@
         <div class="box">
             <h1>Register</h1>
             <EditForm Model="@userModel" OnValidSubmit="Register_Click">
-                <DataAnnotationsValidator />
+                <ValidationSummary />
+
                 <InputText type="text" name="name" placeholder="Name" class="email" @bind-Value="userModel.Name" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.Name)" class="validation-message" />
                 <br /><br />
@@ -53,30 +54,67 @@
     {
         alertMessage = "";
 
-        // Validate the full name
-        var fullName = userModel.Name;
-        var nameParts = fullName?.Trim().Split(' ');
-
-        if (nameParts == null || nameParts.Length < 2 || nameParts.Any(part => part.Length < 2))
+        // Name Validation
+        if (string.IsNullOrEmpty(userModel.Name))
         {
-            alertMessage = "Please enter your full name";
+            alertMessage = "Name is required";
             StateHasChanged();
             return;
         }
 
-        // Validate the password
-        if (userModel.Password != userModel.ConfirmPassword)
+        // Email Validation
+        if (string.IsNullOrEmpty(userModel.Email))
         {
-            alertMessage = "Passwords do not match";
+            alertMessage = "Email is required";
+            StateHasChanged();
+            return;
+        }
+        else if (!new EmailAddressAttribute().IsValid(userModel.Email))
+        {
+            alertMessage = "Invalid email address";
             StateHasChanged();
             return;
         }
 
-        // Hash the password
-        string hashedPassword = ComputeSha256Hash(userModel.Password);
-        userModel.Password = hashedPassword;
-        userModel.ConfirmPassword = hashedPassword;
+        // Mobile Validation
+        if (string.IsNullOrEmpty(userModel.Mobile))
+        {
+            alertMessage = "Mobile is required";
+            StateHasChanged();
+            return;
+        }
 
+        // Password Validation
+        if (string.IsNullOrEmpty(userModel.Password))
+        {
+            alertMessage = "Password is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Confirm Password Validation
+        if (string.IsNullOrEmpty(userModel.ConfirmPassword))
+        {
+            alertMessage = "Confirm Password is required";
+            StateHasChanged();
+            return;
+        }
+        else if (userModel.Password != userModel.ConfirmPassword)
+        {
+            alertMessage = "Password and confirm password do not match";
+            StateHasChanged();
+            return;
+        }
+
+        // Address Validation
+        if (string.IsNullOrEmpty(userModel.Address))
+        {
+            alertMessage = "Address is required";
+            StateHasChanged();
+            return;
+        }
+
+        // If all validations pass, proceed with registration
         var result = await webShopAppService.RegisterUser(userModel);
 
         if (result.user != null)
@@ -88,29 +126,10 @@
         }
         else
         {
-            if (result.errorMessage.Contains("Email already exists"))
-            {
-                alertMessage = "Error: The email address already exists";
-            }
-            else
-            {
-                alertMessage = $"Error: {result.errorMessage}";
-            }
+            alertMessage = result.errorMessage.Contains("Email already exists")
+                ? "Error: The email address already exists"
+                : $"Error: {result.errorMessage}";
         }
         StateHasChanged();
-    }
-
-    private string ComputeSha256Hash(string rawData)
-    {
-        using (var sha256Hash = System.Security.Cryptography.SHA256.Create())
-        {
-            byte[] bytes = sha256Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
-            var builder = new System.Text.StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                builder.Append(bytes[i].ToString("x2"));
-            }
-            return builder.ToString();
-        }
     }
 }
