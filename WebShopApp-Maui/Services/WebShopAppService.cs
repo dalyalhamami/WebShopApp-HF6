@@ -89,5 +89,19 @@ public class WebShopAppService : IWebShopAppService
         }
         return null;
     }
+
+    // Check if email exists
+    public async Task<bool> CheckEmailAsync(string email)
+    {
+        var response = await httpClient.GetAsync($"api/User/CheckEmail/{email}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<bool>();
+        }
+
+        Console.WriteLine($"Error checking email: {response.StatusCode}");
+        return false; 
+    }
 }
 

@@ -74,4 +74,21 @@ public class UserController : ControllerBase
 
         return Ok(response);
     }
+
+    // Check if an email is exist
+    [HttpGet("CheckEmail/{email}")]
+    public async Task<ActionResult<bool>> CheckEmail(string email)
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest("Invalid Request");
+        }
+
+        var userWithEmailExists = await webShopAppDBContext.User
+            .AnyAsync(x => x.Email!.ToLower() == email.ToLower());
+
+        return Ok(userWithEmailExists);
+    }
+
+ 
 }

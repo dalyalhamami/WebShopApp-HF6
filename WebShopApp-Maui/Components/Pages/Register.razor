@@ -69,12 +69,6 @@
             StateHasChanged();
             return;
         }
-        else if (!new EmailAddressAttribute().IsValid(userModel.Email))
-        {
-            alertMessage = "Invalid email address";
-            StateHasChanged();
-            return;
-        }
 
         // Mobile Validation
         if (string.IsNullOrEmpty(userModel.Mobile))

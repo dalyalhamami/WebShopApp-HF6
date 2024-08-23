@@ -50,9 +50,12 @@
             StateHasChanged();
             return;
         }
-        else if (!new EmailAddressAttribute().IsValid(userModel.Email))
+
+        // Check if email exists
+        var emailExists = await webShopAppService.CheckEmailAsync(userModel.Email);
+        if (!emailExists)
         {
-            alertMessage = "Invalid email address";
+            alertMessage = "This email is not registered";
             StateHasChanged();
             return;
         }
