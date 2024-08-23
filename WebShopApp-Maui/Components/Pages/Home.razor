@@ -1,34 +1,147 @@
 ﻿@page "/"
-@using WebShopApp_Maui.Models
 @using WebShopApp_Maui.Services
-@inject IWebShopAppService webShopAppService
-
-<h3>ProductComponent</h3>
+@using Microsoft.Maui.Storage;
+@using Newtonsoft.Json;
+@inject IWebShopAppService webShopAppService;
+@inject NavigationManager navManager;
 
 @if (products == null)
 {
-    <p>Loading products...</p>
+    <span>Loading...</span>
 }
 else if (products.Count == 0)
 {
-    <p>No products available.</p>
+    <span>No products available</span>
 }
 else
 {
-    <ul>
-        @foreach (var product in products)
-        {
-            <li>@product.Name - @product.Price $</li>
-        }
-    </ul>
+    <div class="column content">
+        <div class="container">
+            <div class="row">
+                @foreach (var prod in products)
+                {
+                    <div class="col-md-4">
+                        <div class="col-md-12 stuff">
+                            <div style="width: 100%; border-radius: 2px; background-color: white;">
+                                <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;">@prod.Name</button>
+                                <img src="http://localhost:5290//@prod.ImageUrl" style="width:100%; height:50%;border-radius:1px;" />
+                                <div>
+                                    Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.StockId</span>
+                                </div>
+                                @if (prod.CartFlag)
+                                {
+                                    <button type="button" class="btn add-to-cart" style="background-color:#ffd800;" @onclick="(()=> AddToCart_Click(prod))">Remove Form Cart</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Add To Cart</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 }
 
 @code {
-    private List<ProductModel> products;
-
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
+    public List<ProductModel> products { get; set; }
+    public bool IsUserLoggedIn = false;
+    private UserModel user;
+    public bool cartFlag = false;
+    public List<CartModel> myCart { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         products = await webShopAppService.GetProductsAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await notify.InvokeAsync();
+
+            var userJson = await SecureStorage.Default.GetAsync("User");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                user = JsonConvert.DeserializeObject<UserModel>(userJson);
+                IsUserLoggedIn = true;
+                StateHasChanged();
+            }
+            else
+            {
+                navManager.NavigateTo("/login");
+            }
+        }
+    }
+
+    private async Task AddToCart_Click(ProductModel productClicked)
+    {
+        cartFlag = true;
+        var cartJson = await SecureStorage.Default.GetAsync("myCart");
+        if (string.IsNullOrEmpty(cartJson))
+        {
+            myCart = new List<CartModel>();
+        }
+        else
+        {
+            myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
+        }
+
+        if (productClicked.CartFlag)
+        {
+            var existing_product = myCart.Where(x => x.ProductId == productClicked.Id).FirstOrDefault();
+            if (existing_product != null)
+            {
+                myCart.Remove(existing_product);
+                await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
+            }
+        }
+        else
+        {
+            CartModel cm = new CartModel
+                {
+                    ProductId = productClicked.Id,
+                    Quantity = 1,
+                    AvailableStock = 20,//Convert.ToInt32(productClicked.StockId),
+                    ProductName = productClicked.Name,
+                    ProductImage = productClicked.ImageUrl,
+                    Price = Convert.ToInt32(productClicked.Price)
+                };
+            myCart.Add(cm);
+            await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
+        }
+
+        await UpdateCartText();
+        await notify.InvokeAsync();
+    }
+
+    private async Task UpdateCartText()
+    {
+        if (cartFlag)
+        {
+            var cartJson = await SecureStorage.Default.GetAsync("myCart");
+            if (!string.IsNullOrEmpty(cartJson))
+            {
+                foreach (var product in products)
+                {
+                    product.CartFlag = false;
+                }
+
+                myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
+                foreach (var cart in myCart)
+                {
+                    var cartProduct = products.Where(x => x.Id == cart.ProductId).FirstOrDefault();
+                    if (cartProduct != null)
+                    {
+                        cartProduct.CartFlag = true;
+                    }
+                }
+            }
+        }
     }
 }

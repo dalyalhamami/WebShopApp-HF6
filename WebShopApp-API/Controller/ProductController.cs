@@ -31,7 +31,7 @@ public class ProductController : ControllerBase
         }
         else
         {
-            return BadRequest("Category not found.");
+            return BadRequest("Category not found");
         }
     }
 
