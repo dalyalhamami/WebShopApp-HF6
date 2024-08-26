@@ -1,0 +1,111 @@
+﻿@page "/product"
+@using WebShopApp_Maui.Services
+@using Microsoft.Maui.Storage;
+@using Newtonsoft.Json;
+@inject IWebShopAppService webShopAppService;
+@inject NavigationManager navManager;
+
+
+    <div>
+        @if (productModel == null)
+        {
+           <span>Loading...</span>
+        }
+        else
+        {
+            <div>
+
+            </div>
+        }
+    </div>       
+
+
+
+@code {
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
+
+    public ProductModel productModel { get; set; }
+    public List<CategoryModel> categories { get; set; }
+    public List<ProductModel> products { get; set; }
+    public int categoryId { get; set; }
+    IReadOnlyList<IBrowserFile> selectedFiles;
+    List<string> imageUrls = new List<string>();
+    public ProductModel productToUpdate { get; set; }
+    public ProductModel productToDelete { get; set; }
+    public bool showEditPopup = false;
+    public bool showDeletePopup = false;
+    public bool successPopup = false;
+    string Message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        productModel = new ProductModel();
+        await GetCategories();
+        await GetProducts();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await notify.InvokeAsync();
+        }
+    }
+
+    // Upload image file to server and generate URL
+    private async Task<string> UploadImage(IReadOnlyList<IBrowserFile> files)
+    {
+        if (files != null && files.Count > 0)
+        {
+            var file = files.FirstOrDefault();
+            using var stream = file.OpenReadStream();
+            var fileName = file.Name;
+            var imagePath = Path.Combine("wwwroot", "images", fileName);
+            using var fileStream = new FileStream(imagePath, FileMode.Create);
+            await stream.CopyToAsync(fileStream);
+            var imageUrl = $"/images/{fileName}";
+            return imageUrl;
+        }
+        return null;
+    }
+
+    private async Task GetCategories()
+    {
+        categories = await webShopAppService.GetCategoriesAsync();
+    }
+
+    private async Task SaveProduct()
+    {
+        var imageUrl = await UploadImage(selectedFiles);
+        if (imageUrl != null)
+        {
+            productModel.ImageUrl = imageUrl;
+            var savedProduct = await webShopAppService.SaveProductAsync(productModel);
+            if (savedProduct != null)
+            {
+                await GetProducts();
+                ClearForm();
+            }
+            else
+            {
+                Console.WriteLine("Failed to save product");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Failed to upload image");
+        }
+    }
+
+    private async Task GetProducts()
+    {
+        products = await webShopAppService.GetProductsAsync();
+    }
+
+    private void ClearForm()
+    {
+        productModel = new ProductModel();
+        imageUrls = new List<string>();
+    }
+}

@@ -12,32 +12,6 @@ public class WebShopAppService : IWebShopAppService
             : new Uri("http://localhost:5031/");
     }
 
-    //...................................................... Product ......................................................//
-
-    // Get all products
-    public async Task<List<ProductModel>> GetProductsAsync()
-    {
-        try
-        {
-            var response = await httpClient.GetAsync($"api/Product/GetProducts");
-            response.EnsureSuccessStatusCode();
-            var products = await response.Content.ReadFromJsonAsync<List<ProductModel>>();
-            return products;
-        }
-        catch (HttpRequestException httpEx)
-        {
-            Console.WriteLine($"HTTP Request failed: {httpEx.Message}");
-            Console.WriteLine($"Status Code: {httpEx.StatusCode}");
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Exception occurred: {ex.Message}");
-            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-            return null;
-        }
-    }
-
     //....................................................... User .......................................................//
 
     // Create user
@@ -101,7 +75,82 @@ public class WebShopAppService : IWebShopAppService
         }
 
         Console.WriteLine($"Error checking email: {response.StatusCode}");
-        return false; 
+        return false;
     }
+
+
+    //...................................................... Category ......................................................//
+
+    // Get all categories
+    public async Task<List<CategoryModel>> GetCategoriesAsync()
+    {
+        try
+        {
+            var categories = await httpClient.GetFromJsonAsync<List<CategoryModel>>("api/Category/GetCategories");
+            return categories;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return null;
+        }
+    }
+
+    //...................................................... Product ......................................................//
+
+    // Create new product
+    public async Task<ProductModel> SaveProductAsync(ProductModel newProduct)
+    {
+        try
+        {
+            // Serialize the newProduct object to JSON
+            var jsonContent = JsonContent.Create(newProduct);
+
+            var response = await httpClient.PostAsync("api/Product/CreateProduct", jsonContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Deserialize the response content to ProductModel object
+                var savedProduct = await response.Content.ReadFromJsonAsync<ProductModel>();
+                return savedProduct;
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return null;
+        }
+    }
+
+    // Get all products
+    public async Task<List<ProductModel>> GetProductsAsync()
+    {
+        try
+        {
+            var response = await httpClient.GetAsync($"api/Product/GetProducts");
+            response.EnsureSuccessStatusCode();
+            var products = await response.Content.ReadFromJsonAsync<List<ProductModel>>();
+            return products;
+        }
+        catch (HttpRequestException httpEx)
+        {
+            Console.WriteLine($"HTTP Request failed: {httpEx.Message}");
+            Console.WriteLine($"Status Code: {httpEx.StatusCode}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            return null;
+        }
+    }
+
+
 }
 

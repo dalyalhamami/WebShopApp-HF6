@@ -11,6 +11,7 @@ public class UserController : ControllerBase
         this.webShopAppDBContext = webShopAppDBContext;
     }
 
+    // Create a new user
     [HttpPost("CreateUser")]
     public async Task<ActionResult<UserResponseDto>> CreateUser(User user)
     {
@@ -49,6 +50,7 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    // Login user
     [HttpPost("Login")]
     public async Task<ActionResult<UserResponseDto>> Login([FromBody] UserLoginDto loginDto)
     {
