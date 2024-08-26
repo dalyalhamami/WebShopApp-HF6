@@ -96,6 +96,32 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
+    public async Task<CategoryModel> GetCategoryByIdAsync(int? id)
+    {
+        try
+        {
+            var response = await httpClient.GetAsync($"api/WebApp/GetCategoryById?id={id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var category = await response.Content.ReadFromJsonAsync<CategoryModel>();
+                return category;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                Console.WriteLine("Category not found");
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+        return null; // Return null in case of errors
+    }
     //...................................................... Product ......................................................//
 
     // Create new product
@@ -151,6 +177,55 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
+    public async Task<ProductModel> UpdateProductAsync(ProductModel editedProduct)
+    {
+        //Retrieve category details based on editedProduct.CategoryId
+        var category = await GetCategoryByIdAsync(editedProduct.CategoryId);
+        if (category != null)
+        {
+            editedProduct.CategoryName = category.Name;
+        }
 
+        try
+        {
+            // Serialize the editedProduct object to JSON
+            var jsonContent = JsonContent.Create(editedProduct);
+
+            var response = await httpClient.PutAsync($"api/Product/UpdateProduct", jsonContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Deserialize the response content to ProductModel object
+                var updatedProduct = await response.Content.ReadFromJsonAsync<ProductModel>();
+                return updatedProduct;
+            }
+            else
+            {
+                // Handle other error cases
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+        return null; // Return null in case of errors
+    }
+
+    public async Task<bool> DeleteProductAsync(int productId)
+    {
+        try
+        {
+            var response = await httpClient.DeleteAsync($"api/Product/DeleteProduct/{productId}");
+
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return false; // Return false in case of errors
+        }
+    }
 }
 

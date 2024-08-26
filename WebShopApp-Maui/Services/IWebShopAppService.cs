@@ -9,10 +9,13 @@ public interface IWebShopAppService
 
     //...................................................... Category ......................................................//
     Task<List<CategoryModel>> GetCategoriesAsync();
+    Task<CategoryModel> GetCategoryByIdAsync(int? id);
 
     //...................................................... Products ......................................................//
 
     Task<ProductModel> SaveProductAsync(ProductModel newProduct);
     Task<List<ProductModel>> GetProductsAsync();
+    Task<ProductModel> UpdateProductAsync(ProductModel editedProduct);
+    Task<bool> DeleteProductAsync(int productId);
 
 }

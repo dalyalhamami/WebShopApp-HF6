@@ -7,19 +7,57 @@
 
 
     <div>
-        @if (productModel == null)
+    @if (products == null)
         {
            <span>Loading...</span>
         }
-        else
+    else
         {
-            <div>
-
-            </div>
-        }
+        <span>Hello world</span>
+    }
     </div>       
 
+@if (showEditPopup == true)
+{
+  
+   
+}
 
+@if (showDeletePopup == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Delete Product</h5>
+                <span class="close" @onclick="ToggleDeletePopup">&times;</span>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Delete <span style="background-color:yellow;">@productToDelete.Name</span> Product?
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Yes" @onclick="DeleteProduct" />
+                <input type="button" class="btn btn-primary" value="No" @onclick="ToggleDeletePopup" />
+            </div>
+        </div>
+    </div>
+}
+
+@if (successPopup == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+            </div>
+            <div class="modal-body">
+                @Message
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [CascadingParameter]
@@ -98,6 +136,53 @@
         }
     }
 
+    private async Task UpdateProduct()
+    {
+        // Retrieve category details based on selected CategoryId
+        var selectedCategory = categories.FirstOrDefault(c => c.Id == productToUpdate.CategoryId);
+        if (selectedCategory != null)
+        {
+            productToUpdate.CategoryName = selectedCategory.Name;
+        }
+
+        var updatedProduct = await webShopAppService.UpdateProductAsync(productToUpdate);
+
+        if (updatedProduct != null)
+        {
+            ToggleEditPopup();
+            Message = "Product Updated Successfully !!";
+            ToggleSuccessPopup();
+            productToUpdate = new ProductModel();
+            await GetProducts();
+        }
+        else
+        {
+            Message = "Product Not Updated. Try Again !!";
+            ToggleSuccessPopup();
+        }
+    }
+
+    private async Task DeleteProduct()
+    {
+        if (productToDelete != null)
+        {
+            var flag = await webShopAppService.DeleteProductAsync(productToDelete.Id);
+            ToggleDeletePopup();
+            if (flag)
+            {
+                Message = "Product Deleted Successfully !!";
+            }
+            else
+            {
+                Message = "Product Not Deleted. Try Again !!";
+            }
+
+            ToggleSuccessPopup();
+            productToDelete = new ProductModel();
+            await GetProducts();
+        }
+    }
+
     private async Task GetProducts()
     {
         products = await webShopAppService.GetProductsAsync();
@@ -107,5 +192,32 @@
     {
         productModel = new ProductModel();
         imageUrls = new List<string>();
+    }
+
+    private void EditButtonClick(ProductModel productToUpdate)
+    {
+        this.productToUpdate = productToUpdate;
+        ToggleEditPopup();
+    }
+
+    private void DeleteButtonClick(ProductModel productToDelete)
+    {
+        this.productToDelete = productToDelete; 
+        ToggleDeletePopup(); 
+    }
+
+    private void ToggleEditPopup()
+    {
+        showEditPopup = showEditPopup == true ? false : true;
+    }
+
+    private void ToggleDeletePopup()
+    {
+        showDeletePopup = showDeletePopup == true ? false : true;
+    }
+
+    private void ToggleSuccessPopup()
+    {
+        successPopup = successPopup == true ? false : true;
     }
 }

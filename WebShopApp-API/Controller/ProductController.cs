@@ -49,4 +49,54 @@ public class ProductController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    // Update an existing product
+    [HttpPut("UpdateProduct")]
+    public async Task<ActionResult<Product>> UpdateProduct(Product editedProduct)
+    {
+        if (editedProduct.Id == null)
+        {
+            return BadRequest("Invalid ID");
+        }
+
+        webShopAppDBContext.Entry(editedProduct).State = EntityState.Modified;
+
+        try
+        {
+            await webShopAppDBContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProductExists(editedProduct.Id))
+            {
+                return NotFound("Product not found");
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return Ok(editedProduct);
+    }
+    private bool ProductExists(int id)
+    {
+        return webShopAppDBContext.Product.Any(e => e.Id == id);
+    }
+
+    // Delete a product
+    [HttpDelete("DeleteProduct/{id}")]
+    public async Task<ActionResult> DeleteProduct(int id)
+    {
+        var product = await webShopAppDBContext.Product.FindAsync(id);
+        if (product == null)
+        {
+            return NotFound("Product not found");
+        }
+
+        webShopAppDBContext.Product.Remove(product);
+        await webShopAppDBContext.SaveChangesAsync();
+
+        return NoContent();
+    }
+
 }
