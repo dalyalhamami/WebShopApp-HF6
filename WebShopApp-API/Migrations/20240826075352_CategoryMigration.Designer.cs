@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebShopApp_API.Data;
 
@@ -10,9 +11,10 @@ using WebShopApp_API.Data;
 namespace WebShopApp_API.Migrations
 {
     [DbContext(typeof(WebShopAppDBContext))]
-    partial class WebShopAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240826075352_CategoryMigration")]
+    partial class CategoryMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
