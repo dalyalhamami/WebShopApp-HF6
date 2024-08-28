@@ -50,6 +50,48 @@ public class UserController : ControllerBase
         return Ok(response);
     }
 
+    // Get all users
+    [HttpGet("GetUsers")]
+    public async Task<ActionResult<List<UserResponseDto>>> GetUsers()
+    {
+        var users = await webShopAppDBContext.User
+            .Select(user => new UserResponseDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Mobile = user.Mobile,
+                Address = user.Address,
+                Roles = user.Roles
+            }).ToListAsync();
+
+        return Ok(users);
+    }
+
+    // Get user by Id
+    [HttpGet("GetUser/{userId}")]
+    public async Task<ActionResult<UserResponseDto>> GetUser(int userId)
+    {
+        var user = await webShopAppDBContext.User
+            .Where(x => x.Id == userId)
+            .Select(user => new UserResponseDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Mobile = user.Mobile,
+                Address = user.Address,
+                Roles = user.Roles
+            }).FirstOrDefaultAsync();
+
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        return Ok(user);
+    }
+
     // Login user
     [HttpPost("Login")]
     public async Task<ActionResult<UserResponseDto>> Login([FromBody] UserLoginDto loginDto)
