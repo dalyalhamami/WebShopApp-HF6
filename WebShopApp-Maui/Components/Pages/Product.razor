@@ -146,6 +146,11 @@
                             <ValidationMessage For="@(() => productToUpdate.Stock)" />
                         </div>
                         <div class="form-group col-5">
+                            <label>Description :</label>
+                            <InputText @bind-Value="productToUpdate.Description" class="form-control" />
+                            <ValidationMessage For="@(() => productToUpdate.Description)" />
+                        </div>
+                        <div class="form-group col-5">
                             <label>Category :</label>
                             <select class="form-control" @bind="@productToUpdate.CategoryId">
                                 @if (categories != null)
@@ -248,12 +253,12 @@
             var file = files.FirstOrDefault();
             var fileName = file.Name;
 
-            // Define the path in wwwroot/images
+            // Define the path in wwwroot/Images
             var wwwrootPath = Path.Combine(FileSystem.Current.AppDataDirectory, "wwwroot", "Images");
             Directory.CreateDirectory(wwwrootPath); // Ensure the directory exists
-
             var filePath = Path.Combine(wwwrootPath, fileName);
 
+            // Save the file to the server
             using (var stream = file.OpenReadStream())
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
@@ -276,8 +281,8 @@
             var savedProduct = await webShopAppService.SaveProductAsync(productModel);
             if (savedProduct != null)
             {
-                await GetProducts();
-                ClearForm();
+                await GetProducts(); 
+                ClearForm(); 
             }
             else
             {
