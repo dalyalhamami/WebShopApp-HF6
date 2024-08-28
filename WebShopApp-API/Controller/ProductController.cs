@@ -20,7 +20,7 @@ public class ProductController : ControllerBase
             {
                 Name = product.Name,
                 Price = product.Price,
-                StockId = product.StockId,
+                Stock = product.Stock,
                 CategoryId = product.CategoryId,
                 ImageUrl = product.ImageUrl,
                 Description = product.Description,

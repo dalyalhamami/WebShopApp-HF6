@@ -24,9 +24,9 @@ else
                         <div class="col-md-12 stuff">
                             <div style="width: 100%; border-radius: 2px; background-color: white;">
                                 <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;">@prod.Name</button>
-                                <img src="http://localhost:5290//@prod.ImageUrl" style="width:100%; height:50%;border-radius:1px;" />
+                                <img src=@prod.ImageUrl style="width:100%; height:50%;border-radius:1px;" />
                                 <div>
-                                    Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.StockId</span>
+                                    Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.Stock</span>
                                 </div>
                                 @if (prod.CartFlag)
                                 {
