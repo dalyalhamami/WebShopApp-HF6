@@ -23,7 +23,9 @@ else
                     <div class="col-md-4">
                         <div class="col-md-12 stuff">
                             <div style="width: 100%; border-radius: 2px; background-color: white;">
-                                <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;">@prod.Name</button>
+                                <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;" @onclick="(() => OpenProductModal(prod))">
+                                    @prod.Name
+                                </button>
                                 <img src=@prod.ImageUrl style="width:100%; height:50%;border-radius:1px;" />
                                 <div>
                                     Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.Stock</span>
@@ -45,6 +47,40 @@ else
     </div>
 }
 
+@if (showProductModal)
+{
+    <div class="modal show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@selectedProduct.Name</h5>
+                    <button type="button" class="close custom-close" @onclick="CloseProductModal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="@selectedProduct.ImageUrl" style="width:100%; height:auto;" />
+                    <p><strong>Price:</strong> $@selectedProduct.Price</p>
+                    <p><strong>Stock:</strong> @selectedProduct.Stock</p>
+                    <p><strong>Description:</strong> @selectedProduct.Description</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseProductModal">Close</button>
+                    @if (selectedProduct.CartFlag)
+                    {
+                        <button type="button" class="btn btn-warning" @onclick="(() => AddToCart_Click(selectedProduct))">Remove from Cart</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" @onclick="(() => AddToCart_Click(selectedProduct))">Add to Cart</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
 @code {
     [CascadingParameter]
     public EventCallback notify { get; set; }
@@ -53,6 +89,8 @@ else
     private UserModel user;
     public bool cartFlag = false;
     public List<CartModel> myCart { get; set; }
+    public bool showProductModal = false;
+    public ProductModel selectedProduct { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,6 +115,17 @@ else
                 navManager.NavigateTo("/login");
             }
         }
+    }
+
+    private void OpenProductModal(ProductModel product)
+    {
+        selectedProduct = product;
+        showProductModal = true;
+    }
+
+    private void CloseProductModal()
+    {
+        showProductModal = false;
     }
 
     private async Task AddToCart_Click(ProductModel productClicked)

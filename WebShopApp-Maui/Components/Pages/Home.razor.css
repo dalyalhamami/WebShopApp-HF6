@@ -105,3 +105,31 @@ span {
     font-size: 1.5em;
     color: #6c757d;
 }
+
+/* Custom Close Button Styling */
+.custom-close {
+    background-color: transparent; /* No background color */
+    border: none; /* No border */
+    font-size: 1.5rem; /* Adjust font size for better visibility */
+    color: #000; /* Default text color */
+    opacity: 1; /* Full opacity */
+    cursor: pointer; /* Pointer cursor for better UX */
+    padding: 0; /* Remove any padding */
+    outline: none; /* Remove outline on focus */
+    transition: color 0.3s ease, transform 0.3s ease; /* Add transition effects */
+}
+
+    .custom-close:hover {
+        color: #ff0000; /* Change color on hover */
+        transform: scale(1.2); /* Slightly increase size on hover */
+    }
+
+    /* Ensures the X is centered and larger */
+    .custom-close span {
+        font-weight: bold; /* Bold X symbol */
+        display: block; /* Ensure it behaves like a block element */
+        line-height: 1; /* Set line height to 1 for better centering */
+        text-align: center; /* Center the X within the button */
+        width: 100%; /* Take full width of the button */
+    }
+
