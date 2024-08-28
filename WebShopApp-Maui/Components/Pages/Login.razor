@@ -10,14 +10,14 @@
         <div class="box">
             <h1>Login</h1>
 
-            <EditForm Model="@userModel" OnValidSubmit="Login_Click">
+            <EditForm Model="@userLoginModel" OnValidSubmit="Login_Click">
                 <ValidationSummary />
 
-                <InputText type="email" name="email" class="email" placeholder="Email" @bind-Value="userModel.Email" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Email)" class="validation-message" />
+                <InputText type="email" name="email" class="email" placeholder="Email" @bind-Value="userLoginModel.Email" autocomplete="off" />
+                <ValidationMessage For="@(() => userLoginModel.Email)" class="validation-message" />
                 <br /><br />
-                <InputText type="password" name="password" class="password" placeholder="Password" @bind-Value="userModel.Password" />
-                <ValidationMessage For="@(() => userModel.Password)" class="validation-message" />
+                <InputText type="password" name="password" class="password" placeholder="Password" @bind-Value="userLoginModel.Password" />
+                <ValidationMessage For="@(() => userLoginModel.Password)" class="validation-message" />
                 <br /><br />
                 <input type="submit" class="btn-primary" value="Login" />
             </EditForm>
@@ -36,7 +36,7 @@
     [CascadingParameter]
     public EventCallback notify { get; set; }
 
-    public UserModel userModel { get; set; } = new UserModel();
+    public LoginModel userLoginModel { get; set; } = new LoginModel();
     public string alertMessage { get; set; }
 
     private async Task Login_Click()
@@ -44,7 +44,7 @@
         alertMessage = "";
 
         // Validate Email
-        if (string.IsNullOrEmpty(userModel.Email))
+        if (string.IsNullOrEmpty(userLoginModel.Email))
         {
             alertMessage = "Email is required";
             StateHasChanged();
@@ -52,7 +52,7 @@
         }
 
         // Check if email exists
-        var emailExists = await webShopAppService.CheckEmailAsync(userModel.Email);
+        var emailExists = await webShopAppService.CheckEmailAsync(userLoginModel.Email);
         if (!emailExists)
         {
             alertMessage = "This email is not registered";
@@ -61,17 +61,17 @@
         }
 
         // Validate Password
-        if (string.IsNullOrEmpty(userModel.Password))
+        if (string.IsNullOrEmpty(userLoginModel.Password))
         {
             alertMessage = "Password is required";
             StateHasChanged();
             return;
         }
 
-        string hashedPassword = ComputeSha256Hash(userModel.Password);
+        string hashedPassword = ComputeSha256Hash(userLoginModel.Password);
 
         // Proceed with login if validation passes
-        var user = await webShopAppService.LoginAsync(userModel.Email, hashedPassword);
+        var user = await webShopAppService.LoginAsync(userLoginModel.Email, hashedPassword);
 
         if (user != null)
         {
