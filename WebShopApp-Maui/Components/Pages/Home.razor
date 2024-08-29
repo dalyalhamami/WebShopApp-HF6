@@ -5,6 +5,19 @@
 @inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
+<div class="user-info">
+    @if (IsUserLoggedIn)
+    {
+        <p class="welcome-text">Welcome, @user.Name!</p>
+        <button class="logout-button" @onclick="@Logout"><i class="fa fa-sign-out"></i>Logout</button>
+    }
+    else
+    {
+        <p class="welcome-text">Welcome</p>
+        <button class="logout-button" @onclick="@Login"><i class="fa fa-sign-in"></i>Login</button>
+    }
+</div>
+
 @if (products == null)
 {
     <span>Loading...</span>
@@ -112,7 +125,7 @@ else
             }
             else
             {
-                navManager.NavigateTo("/login");
+                navManager.NavigateTo("/");
             }
         }
     }
@@ -192,5 +205,16 @@ else
                 }
             }
         }
+    }
+
+    private void Logout()
+    {
+        SecureStorage.RemoveAll();
+        navManager.NavigateTo("/login");
+    }
+
+    private void Login()
+    {
+        navManager.NavigateTo("/login");
     }
 }
