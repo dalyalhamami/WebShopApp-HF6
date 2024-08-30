@@ -1,4 +1,49 @@
-﻿/* Page content padding */
+﻿/* Mobile-first styles */
+
+/* Layout adjustments */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.column {
+    width: 100%;
+    float: none;
+    padding: 0;
+}
+
+/* Menu styles */
+.menu {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.vertical-menu {
+    border-radius: 10px;
+}
+
+    .vertical-menu a {
+        display: block;
+        padding: 12px;
+        text-decoration: none;
+        color: black;
+        background-color: #eee;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+
+        .vertical-menu a:hover {
+            background-color: #ccc;
+        }
+
+        .vertical-menu a.active {
+            background-color: olivedrab;
+            color: white;
+        }
+
+/* Content styles */
 .content {
     padding: 10px;
 }
@@ -33,7 +78,7 @@
 
     .modal-header h5 {
         margin: 0;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
 
 .modal-body {
@@ -56,11 +101,6 @@
     margin-bottom: 15px;
 }
 
-    .form-group.row > div {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
 .form-control {
     width: 100%;
     font-size: 1rem;
@@ -76,4 +116,29 @@ label {
     width: 100%;
     font-size: 1rem;
     margin-top: 10px;
+    padding: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .modal-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .modal-header h5 {
+        font-size: 1rem;
+    }
+
+    .modal-body, .modal-footer .btn {
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+    }
 }

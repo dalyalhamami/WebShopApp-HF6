@@ -5,106 +5,103 @@
 @inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
-
 @if (user != null)
 {
-    <div>
-        <div class="column menu" style="background-color:white; border-radius:15px;">
+    <div class="clearfix">
+        <div class="column menu">
             <div class="vertical-menu">
-                <a class="@(myAccountFlag? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>My Account</a>
-                <a class="@(changePasswordFlag? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Change Password</a>
-                <a class="@(orderHistoryFlag? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Order History</a>
+                <a class="@(myAccountFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>My Account</a>
+                <a class="@(changePasswordFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Change Password</a>
+                <a class="@(orderHistoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Order History</a>
             </div>
         </div>
-        <br />
         <div class="column content">
-            <div style="border:2px ridge #bacf67;padding:10px;border-radius:15px; text-align:center;">
+            <div>
                 <h4>@headerText</h4>
             </div>
+            <br />
+            @if (myAccountFlag)
+            {
+                <div>
+                    <p><strong>Name:</strong> @user.Name</p>
+                    <p><strong>Email:</strong> @user.Email</p>
+                    <p><strong>Mobile:</strong> @user.Mobile</p>
+                    <p><strong>Address:</strong> @user.Address</p>
+                    <p><strong>Roles:</strong> @user.Roles</p>
+                    <button class="btn btn-primary" @onclick="() => EditButtonClick(user)">Edit</button>
+                </div>
+            }
+
+            @if (changePasswordFlag)
+            {
+                <p>Change Password</p>
+            }
+
+            @if (orderHistoryFlag)
+            {
+                <p>Order History</p>
+            }
+
+            @if (showEditPopup)
+            {
+                <div class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>Edit User</h5>
+                            <span class="close" @onclick="ToggleEditPopup">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <EditForm Model="@userToUpdate" OnValidSubmit="UpdateUser">
+                                <DataAnnotationsValidator />
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <InputText @bind-Value="userToUpdate.Name" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <InputText @bind-Value="userToUpdate.Email" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Mobile:</label>
+                                    <InputText @bind-Value="userToUpdate.Mobile" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Address:</label>
+                                    <InputText @bind-Value="userToUpdate.Address" class="form-control" />
+                                </div>
+                            </EditForm>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-primary" value="Save" @onclick="UpdateUser" />
+                            <input type="button" class="btn btn-primary" value="Cancel" @onclick="ToggleEditPopup" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (successPopup)
+            {
+                <div class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            @Message
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
-        <br />
-        @if (myAccountFlag == true)
-        {
-            <div style="padding: 10px;">
-                <p><strong>Name:</strong> @user.Name</p>
-                <p><strong>Email:</strong> @user.Email</p>
-                <p><strong>Mobile:</strong> @user.Mobile</p>
-                <p><strong>Address:</strong> @user.Address</p>
-                <p><strong>Roles:</strong> @user.Roles</p>
-                <button class="btn btn-primary" @onclick="() => EditButtonClick(user)">Edit</button>
-            </div>
-        }
-
-        @if (changePasswordFlag == true)
-        {
-            <p>Change Password</p>
-        }
-
-        @if (orderHistoryFlag == true)
-        {
-            <p>Order History</p>
-        }
-
-        @if (showEditPopup == true)
-        {
-            <div class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5>Edit User</h5>
-                        <span class="close" @onclick="ToggleEditPopup">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        <EditForm Model="@userToUpdate" OnValidSubmit="UpdateUser">
-                            <DataAnnotationsValidator />
-                            <div class="form-group">
-                                <label>Name:</label>
-                                <InputText @bind-Value="userToUpdate.Name" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Email:</label>
-                                <InputText @bind-Value="userToUpdate.Email" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Mobile:</label>
-                                <InputText @bind-Value="userToUpdate.Mobile" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label>Address:</label>
-                                <InputText @bind-Value="userToUpdate.Address" class="form-control" />
-                            </div>
-                        </EditForm>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-primary" value="Update" @onclick="UpdateUser" />
-                        <input type="button" class="btn btn-primary" value="Cancel" @onclick="ToggleEditPopup" />
-                    </div>
-                </div>
-            </div>
-        }
-
-        @if (successPopup == true)
-        {
-            <div class="modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
-                    </div>
-                    <div class="modal-body">
-                        @Message
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
-                    </div>
-                </div>
-            </div>
-        }
     </div>
 }
 else
 {
     <p>No user data found. Please <a href="/login">login</a>.</p>
 }
-
 
 @code {
     private UserModel user;
@@ -191,7 +188,7 @@ else
         {
             await SecureStorage.Default.SetAsync("User", JsonConvert.SerializeObject(updatedUser)); // Update SecureStorage
             ToggleEditPopup();
-            Message = "Product Updated Successfully !!";
+            Message = "User Updated Successfully !!";
             ToggleSuccessPopup();
             userToUpdate = new UserModel();
             user = updatedUser;
