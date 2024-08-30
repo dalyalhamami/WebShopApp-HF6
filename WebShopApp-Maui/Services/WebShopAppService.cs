@@ -39,6 +39,39 @@ public class WebShopAppService : IWebShopAppService
             return (null, "Exception occurred: " + ex.Message);
         }
     }
+    public async Task<UserModel> UpdateUserAsync(UserModel editedUser)
+    {
+        try
+        {
+            // Serialize the editedUser object to JSON
+            var jsonContent = JsonContent.Create(editedUser);
+
+            // Log the request content for debugging
+            var requestContent = await jsonContent.ReadAsStringAsync();
+            Console.WriteLine($"Request Content: {requestContent}");
+
+            var response = await httpClient.PutAsync("api/User/UpdateUser", jsonContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Deserialize the response content to UserModel object
+                var updatedUser = await response.Content.ReadFromJsonAsync<UserModel>();
+                return updatedUser;
+            }
+            else
+            {
+                // Log the response content for debugging
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error: {response.StatusCode}, {errorContent}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+        return null;
+    }
 
     // Login
     public async Task<UserModel> LoginAsync(string email, string password)
@@ -96,6 +129,7 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
+    // Get category
     public async Task<CategoryModel> GetCategoryByIdAsync(int? id)
     {
         try
@@ -178,6 +212,7 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
+    // Update product
     public async Task<ProductModel> UpdateProductAsync(ProductModel editedProduct)
     {
         //Retrieve category details based on editedProduct.CategoryId
@@ -214,6 +249,7 @@ public class WebShopAppService : IWebShopAppService
         return null; // Return null in case of errors
     }
 
+    // Delete product
     public async Task<bool> DeleteProductAsync(int productId)
     {
         try

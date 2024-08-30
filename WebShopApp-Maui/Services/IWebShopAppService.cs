@@ -4,6 +4,7 @@ public interface IWebShopAppService
     //....................................................... User ........................................................//
 
     Task<(UserModel user, string errorMessage)> RegisterUser(UserModel userModel);
+    Task<UserModel> UpdateUserAsync(UserModel editedUser);
     Task<UserModel> LoginAsync(string email, string password);
     Task<bool> CheckEmailAsync(string email);
 

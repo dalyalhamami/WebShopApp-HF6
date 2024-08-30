@@ -1,5 +1,4 @@
-﻿
-namespace Controller;
+﻿namespace Controller;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -90,6 +89,56 @@ public class UserController : ControllerBase
         }
 
         return Ok(user);
+    }
+
+    [HttpPut("UpdateUser")]
+    public async Task<ActionResult<UserResponseDto>> UpdateUser([FromBody] UserUpdate userUpdate)
+    {
+        if (userUpdate == null)
+        {
+            return BadRequest("Invalid request: user is null");
+        }
+
+        var existingUser = await webShopAppDBContext.User.FindAsync(userUpdate.Id);
+
+        if (existingUser == null)
+        {
+            return NotFound("User not found");
+        }
+
+        // Update only the fields provided in the request
+        if (userUpdate.Name != null)
+            existingUser.Name = userUpdate.Name;
+
+        if (userUpdate.Email != null)
+            existingUser.Email = userUpdate.Email;
+
+        if (userUpdate.Mobile != null)
+            existingUser.Mobile = userUpdate.Mobile;
+
+        if (userUpdate.Address != null)
+            existingUser.Address = userUpdate.Address;
+
+        try
+        {
+            await webShopAppDBContext.SaveChangesAsync();
+
+            var response = new UserResponseDto
+            {
+                Id = existingUser.Id,
+                Name = existingUser.Name,
+                Email = existingUser.Email,
+                Mobile = existingUser.Mobile,
+                Address = existingUser.Address,
+                Roles = existingUser.Roles
+            };
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     // Login user

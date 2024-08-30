@@ -5,3 +5,4 @@ global using Microsoft.EntityFrameworkCore;
 global using WebShopApp_API.Models;
 global using WebShopApp_API.Data;
 global using WebShopApp_API.DTO;
+global using WebShopApp_API.Entities;

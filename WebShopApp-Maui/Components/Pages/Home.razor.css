@@ -135,7 +135,6 @@ span {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 10px;*/
     background-color: transparent;
 }
 
@@ -159,11 +158,11 @@ span {
 }
 
     .logout-button a {
-        color: white; /* Ensure the link text color is white */
-        text-decoration: none; /* Remove underline from the link text */
+        color: white; 
+        text-decoration: none; 
     }
 
     .logout-button i {
-        margin-right: 8px; /* Space between the icon and the text */
+        margin-right: 8px; 
     }
 
