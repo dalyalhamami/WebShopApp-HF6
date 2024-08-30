@@ -8,8 +8,6 @@ public class CartModel
     public int Price { get; set; }
     public int Quantity { get; set; }
     public int AvailableStock { get; set; }
-
-    [Required(ErrorMessage = "Address is required")]
     public string ShippingAddress { get; set; }
     public int ShippingCharges { get; set; }
     public int SubTotal { get; set; }

@@ -9,8 +9,11 @@ public interface IWebShopAppService
     Task<bool> CheckEmailAsync(string email);
 
     //...................................................... Category ......................................................//
+    Task<CategoryModel> SaveCategoryAsync(CategoryModel newCategory);
     Task<List<CategoryModel>> GetCategoriesAsync();
     Task<CategoryModel> GetCategoryByIdAsync(int? id);
+    Task<CategoryModel> UpdateCategoryAsync(CategoryModel editedCategory);
+    Task<bool> DeleteCategoryAsync(int categoryId);
 
     //...................................................... Products ......................................................//
 

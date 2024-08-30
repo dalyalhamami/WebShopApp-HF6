@@ -113,6 +113,34 @@ public class WebShopAppService : IWebShopAppService
 
 
     //...................................................... Category ......................................................//
+    
+    // Create new category
+    public async Task<CategoryModel> SaveCategoryAsync(CategoryModel newCategory)
+    {
+        try
+        {
+            // Serialize the newCategory object to JSON
+            var jsonContent = JsonContent.Create(newCategory);
+
+            var response = await httpClient.PostAsync("api/Category/CreateCategory", jsonContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var savedCategory = await response.Content.ReadFromJsonAsync<CategoryModel>();
+                return savedCategory;
+            }
+            else
+            {
+                // Handle other error cases
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+        return null;
+    }
 
     // Get all categories
     public async Task<List<CategoryModel>> GetCategoriesAsync()
@@ -156,7 +184,55 @@ public class WebShopAppService : IWebShopAppService
         }
         return null; // Return null in case of errors
     }
-   
+
+    // Update category
+    public async Task<CategoryModel> UpdateCategoryAsync(CategoryModel editedCategory)
+    {
+        try
+        {
+            // Serialize the editedCategory object to JSON
+            var jsonContent = JsonContent.Create(editedCategory);
+
+            var response = await httpClient.PutAsync($"api/Category/EditCategory", jsonContent);
+
+            if (response != null)
+            {
+                // Deserialize the response content to CategoryModel object
+                var updatedCategory = await response.Content.ReadFromJsonAsync<CategoryModel>();
+                return updatedCategory;
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+        }
+        return null; // Return null in case of errors
+    }
+
+    // Delete category
+    public async Task<bool> DeleteCategoryAsync(int categoryId)
+    {
+        try
+        {
+            // Make a DELETE request to the appropriate API endpoint
+            var response = await httpClient.DeleteAsync($"api/Category/DeleteCategory/{categoryId}");
+
+            // Check if the request was successful
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return false; // Return false in case of errors
+        }
+    }
+
+
     //...................................................... Product ......................................................//
 
     // Create new product
