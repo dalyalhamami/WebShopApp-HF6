@@ -51,15 +51,6 @@
             return;
         }
 
-        // Check if email exists
-        var emailExists = await webShopAppService.CheckEmailAsync(userLoginModel.Email);
-        if (!emailExists)
-        {
-            alertMessage = "This email is not registered";
-            StateHasChanged();
-            return;
-        }
-
         // Validate Password
         if (string.IsNullOrEmpty(userLoginModel.Password))
         {
@@ -70,20 +61,23 @@
 
         string hashedPassword = ComputeSha256Hash(userLoginModel.Password);
 
-        // Proceed with login if validation passes
-        var user = await webShopAppService.LoginAsync(userLoginModel.Email, hashedPassword);
+        try
+        {
+            // Attempt to login
+            var user = await webShopAppService.LoginAsync(userLoginModel.Email, hashedPassword);
 
-        if (user != null)
-        {
-            // Successful login, store user info and navigate
-            await SecureStorage.Default.SetAsync("User", JsonConvert.SerializeObject(user));
-            await notify.InvokeAsync();
-            navManager.NavigateTo("/");
+            if (user != null)
+            {
+                // Successful login, store user info and navigate
+                await SecureStorage.Default.SetAsync("User", JsonConvert.SerializeObject(user));
+                await notify.InvokeAsync();
+                navManager.NavigateTo("/");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Incorrect email or password
-            alertMessage = "Your email or password is incorrect. Please try again.";
+            // Show the error message returned from the service
+            alertMessage = ex.Message;
             StateHasChanged();
         }
     }

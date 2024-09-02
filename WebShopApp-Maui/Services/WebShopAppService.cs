@@ -39,6 +39,8 @@ public class WebShopAppService : IWebShopAppService
             return (null, "Exception occurred: " + ex.Message);
         }
     }
+
+    // Update user
     public async Task<UserModel> UpdateUserAsync(UserModel editedUser)
     {
         try
@@ -81,20 +83,26 @@ public class WebShopAppService : IWebShopAppService
 
         var response = await httpClient.PostAsJsonAsync(loginUrl, loginData);
 
-        if (response != null)
+        if (response.IsSuccessStatusCode)
         {
             var user = await response.Content.ReadFromJsonAsync<UserModel>();
             return user;
         }
         else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
-            Console.WriteLine("User not found");
+            // Email not found
+            throw new Exception("Email not registered");
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            // Incorrect password
+            throw new Exception("Incorrect password");
         }
         else
         {
             Console.WriteLine($"Error: {response.StatusCode}");
+            throw new Exception("An error occurred during login");
         }
-        return null;
     }
 
     // Check if email exists

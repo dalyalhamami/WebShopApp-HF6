@@ -146,13 +146,17 @@ public class UserController : ControllerBase
     public async Task<ActionResult<UserResponseDto>> Login([FromBody] UserLoginDto loginDto)
     {
         var user = await webShopAppDBContext.User
-            .Where(x => x.Email!.ToLower().Equals(loginDto.Email.ToLower()) &&
-                        x.Password == loginDto.Password)
+            .Where(x => x.Email!.ToLower().Equals(loginDto.Email.ToLower()))
             .FirstOrDefaultAsync();
 
         if (user == null)
         {
-            return NotFound("User not found");
+            return NotFound("Email not registered");
+        }
+
+        if (user.Password != loginDto.Password)
+        {
+            return BadRequest("Incorrect password");
         }
 
         var response = new UserResponseDto
