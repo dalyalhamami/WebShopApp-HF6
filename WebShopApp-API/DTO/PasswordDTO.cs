@@ -1,9 +1,7 @@
-﻿namespace WebShopApp_Maui.Models;
-
-public class PasswordModel
+﻿namespace WebShopApp_API.DTO;
+public class PasswordDTO
 {
     public int UserId { get; set; }
     public string OldPassword { get; set; }
-    public string Password { get; set; }
     public string HashedPassword { get; set; }
 }

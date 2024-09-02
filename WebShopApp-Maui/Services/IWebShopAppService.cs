@@ -7,6 +7,7 @@ public interface IWebShopAppService
     Task<UserModel> UpdateUserAsync(UserModel editedUser);
     Task<UserModel> LoginAsync(string email, string password);
     Task<bool> CheckEmailAsync(string email);
+    Task<HttpResponseMessage> ChangePassword(PasswordModel passwordModel);
 
     //...................................................... Category ......................................................//
     Task<CategoryModel> SaveCategoryAsync(CategoryModel newCategory);

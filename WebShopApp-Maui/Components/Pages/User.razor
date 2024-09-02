@@ -27,14 +27,36 @@
                     <p><strong>Email:</strong> @user.Email</p>
                     <p><strong>Mobile:</strong> @user.Mobile</p>
                     <p><strong>Address:</strong> @user.Address</p>
-                    <p><strong>Roles:</strong> @user.Roles</p>
                     <button class="btn btn-primary" @onclick="() => EditButtonClick(user)">Edit</button>
                 </div>
             }
 
             @if (changePasswordFlag)
             {
-                <p>Change Password</p>
+                <div class="form-group">
+                    <EditForm Model="@passwordModel" OnValidSubmit="ChangePassword_Click">
+                        <DataAnnotationsValidator />
+                        <div class="form-group">
+                            <label>Old Password:</label>
+                            <InputText type="password" class="form-control" id="oldpwd" @bind-Value="passwordModel.OldPassword" autocomplete="off"></InputText>
+                            <ValidationMessage For="@(() => passwordModel.OldPassword)"></ValidationMessage>
+                        </div>
+                        <div class="form-group">
+                            <label>New Password:</label>
+                            <InputText type="password" class="form-control" id="newpwd" @bind-Value="passwordModel.Password" autocomplete="off"></InputText>
+                            <ValidationMessage For="@(() => passwordModel.Password)"></ValidationMessage>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password:</label>
+                            <InputText type="password" class="form-control" id="confirmpwd" @bind-Value="confirmPassword" autocomplete="off"></InputText>
+                            <ValidationMessage For="@(() => confirmPassword)"></ValidationMessage>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </EditForm>
+                </div>
             }
 
             @if (orderHistoryFlag)
@@ -42,44 +64,9 @@
                 <p>Order History</p>
             }
 
-            @if (showEditPopup)
-            {
-                <div class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5>Edit User</h5>
-                            <span class="close" @onclick="ToggleEditPopup">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <EditForm Model="@userToUpdate" OnValidSubmit="UpdateUser">
-                                <DataAnnotationsValidator />
-                                <div class="form-group">
-                                    <label>Name:</label>
-                                    <InputText @bind-Value="userToUpdate.Name" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Email:</label>
-                                    <InputText @bind-Value="userToUpdate.Email" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Mobile:</label>
-                                    <InputText @bind-Value="userToUpdate.Mobile" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Address:</label>
-                                    <InputText @bind-Value="userToUpdate.Address" class="form-control" />
-                                </div>
-                            </EditForm>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-primary" value="Save" @onclick="UpdateUser" />
-                            <input type="button" class="btn btn-primary" value="Cancel" @onclick="ToggleEditPopup" />
-                        </div>
-                    </div>
-                </div>
-            }
 
-            @if (successPopup)
+
+            @if (showAlertMessage == true)
             {
                 <div class="modal">
                     <div class="modal-content">
@@ -103,16 +90,37 @@ else
     <p>No user data found. Please <a href="/login">login</a>.</p>
 }
 
+@if (showAlertMessage == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Alert </h5>
+                <span class="close" @onclick="ToggleAlertMessage">&times;</span>
+            </div>
+            <div class="modal-body">
+                @alertMessage
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleAlertMessage" />
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private UserModel user;
     private UserModel userToUpdate;
     private bool showEditPopup = false;
-    public bool successPopup = false;
     string Message = string.Empty;
     private string headerText = "MyAccount";
     private bool myAccountFlag = true;
     private bool changePasswordFlag = false;
     private bool orderHistoryFlag = false;
+    public bool showAlertMessage = false;
+    private PasswordModel passwordModel = new PasswordModel();
+    private string confirmPassword;
+    private string alertMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -163,10 +171,15 @@ else
                 myAccountFlag = false;
                 changePasswordFlag = false;
                 orderHistoryFlag = true;
-               // await GetOrderByUserID(user.Id);
+                // await GetOrderByUserID(user.Id);
                 break;
         }
         StateHasChanged();
+    }
+
+    private void ToggleAlertMessage()
+    {
+        showAlertMessage = !showAlertMessage;
     }
 
     private void EditButtonClick(UserModel userToUpdate)
@@ -202,6 +215,54 @@ else
 
     private void ToggleSuccessPopup()
     {
-        successPopup = successPopup == true ? false : true;
+        showAlertMessage = showAlertMessage == true ? false : true;
+    }
+
+    private async Task ChangePassword_Click()
+    {
+        if (passwordModel.Password != confirmPassword)
+        {
+            alertMessage = "Password & Confirm Password do not match";
+            ToggleAlertMessage();
+            return;
+        }
+
+        passwordModel.HashedPassword = ComputeSha256Hash(passwordModel.Password);
+        passwordModel.OldPassword = ComputeSha256Hash(passwordModel.OldPassword);
+        passwordModel.UserId = user.Id;
+
+        try
+        {
+            var response = await webShopAppService.ChangePassword(passwordModel);
+            if (response.IsSuccessStatusCode)
+            {
+                passwordModel = new PasswordModel();
+                confirmPassword = string.Empty;
+                alertMessage = "Password changed successfully";
+            }
+            else
+            {
+                alertMessage = await response.Content.ReadAsStringAsync(); // Read error message from the response
+            }
+        }
+        catch (Exception ex)
+        {
+            alertMessage = $"An error occurred: {ex.Message}";
+        }
+        ToggleAlertMessage();
+    }
+
+    private string ComputeSha256Hash(string rawData)
+    {
+        using (var sha256Hash = System.Security.Cryptography.SHA256.Create())
+        {
+            byte[] bytes = sha256Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+            var builder = new System.Text.StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
     }
 }

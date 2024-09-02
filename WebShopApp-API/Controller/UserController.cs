@@ -183,5 +183,45 @@ public class UserController : ControllerBase
         return Ok(userWithEmailExists);
     }
 
- 
+    // Update password
+    [HttpPut("ChangePassword")]
+    public async Task<ActionResult<bool>> ChangePassword([FromBody] PasswordDTO password)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid input");
+        }
+
+        var user = await webShopAppDBContext.User.FirstOrDefaultAsync(u => u.Id == password.UserId);
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        // Check if the old password is correct
+        if (user.Password != password.OldPassword)
+        {
+            return BadRequest("Old password is incorrect");
+        }
+
+        // Check if the new password already exists
+        if (await webShopAppDBContext.User.AnyAsync(u => u.Password == password.HashedPassword))
+        {
+            return BadRequest("You can't use that password. Please choose another");
+        }
+
+        // Update the user's password
+        user.Password = password.HashedPassword;
+
+        try
+        {
+            await webShopAppDBContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return StatusCode(500, "Failed to update password");
+        }
+
+        return Ok(true);
+    }
 }

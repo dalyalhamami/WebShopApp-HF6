@@ -111,9 +111,16 @@ public class WebShopAppService : IWebShopAppService
         return false;
     }
 
+    // Update password
+    public async Task<HttpResponseMessage> ChangePassword(PasswordModel passwordModel)
+    {
+        var jsonContent = JsonContent.Create(passwordModel);
+        var response = await httpClient.PutAsync("api/User/ChangePassword", jsonContent);
+        return response;
+    }
 
     //...................................................... Category ......................................................//
-    
+
     // Create new category
     public async Task<CategoryModel> SaveCategoryAsync(CategoryModel newCategory)
     {
