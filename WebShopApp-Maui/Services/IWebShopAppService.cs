@@ -3,7 +3,7 @@ public interface IWebShopAppService
 {
     //....................................................... User ........................................................//
 
-    Task<(UserModel user, string errorMessage)> RegisterUser(UserRegisterModel userModel);
+    Task<(UserModel user, string errorMessage)> RegisterUser(RegisterModel userModel);
     Task<UserModel> UpdateUserAsync(UserModel editedUser);
     Task<UserModel> LoginAsync(string email, string password);
     Task<bool> CheckEmailAsync(string email);

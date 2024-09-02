@@ -1,6 +1,6 @@
 ﻿namespace WebShopApp_Maui.Models;
 
-public class UserRegisterModel
+public class RegisterModel
 {
     [Required(ErrorMessage = "Name is required")]
     public string Name { get; set; }

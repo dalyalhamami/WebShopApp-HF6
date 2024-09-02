@@ -14,6 +14,8 @@
     
     [Required]
     public string Mobile { get; set; }
+ 
+    [Required]
     public string Address { get; set; }
 }
 
