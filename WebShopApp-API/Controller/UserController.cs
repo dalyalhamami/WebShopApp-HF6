@@ -12,28 +12,42 @@ public class UserController : ControllerBase
 
     // Create a new user
     [HttpPost("CreateUser")]
-    public async Task<ActionResult<UserResponseDto>> CreateUser(User user)
+    public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] UserRegisterDto registerDto)
     {
-        if (user == null)
+        if (!ModelState.IsValid)
         {
-            return BadRequest("Invalid Request");
+            return BadRequest("Invalid data");
         }
 
+        // Check if the email already exists
         var existingUser = await webShopAppDBContext.User
-            .FirstOrDefaultAsync(u => u.Email!.ToLower() == user.Email!.ToLower());
+            .FirstOrDefaultAsync(u => u.Email.ToLower() == registerDto.Email.ToLower());
+
         if (existingUser != null)
         {
             return BadRequest("Email already exists");
         }
 
+        // Check if the password already exists
         var existingPassword = await webShopAppDBContext.User
-            .FirstOrDefaultAsync(p => p.Password == user.Password);
+            .FirstOrDefaultAsync(u => u.Password == registerDto.Password);
+
         if (existingPassword != null)
         {
-            return BadRequest("You can't use that password. Please choose another");
+            return BadRequest("Password already in use, please choose another password");
         }
 
-        var result = webShopAppDBContext.User.Add(user).Entity;
+        var newUser = new User
+        {
+            Name = registerDto.Name,
+            Email = registerDto.Email,
+            Password = registerDto.Password, // Assume the password is already hashed
+            Mobile = registerDto.Mobile,
+            Address = registerDto.Address,
+            Roles = 0 // Default role (0 = User, 1 = Admin)
+        };
+
+        var result = webShopAppDBContext.User.Add(newUser).Entity;
         await webShopAppDBContext.SaveChangesAsync();
 
         var response = new UserResponseDto

@@ -15,7 +15,7 @@ public class WebShopAppService : IWebShopAppService
     //....................................................... User .......................................................//
 
     // Create user
-    public async Task<(UserModel user, string errorMessage)> RegisterUser(UserModel userModel)
+    public async Task<(UserModel user, string errorMessage)> RegisterUser(UserRegisterModel userModel)
     {
         try
         {
