@@ -192,3 +192,66 @@ span {
     min-width: 30px;
     top: -20px;
 }
+
+/* General Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h5 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.modal-body {
+    margin: 20px 0;
+    font-size: 1rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+    .modal-footer .btn {
+        width: 45%;
+        font-size: 1rem;
+    }
+
+/* Custom Close Button Styles */
+.custom-close {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #000;
+    cursor: pointer;
+}
+
+.custom-close:hover {
+    color: #ff0000;
+    transform: scale(1.2);
+}
+

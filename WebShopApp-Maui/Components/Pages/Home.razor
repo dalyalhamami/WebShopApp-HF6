@@ -103,6 +103,26 @@ else
     </div>
 }
 
+@if (showLoginPrompt)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login Required</h5>
+                <button type="button" class="close custom-close" @onclick="CloseLoginPrompt">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>You need to log in to add items to your cart. Do you want to log in now?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="ConfirmLogin">Yes, log in</button>
+                <button type="button" class="btn btn-secondary" @onclick="CloseLoginPrompt">Cancel</button>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [CascadingParameter]
@@ -113,6 +133,7 @@ else
     public bool cartFlag = false;
     public bool showProductModal = false;
     public ProductModel selectedProduct { get; set; }
+    private bool showLoginPrompt = false;
 
     public List<CartModel> myCart { get; set; }
     public int cartCount = 0;
@@ -171,6 +192,12 @@ else
 
     private async Task AddToCart_Click(ProductModel productClicked)
     {
+        if (!IsUserLoggedIn)
+        {
+            showLoginPrompt = true;
+            StateHasChanged();
+            return;
+        }
         var cartJson = await SecureStorage.Default.GetAsync("myCart");
         if (string.IsNullOrEmpty(cartJson))
         {
@@ -239,6 +266,18 @@ else
             cartCount = 0; // Reset cart count if no items are in the cart
         }
     }
+
+    private void CloseLoginPrompt()
+    {
+        showLoginPrompt = false;
+        StateHasChanged();
+    }
+
+    private void ConfirmLogin()
+    {
+        showLoginPrompt = false;
+        navManager.NavigateTo("/login");
+    } 
 
     private void Logout()
     {
