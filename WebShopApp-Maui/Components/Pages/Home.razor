@@ -9,7 +9,17 @@
     @if (IsUserLoggedIn)
     {
         <p class="welcome-text">Welcome, @user.Name!</p>
-        <button class="logout-button" @onclick="@Logout"><i class="fa fa-sign-out"></i>Logout</button>
+        <button class="logout-button" @onclick="@Logout">
+            <i class="fa fa-sign-out"></i>Logout
+        </button>
+
+        <div class="cart-container">
+            <a href="/mycart" class="cart-link">
+                <i class="fa fa-shopping-cart">
+                    <span class="cart-count"><sup>@cartCount</sup></span>
+                </i>
+            </a>
+        </div>
     }
     else
     {
@@ -101,9 +111,11 @@ else
     public bool IsUserLoggedIn = false;
     private UserModel user;
     public bool cartFlag = false;
-    public List<CartModel> myCart { get; set; }
     public bool showProductModal = false;
     public ProductModel selectedProduct { get; set; }
+
+    public List<CartModel> myCart { get; set; }
+    public int cartCount = 0;
 
     protected override async Task OnInitializedAsync()
     {

@@ -166,3 +166,75 @@ span {
         margin-right: 8px; 
     }
 
+.welcome-text {
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+    .logout-button i {
+        margin-right: 8px;
+    }
+
+.cart-container {
+    display: flex;
+    align-items: center;
+}
+
+.cart-link {
+    display: flex;
+    align-items: center;
+    position: relative;
+    font-size: 26px;
+    color: green;
+    margin-top:10px;
+}
+
+.cart-count {
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    color: orange;
+    min-width: 30px;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .welcome-text {
+        font-size: 14px;
+    }
+
+    .logout-button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .cart-link i {
+        font-size: 20px;
+    }
+
+    .cart-count {
+        font-size: 12px;
+        top: -3px;
+        right: -8px;
+    }
+}
