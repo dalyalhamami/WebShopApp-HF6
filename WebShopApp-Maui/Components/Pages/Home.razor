@@ -133,6 +133,7 @@ else
             {
                 user = JsonConvert.DeserializeObject<UserModel>(userJson);
                 IsUserLoggedIn = true;
+                await LoadCartData(); // Load cart data and update cart count
                 StateHasChanged();
             }
             else
@@ -140,6 +141,21 @@ else
                 navManager.NavigateTo("/");
             }
         }
+    }
+
+    private async Task LoadCartData()
+    {
+        var cartJson = await SecureStorage.Default.GetAsync("myCart");
+        if (!string.IsNullOrEmpty(cartJson))
+        {
+            myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
+            cartCount = myCart.Count;
+        }
+        else
+        {
+            cartCount = 0;
+        }
+        StateHasChanged();
     }
 
     private void OpenProductModal(ProductModel product)
@@ -155,7 +171,6 @@ else
 
     private async Task AddToCart_Click(ProductModel productClicked)
     {
-        cartFlag = true;
         var cartJson = await SecureStorage.Default.GetAsync("myCart");
         if (string.IsNullOrEmpty(cartJson))
         {
@@ -168,10 +183,11 @@ else
 
         if (productClicked.CartFlag)
         {
-            var existing_product = myCart.Where(x => x.ProductId == productClicked.Id).FirstOrDefault();
+            var existing_product = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
             if (existing_product != null)
             {
                 myCart.Remove(existing_product);
+                cartCount--; // Decrement cart count
                 await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
             }
         }
@@ -181,41 +197,46 @@ else
                 {
                     ProductId = productClicked.Id,
                     Quantity = 1,
-                    AvailableStock = 20,//Convert.ToInt32(productClicked.StockId),
+                    AvailableStock = productClicked.Stock,
                     ProductName = productClicked.Name,
                     ProductImage = productClicked.ImageUrl,
                     Price = Convert.ToInt32(productClicked.Price)
                 };
             myCart.Add(cm);
+            cartCount++; // Increment cart count
             await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
         }
 
         await UpdateCartText();
         await notify.InvokeAsync();
+        StateHasChanged();
     }
 
     private async Task UpdateCartText()
     {
-        if (cartFlag)
+        var cartJson = await SecureStorage.Default.GetAsync("myCart");
+        if (!string.IsNullOrEmpty(cartJson))
         {
-            var cartJson = await SecureStorage.Default.GetAsync("myCart");
-            if (!string.IsNullOrEmpty(cartJson))
-            {
-                foreach (var product in products)
-                {
-                    product.CartFlag = false;
-                }
+            myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
+            cartCount = myCart.Count; // Ensure cart count is correct
 
-                myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
-                foreach (var cart in myCart)
+            foreach (var product in products)
+            {
+                product.CartFlag = false;
+            }
+
+            foreach (var cart in myCart)
+            {
+                var cartProduct = products.FirstOrDefault(x => x.Id == cart.ProductId);
+                if (cartProduct != null)
                 {
-                    var cartProduct = products.Where(x => x.Id == cart.ProductId).FirstOrDefault();
-                    if (cartProduct != null)
-                    {
-                        cartProduct.CartFlag = true;
-                    }
+                    cartProduct.CartFlag = true;
                 }
             }
+        }
+        else
+        {
+            cartCount = 0; // Reset cart count if no items are in the cart
         }
     }
 

@@ -106,65 +106,39 @@ span {
     color: #6c757d;
 }
 
+/* Custom close button styling */
 .custom-close {
     background-color: transparent;
-    border: none; 
-    font-size: 1.5rem; 
-    color: #000; 
-    opacity: 1; 
-    cursor: pointer; 
-    padding: 0; 
-    outline: none; 
-    transition: color 0.3s ease, transform 0.3s ease; 
+    border: none;
+    font-size: 1.5rem;
+    color: #000;
+    opacity: 1;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
     .custom-close:hover {
-        color: #ff0000; 
-        transform: scale(1.2); 
+        color: #ff0000;
+        transform: scale(1.2);
     }
 
     .custom-close span {
-        font-weight: bold; 
-        display: block; 
-        line-height: 1; 
-        text-align: center; 
-        width: 100%; 
+        font-weight: bold;
+        display: block;
+        line-height: 1;
+        text-align: center;
+        width: 100%;
     }
 
+/* User info styling */
 .user-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: transparent;
 }
-
-.welcome-text {
-    margin: 0;
-    font-weight: bold;
-    color: gray; 
-    font-size: 16px;
-}
-
-.logout-button {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    background-color: transparent;
-    color: gray;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none; 
-}
-
-    .logout-button a {
-        color: white; 
-        text-decoration: none; 
-    }
-
-    .logout-button i {
-        margin-right: 8px; 
-    }
 
 .welcome-text {
     margin: 0;
@@ -195,6 +169,7 @@ span {
         margin-right: 8px;
     }
 
+/* Cart container and cart icon styling */
 .cart-container {
     display: flex;
     align-items: center;
@@ -206,35 +181,14 @@ span {
     position: relative;
     font-size: 26px;
     color: green;
-    margin-top:10px;
+    margin-top: 10px;
 }
 
 .cart-count {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
     position: absolute;
-    color: orange;
+    color: darkorange;
     min-width: 30px;
-    margin-top: 30px;
-}
-
-@media (max-width: 768px) {
-    .welcome-text {
-        font-size: 14px;
-    }
-
-    .logout-button {
-        font-size: 12px;
-        padding: 6px 12px;
-    }
-
-    .cart-link i {
-        font-size: 20px;
-    }
-
-    .cart-count {
-        font-size: 12px;
-        top: -3px;
-        right: -8px;
-    }
+    top: -20px;
 }
