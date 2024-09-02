@@ -1,5 +1,5 @@
 ﻿namespace WebShopApp_API.DTO;
-    public class UserRegisterDto
+    public class RegisterDto
     {
     [Required]
     public string Name { get; set; }

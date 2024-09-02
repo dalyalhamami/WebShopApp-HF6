@@ -12,7 +12,7 @@ public class UserController : ControllerBase
 
     // Create a new user
     [HttpPost("CreateUser")]
-    public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] UserRegisterDto registerDto)
+    public async Task<ActionResult<UserResponseDto>> CreateUser([FromBody] RegisterDto registerDto)
     {
         if (!ModelState.IsValid)
         {
@@ -157,7 +157,7 @@ public class UserController : ControllerBase
 
     // Login user
     [HttpPost("Login")]
-    public async Task<ActionResult<UserResponseDto>> Login([FromBody] UserLoginDto loginDto)
+    public async Task<ActionResult<UserResponseDto>> Login([FromBody] LoginDto loginDto)
     {
         var user = await webShopAppDBContext.User
             .Where(x => x.Email!.ToLower().Equals(loginDto.Email.ToLower()))
