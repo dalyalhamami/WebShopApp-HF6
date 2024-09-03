@@ -1,7 +1,187 @@
 ﻿@page "/mycart"
+@using WebShopApp_Maui.Services
+@using Microsoft.Maui.Storage;
+@using Newtonsoft.Json;
+@inject IWebShopAppService webShopAppService;
+@inject NavigationManager navManager;
 
-<h3>MyCart</h3>
+<div class="small-container cart-page">
+    @if (@myCart != null && @myCart.Count > 0)
+    {
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Remove</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+            @foreach (var cart in myCart)
+            {
+                <tr>
+                    <td>
+                        <div class="cart-info">
+                            <img src="@cart.ProductImage" alt="Product Photo" />
+                            <div>
+                                <p>@cart.ProductName</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><a @onclick="(() => RemoveFromCart_Click(cart))" style="cursor:pointer;">Remove</a></td>
+                    <td>$cart.Price</td>
+                    <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" style="width:60px;" /></td>
+                    <td>$@(cart.Price * cart.Quantity).00</td>
+                </tr>
+            }
+
+        </table>
+
+        <div class="total-price">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>
+                        $@subTotal.00
+                    </td>
+                </tr>
+                <tr>
+                    <td>Shipping Charges</td>
+                    <td>$@shippingCharges.00</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>$@finalTotal.00</td>
+                </tr>
+                <tr>
+                    <td>Shipping Address</td>
+                    <td>
+                        <textarea rows="3" cols="30" name="shippingaddress" placeholder="Shipping Address" @bind="shippingAddress">
+                            </textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Payment Mode</td>
+                    <td>
+                        @paymentMode
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="button" value="Checkout" class="btn btn-primary" @onclick="@Checkout_Click">Checkout</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-cart-image">
+            <img src="./Images/empty-cart.png" />
+        </div>
+    }
+</div>
 
 @code {
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
+    public List<CartModel> myCart { get; set; }
+    public string shippingAddress { get; set; }
+    public string paymentMode { get; set; }
+    public int subTotal { get; set; }
+    public int shippingCharges { get; set; }
+    public int finalTotal { get; set; }
+    private UserModel user;
 
+
+    protected override Task OnInitializedAsync()
+    {
+        shippingCharges = 50;
+        subTotal = 0;
+        paymentMode = "Cash on Delivery";
+
+        return base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var userJson = await SecureStorage.Default.GetAsync("User");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                user = JsonConvert.DeserializeObject<UserModel>(userJson);
+            }
+            StateHasChanged();
+
+            var cartJson = await SecureStorage.Default.GetAsync("myCart");
+            if (!string.IsNullOrEmpty(cartJson))
+            {
+                myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
+                foreach (var cartItem in myCart)
+                {
+                    subTotal = subTotal + (cartItem.Price * cartItem.Quantity);
+                }
+
+                if (myCart != null && myCart.Count > 0)
+                {
+                    shippingAddress = myCart.FirstOrDefault().ShippingAddress;
+                }
+            }
+
+            finalTotal = subTotal + shippingCharges;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RemoveFromCart_Click(CartModel cartItem)
+    {
+        myCart.Remove(cartItem);
+        await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
+        onQuantityChange();
+
+        await notify.InvokeAsync();
+    }
+
+    private void onQuantityChange()
+    {
+        finalTotal = 0;
+        subTotal = 0;
+        foreach (var cartItem in myCart)
+        {
+            subTotal = subTotal + (cartItem.Price * cartItem.Quantity);
+        }
+        finalTotal = subTotal + shippingCharges;
+    }
+
+    private async Task Checkout_Click()
+    {
+        if (myCart != null && myCart.Count > 0)
+        {
+            // Calculate total before updating cart items
+            finalTotal = subTotal + shippingCharges;
+            myCart.ForEach(item =>
+            {
+                item.ShippingAddress = shippingAddress;
+                item.ShippingCharges = shippingCharges;
+                item.SubTotal = subTotal;
+                item.Total = finalTotal;
+                item.PaymentMode = paymentMode;
+                item.UserId = user.Id;
+            });
+            await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
+            var result = await webShopAppService.Checkout(myCart);
+            if (result)
+            {
+                myCart.Clear(); 
+                await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
+                await notify.InvokeAsync();
+                navManager.NavigateTo("/myaccount");
+            }
+            else
+            {
+                Console.WriteLine("Checkout failed");
+            }
+        }
+    }
 }
