@@ -141,6 +141,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         products = await webShopAppService.GetProductsAsync();
+        await UpdateCartText(); // Ensure the cart status is reflected in the UI
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -189,7 +190,7 @@ else
     {
         showProductModal = false;
     }
-
+    
     private async Task AddToCart_Click(ProductModel productClicked)
     {
         if (!IsUserLoggedIn)
@@ -199,28 +200,20 @@ else
             return;
         }
         var cartJson = await SecureStorage.Default.GetAsync("myCart");
-        if (string.IsNullOrEmpty(cartJson))
-        {
-            myCart = new List<CartModel>();
-        }
-        else
-        {
-            myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
-        }
+        myCart = string.IsNullOrEmpty(cartJson) ? new List<CartModel>() : JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
 
         if (productClicked.CartFlag)
         {
-            var existing_product = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
-            if (existing_product != null)
+            var existingProduct = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
+            if (existingProduct != null)
             {
-                myCart.Remove(existing_product);
+                myCart.Remove(existingProduct);
                 cartCount--; // Decrement cart count
-                await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
             }
         }
         else
         {
-            CartModel cm = new CartModel
+            var cartItem = new CartModel
                 {
                     ProductId = productClicked.Id,
                     Quantity = 1,
@@ -229,14 +222,15 @@ else
                     ProductImage = productClicked.ImageUrl,
                     Price = Convert.ToInt32(productClicked.Price)
                 };
-            myCart.Add(cm);
+            myCart.Add(cartItem);
             cartCount++; // Increment cart count
-            await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
         }
 
-        await UpdateCartText();
-        await notify.InvokeAsync();
-        StateHasChanged();
+        // Save updated cart to secure storage
+        await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
+        await UpdateCartText(); // Ensure UI is updated
+        await notify.InvokeAsync(); // Notify any other components
+        StateHasChanged(); // Trigger UI refresh
     }
 
     private async Task UpdateCartText()
@@ -247,14 +241,16 @@ else
             myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
             cartCount = myCart.Count; // Ensure cart count is correct
 
+            // Reset CartFlag for all products
             foreach (var product in products)
             {
                 product.CartFlag = false;
             }
 
-            foreach (var cart in myCart)
+            // Set CartFlag to true for products that are in the cart
+            foreach (var cartItem in myCart)
             {
-                var cartProduct = products.FirstOrDefault(x => x.Id == cart.ProductId);
+                var cartProduct = products.FirstOrDefault(x => x.Id == cartItem.ProductId);
                 if (cartProduct != null)
                 {
                     cartProduct.CartFlag = true;
@@ -264,7 +260,13 @@ else
         else
         {
             cartCount = 0; // Reset cart count if no items are in the cart
+            foreach (var product in products)
+            {
+                product.CartFlag = false;
+            }
         }
+
+        StateHasChanged(); // Trigger UI refresh
     }
 
     private void CloseLoginPrompt()
