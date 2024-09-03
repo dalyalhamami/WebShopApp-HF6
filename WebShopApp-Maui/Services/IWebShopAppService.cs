@@ -23,4 +23,8 @@ public interface IWebShopAppService
     Task<ProductModel> UpdateProductAsync(ProductModel editedProduct);
     Task<bool> DeleteProductAsync(int productId);
 
+
+    //...................................................... Order .......................................................//
+
+    Task<bool> Checkout(List<CartModel> cartItems);
 }

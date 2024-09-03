@@ -355,5 +355,30 @@ public class WebShopAppService : IWebShopAppService
             return false; // Return false in case of errors
         }
     }
+
+    //...................................................... Order .......................................................//
+
+    public async Task<bool> Checkout(List<CartModel> cartItems)
+    {
+        try
+        {
+            var jsonContent = JsonContent.Create(cartItems);
+            var response = await httpClient.PostAsync($"api/Order/Checkout", jsonContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return false;
+        }
+    }
 }
 
