@@ -5,16 +5,16 @@
 @inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
-<div class="small-container cart-page">
+<div class="cart-container">
     @if (@myCart != null && @myCart.Count > 0)
     {
         <table>
             <tr>
                 <th>Product</th>
-                <th>Remove</th>
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Subtotal</th>
+                <th>Remove</th>
             </tr>
             @foreach (var cart in myCart)
             {
@@ -27,13 +27,12 @@
                             </div>
                         </div>
                     </td>
-                    <td><a @onclick="(() => RemoveFromCart_Click(cart))" style="cursor:pointer;">Remove</a></td>
-                    <td>$cart.Price</td>
+                    <td>$@cart.Price</td>
                     <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" style="width:60px;" /></td>
                     <td>$@(cart.Price * cart.Quantity).00</td>
+                    <td><a @onclick="(() => RemoveFromCart_Click(cart))"><i class="fa fa-trash"></i></a></td>
                 </tr>
             }
-
         </table>
 
         <div class="total-price">
@@ -55,8 +54,7 @@
                 <tr>
                     <td>Shipping Address</td>
                     <td>
-                        <textarea rows="3" cols="30" name="shippingaddress" placeholder="Shipping Address" @bind="shippingAddress">
-                            </textarea>
+                        <textarea rows="3" cols="30" name="shippingaddress" placeholder="Shipping Address" @bind="shippingAddress"></textarea>
                     </td>
                 </tr>
                 <tr>

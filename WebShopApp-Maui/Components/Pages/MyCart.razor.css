@@ -1,13 +1,8 @@
-﻿    .small-container {
-        max-width: 100%;
-        margin: auto;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .cart-page {
-        margin: 20px auto;
-    }
+﻿
+.cart-container {
+    max-width: 100%;
+    padding-right: 10px;
+}
 
     table {
         width: 100%;
@@ -38,47 +33,43 @@
         }
 
         td a {
-            color: #ff523b;
-            font-size: 12px;
+            font-size: 20px;
+            padding-left: 20px;
         }
 
+    .fa-trash {
+         color: #ff523b !important; 
+    }
         td img {
             width: 80px;
             height: 80px;
             margin-right: 10px;
         }
 
-    .total-price {
-        display: flex;
-        justify-content: flex-end;
+.total-price {
+
+    border-top: 3px solid #ff523b;
+    text-align: center;
+    width: 100%;
+    padding: 20px; 
+}
+
+    .total-price textarea {
+        width: 90%;
+        height: 50px;
     }
-
-        .total-price table {
-            border-top: 3px solid #ff523b;
-            width: 100%;
-            max-width: 100%;
-        }
-
-    td:last-child {
-        text-align: right;
-    }
-
-    th:last-child {
-        text-align: right;
-    }
-
 
     .empty-cart-image {
         text-align: center;
         width: 100%;
-        padding: 20px; /* Optional padding for better spacing */
+        padding: 20px; 
     }
 
         .empty-cart-image img {
-            width: 50%; /* Adjust the size of the image */
-            max-width: 200px; /* Ensure the image does not exceed a certain width */
-            height: auto; /* Maintain the aspect ratio */
-            margin: 0 auto; /* Center the image */
-            display: block; /* Ensure block-level display for margin auto to work */
+            width: 50%;
+            max-width: 200px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
         }
 
