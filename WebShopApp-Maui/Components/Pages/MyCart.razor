@@ -174,7 +174,7 @@
                 myCart.Clear(); 
                 await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
                 await notify.InvokeAsync();
-                navManager.NavigateTo("/myaccount");
+                navManager.NavigateTo("/user");
             }
             else
             {
