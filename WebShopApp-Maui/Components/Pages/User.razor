@@ -144,7 +144,6 @@ else
     public bool showAlertMessage = false;
     private PasswordModel passwordModel = new PasswordModel();
     private string confirmPassword;
-    private string alertMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -253,7 +252,7 @@ else
     {
         if (passwordModel.Password != confirmPassword)
         {
-            alertMessage = "Password & Confirm Password do not match";
+            Message = "Password & Confirm Password do not match";
             ToggleAlertMessage();
             return;
         }
@@ -269,16 +268,16 @@ else
             {
                 passwordModel = new PasswordModel();
                 confirmPassword = string.Empty;
-                alertMessage = "Password changed successfully";
+                Message = "Password changed successfully";
             }
             else
             {
-                alertMessage = await response.Content.ReadAsStringAsync(); // Read error message from the response
+                Message = await response.Content.ReadAsStringAsync(); // Read error message from the response
             }
         }
         catch (Exception ex)
         {
-            alertMessage = $"An error occurred: {ex.Message}";
+            Message = $"An error occurred: {ex.Message}";
         }
         ToggleAlertMessage();
     }
