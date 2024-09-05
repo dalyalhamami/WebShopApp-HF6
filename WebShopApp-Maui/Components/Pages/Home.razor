@@ -9,6 +9,14 @@
     @if (IsUserLoggedIn)
     {
         <p class="welcome-text">Welcome, @user.Name!</p>
+
+        @if (user.Roles == 1)
+        {
+            <button class="admin-button" @onclick="NavigateToAdminPanel">
+                <i class="fa fa-cog"></i> Admin
+            </button>
+        }
+
         <button class="logout-button" @onclick="@Logout">
             <i class="fa fa-sign-out"></i>Logout
         </button>
@@ -290,5 +298,10 @@ else
     private void Login()
     {
         navManager.NavigateTo("/login");
+    }
+
+    private void NavigateToAdminPanel()
+    {
+        navManager.NavigateTo("/admin");
     }
 }
