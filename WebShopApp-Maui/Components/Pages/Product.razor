@@ -1,5 +1,4 @@
-﻿@page "/product"
-@using WebShopApp_Maui.Services
+﻿@using WebShopApp_Maui.Services
 @using Microsoft.Maui.Storage;
 @using Newtonsoft.Json;
 @inject IWebShopAppService webShopAppService;
@@ -14,7 +13,7 @@
     else
     {
         <div class="card">
-            <h4 class="card-header"> Product</h4>
+            <h4 class="card-header">Add New Product</h4>
 
             <div class="card-body">
                 <EditForm Model="@productModel" OnValidSubmit="SaveProduct">
