@@ -116,13 +116,13 @@ else
     </div>
 }
 
-@if (showLoginPrompt)
+@if (showLoginModal)
 {
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Login Required</h5>
-                <button type="button" class="close custom-close" @onclick="CloseLoginPrompt">
+                <button type="button" class="close custom-close" @onclick="CloseLoginModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -131,7 +131,7 @@ else
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @onclick="ConfirmLogin">Yes, log in</button>
-                <button type="button" class="btn btn-secondary" @onclick="CloseLoginPrompt">Cancel</button>
+                <button type="button" class="btn btn-secondary" @onclick="CloseLoginModal">Cancel</button>
             </div>
         </div>
     </div>
@@ -146,11 +146,9 @@ else
     public bool cartFlag = false;
     public bool showProductModal = false;
     public ProductModel selectedProduct { get; set; }
-    private bool showLoginPrompt = false;
-
+    private bool showLoginModal = false;
     public List<CartModel> myCart { get; set; }
     public int cartCount = 0;
-
     public List<ProductModel> filteredProducts { get; set; } 
     public string searchTerm { get; set; } = string.Empty; 
 
@@ -212,7 +210,7 @@ else
     {
         if (!IsUserLoggedIn)
         {
-            showLoginPrompt = true;
+            showLoginModal = true;
             StateHasChanged();
             return;
         }
@@ -245,9 +243,9 @@ else
 
         // Save updated cart to secure storage
         await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
-        await UpdateCartText(); // Ensure UI is updated
-        await notify.InvokeAsync(); // Notify any other components
-        StateHasChanged(); // Trigger UI refresh
+        await UpdateCartText(); 
+        await notify.InvokeAsync(); 
+        StateHasChanged(); 
     }
 
     private async Task UpdateCartText()
@@ -286,15 +284,15 @@ else
         StateHasChanged(); // Trigger UI refresh
     }
 
-    private void CloseLoginPrompt()
+    private void CloseLoginModal()
     {
-        showLoginPrompt = false;
+        showLoginModal = false;
         StateHasChanged();
     }
 
     private void ConfirmLogin()
     {
-        showLoginPrompt = false;
+        showLoginModal = false;
         navManager.NavigateTo("/login");
     } 
 
@@ -320,6 +318,6 @@ else
         filteredProducts = products
             .Where(p => p.Name.ToLower().Contains(searchText))
             .ToList();
-        StateHasChanged(); // Refresh the UI
+        StateHasChanged(); 
     }
 }
