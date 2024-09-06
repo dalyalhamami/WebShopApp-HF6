@@ -27,4 +27,7 @@ public interface IWebShopAppService
     //...................................................... Order .......................................................//
 
     Task<bool> Checkout(List<CartModel> cartItems);
+    Task<List<UserOrderModel>> GetOrdersByUserId(int userId);
+    Task<List<CartModel>> GetOrderDetailForUser(int userId, string orderNumber);
+    Task<List<string>> GetShippingStatusForOrder(string orderNumber);
 }

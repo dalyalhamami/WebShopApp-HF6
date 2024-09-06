@@ -1,5 +1,4 @@
-﻿/* Admin Page Layout */
-.clearfix::after {
+﻿.clearfix::after {
     content: "";
     display: table;
     clear: both;
@@ -48,7 +47,6 @@
     margin-top: 20px;
 }
 
-/* Responsive Design */
 @media (min-width: 768px) {
     .column {
         width: 25%;

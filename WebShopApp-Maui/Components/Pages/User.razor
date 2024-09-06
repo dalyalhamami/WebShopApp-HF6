@@ -61,10 +61,41 @@
 
             @if (orderHistoryFlag)
             {
-                <p>Order History</p>
+                @if (userOrders == null || userOrders.Count == 0)
+                {
+                    <p>No orders found</p>
+                }
+                else
+                {
+                    <table class="table table-striped table-bordered bg-light">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Total</th>
+                                <th>Order Date</th>
+                                <th style="width:80px;">Track</th>
+                                <th style="width:80px;">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ord in userOrders)
+                            {
+                                <tr>
+                                    <td>@ord.OrderId</td>
+                                    <td>@ord.Total</td>
+                                    <td>@ord.CreatedOn</td>
+                                    <td>
+                                        <input type="button" class="btn btn-primary" value="Track" @onclick="(() => Track_Click(ord.OrderId))" />
+                                    </td>
+                                    <td>
+                                        <input type="button" class="btn btn-secondary" value="Detail" @onclick="(() => Detail_Click(ord.OrderId))" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
             }
-
-
 
             @if (showAlertMessage == true)
             {
@@ -124,6 +155,118 @@
                     </div>
                 </div>
             }
+
+            @if (showOrderDetail == true)
+            {
+                <div class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>Order Details </h5>
+                            <span class="close" @onclick="ToggleOrderDetailPopup">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            @if (myCart != null && myCart.Count > 0)
+                            {
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Quantity</th>
+                                                    <th>Prise</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var cart in myCart)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <div class="product-info">
+                                                                <div class="product-image">
+                                                                    <img src="@cart.ProductImage" alt="Product" />
+                                                                </div>
+                                                                <div class="product-details">
+                                                                    <p>@cart.ProductName</p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>@cart.Quantity</td>
+                                                        <td>$@(cart.Price * cart.Quantity).00</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <table class="summary-table">
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td>$@subTotal.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Charges</td>
+                                            <td>$@shippingCharges.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total</td>
+                                            <td>$@finalTotal.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping Address</td>
+                                            <td>@shippingAddress</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Payment Mode</td>
+                                            <td>@paymentMode</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>No items found in the order.</p>
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-secondary" value="Close" @onclick="ToggleOrderDetailPopup" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (showTrackOrder == true)
+            {
+                <div class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5>Track Order</h5>
+                            <span class="close" @onclick="ToggleTrackOrderPopup">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            @if (shippingStatuses != null && shippingStatuses.Count > 0)
+                            {
+                                <table>
+                                    <tbody>
+                                        @foreach (var status in shippingStatuses)
+                                        {
+                                            <tr>
+                                                <td>@status</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <span>No update on order shipping. Please check after some time.</span>
+                            }
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleTrackOrderPopup" />
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 }
@@ -133,17 +276,32 @@ else
 }
 
 @code {
+    // User Properties
     private UserModel user;
     private UserModel userToUpdate;
+    private PasswordModel passwordModel = new PasswordModel();
+    private string confirmPassword;
+    // Flags for UI Control
     private bool showEditPopup = false;
-    string Message = string.Empty;
+    public bool showAlertMessage = false;
+    public bool showTrackOrder = false;
+    public bool showOrderDetail = false;
+    // Page Menu and Navigation
     private string headerText = "MyAccount";
     private bool myAccountFlag = true;
     private bool changePasswordFlag = false;
     private bool orderHistoryFlag = false;
-    public bool showAlertMessage = false;
-    private PasswordModel passwordModel = new PasswordModel();
-    private string confirmPassword;
+    // Order Properties
+    private List<UserOrderModel> userOrders;
+    public int subTotal { get; set; }
+    public List<string> shippingStatuses { get; set; }
+    public int shippingCharges { get; set; }
+    public string shippingAddress { get; set; }
+    public string paymentMode { get; set; }
+    public int finalTotal { get; set; }
+    public List<CartModel> myCart { get; set; }
+    // Messages
+    string Message = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -194,10 +352,15 @@ else
                 myAccountFlag = false;
                 changePasswordFlag = false;
                 orderHistoryFlag = true;
-                // await GetOrderByUserID(user.Id);
+                await GetOrderByUserID(user.Id);
                 break;
         }
         StateHasChanged();
+    }
+
+    private async Task GetOrderByUserID(int userId)
+    {
+        userOrders = await webShopAppService.GetOrdersByUserId(userId) ?? new List<UserOrderModel>();
     }
 
     private void ToggleAlertMessage()
@@ -248,6 +411,16 @@ else
         showAlertMessage = showAlertMessage == true ? false : true;
     }
 
+      private void ToggleOrderDetailPopup()
+    {
+        showOrderDetail = showOrderDetail == true ? false : true;
+    }
+
+    private void ToggleTrackOrderPopup()
+    {
+        showTrackOrder = showTrackOrder == true ? false : true;
+    }
+
     private async Task ChangePassword_Click()
     {
         if (passwordModel.Password != confirmPassword)
@@ -294,5 +467,25 @@ else
             }
             return builder.ToString();
         }
+    }
+
+    private async Task Detail_Click(string orderNumber)
+    {
+        myCart = await webShopAppService.GetOrderDetailForUser(user.Id, orderNumber);
+        if (myCart != null && myCart.Count > 0)
+        {
+            subTotal = myCart.FirstOrDefault().SubTotal;
+            shippingCharges = myCart.FirstOrDefault().ShippingCharges;
+            finalTotal = myCart.FirstOrDefault().Total;
+            shippingAddress = myCart.FirstOrDefault().ShippingAddress;
+            paymentMode = myCart.FirstOrDefault().PaymentMode;
+        }
+        ToggleOrderDetailPopup();
+    }
+
+    private async Task Track_Click(string orderNumber)
+    {
+        shippingStatuses = await webShopAppService.GetShippingStatusForOrder(orderNumber);
+        ToggleTrackOrderPopup();
     }
 }

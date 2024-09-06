@@ -380,5 +380,30 @@ public class WebShopAppService : IWebShopAppService
             return false;
         }
     }
+
+    public async Task<List<UserOrderModel>> GetOrdersByUserId(int userId)
+    {
+        try
+        {
+            var userOrders = await httpClient.GetFromJsonAsync<List<UserOrderModel>>($"api/Order/GetOrdersByUserId?userId=" + userId);
+            return userOrders;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<List<CartModel>> GetOrderDetailForUser(int userId, string orderNumber)
+    {
+        return await httpClient.GetFromJsonAsync<List<CartModel>>($"api/Order/GetOrderDetailForUser?userId={userId}&orderNumber={orderNumber}");
+    }
+
+    public async Task<List<string>> GetShippingStatusForOrder(string orderNumber)
+    {
+        var statuses = await httpClient.GetFromJsonAsync<List<string>>($"api/Order/GetShippingStatusForOrder?orderNumber=" + orderNumber);
+        return statuses ?? new List<string>();
+    }
 }
 
