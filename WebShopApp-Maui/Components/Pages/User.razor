@@ -71,7 +71,6 @@
                         <thead>
                             <tr>
                                 <th>Order</th>
-                                <th>Total</th>
                                 <th>Order Date</th>
                                 <th style="width:80px;">Track</th>
                                 <th style="width:80px;">Details</th>
@@ -81,14 +80,17 @@
                             @foreach (var ord in userOrders)
                             {
                                 <tr>
-                                    <td>@ord.OrderId</td>
-                                    <td>@ord.Total</td>
-                                    <td>@ord.CreatedOn</td>
-                                    <td>
-                                        <input type="button" class="btn btn-primary" value="Track" @onclick="(() => Track_Click(ord.OrderId))" />
+                                    <td class="button-cell">@ord.OrderId</td>
+                                    <td class="button-cell">@ord.CreatedOn</td>
+                                    <td class="button-cell">
+                                        <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
+                                            <i class="fa fa-truck"></i>
+                                        </button>
                                     </td>
-                                    <td>
-                                        <input type="button" class="btn btn-secondary" value="Detail" @onclick="(() => Detail_Click(ord.OrderId))" />
+                                    <td class="button-cell">
+                                        <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
+                                            <i class="fa fa-info-circle"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -161,7 +163,7 @@
                 <div class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5>Order Details </h5>
+                            <h5>Order Details</h5>
                             <span class="close" @onclick="ToggleOrderDetailPopup">&times;</span>
                         </div>
                         <div class="modal-body">
@@ -172,16 +174,16 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Product</th>
-                                                    <th>Quantity</th>
-                                                    <th>Prise</th>
+                                                    <th class="button-cell">Product</th>
+                                                    <th class="button-cell">Quantity</th>
+                                                    <th class="button-cell">Prise</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach (var cart in myCart)
                                                 {
                                                     <tr>
-                                                        <td>
+                                                        <td class="button-cell">
                                                             <div class="product-info">
                                                                 <div class="product-image">
                                                                     <img src="@cart.ProductImage" alt="Product" />
@@ -191,8 +193,8 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td>@cart.Quantity</td>
-                                                        <td>$@(cart.Price * cart.Quantity).00</td>
+                                                        <td class="button-cell">@cart.Quantity</td>
+                                                        <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
                                                     </tr>
                                                 }
                                             </tbody>
@@ -200,24 +202,24 @@
                                     </div>
                                     <table class="summary-table">
                                         <tr>
-                                            <td>Subtotal</td>
-                                            <td>$@subTotal.00</td>
+                                            <td style="font-weight:bold;">Subtotal</td>
+                                            <td class="button-cell">$@subTotal.00</td>
                                         </tr>
                                         <tr>
-                                            <td>Shipping Charges</td>
-                                            <td>$@shippingCharges.00</td>
+                                            <td style="font-weight:bold;">Shipping Charges</td>
+                                            <td class="button-cell">$@shippingCharges.00</td>
                                         </tr>
                                         <tr>
-                                            <td>Total</td>
-                                            <td>$@finalTotal.00</td>
+                                            <td style="font-weight:bold;">Total</td>
+                                            <td class="button-cell">$@finalTotal.00</td>
                                         </tr>
                                         <tr>
-                                            <td>Shipping Address</td>
-                                            <td>@shippingAddress</td>
+                                            <td style="font-weight:bold;">Shipping Address</td>
+                                            <td class="button-cell">@shippingAddress</td>
                                         </tr>
                                         <tr>
-                                            <td>Payment Mode</td>
-                                            <td>@paymentMode</td>
+                                            <td style="font-weight:bold;">Payment Mode</td>
+                                            <td class="button-cell">@paymentMode</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -250,7 +252,9 @@
                                         @foreach (var status in shippingStatuses)
                                         {
                                             <tr>
-                                                <td>@status</td>
+                                                <td>
+                                                    <i class="fa fa-check-circle" style="color: green;"></i> @status
+                                                </td>
                                             </tr>
                                         }
                                     </tbody>

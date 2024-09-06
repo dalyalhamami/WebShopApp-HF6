@@ -33,7 +33,7 @@ public class OrderController : ControllerBase
                 ShippingCharges = detail.ShippingCharges,
                 SubTotal = detail.SubTotal,
                 Total = detail.Total,
-                ShippingStatus = "Pending",
+                ShippingStatus = "Order Received",
                 CreatedOn = DateTime.Now.ToString("dd/MM/yyyy"),
                 UpdatedOn = DateTime.Now.ToString("dd/MM/yyyy")
             };
