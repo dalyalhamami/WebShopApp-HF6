@@ -40,6 +40,21 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
+    // Get all users
+    public async Task<List<UserModel>> GetUsersAsync()
+    {
+        try
+        {
+            var users = await httpClient.GetFromJsonAsync<List<UserModel>>("api/User/GetUsers");
+            return users;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception occurred: {ex.Message}");
+            return null;
+        }
+    }
+
     // Update user
     public async Task<UserModel> UpdateUserAsync(UserModel editedUser)
     {
