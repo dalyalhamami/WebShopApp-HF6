@@ -321,3 +321,22 @@ span {
     }
 }
 
+.category-select {
+    width: 50%;
+    margin: 10px;
+}
+
+/* Custom styling to remove shadow or outline when clicked/focused */
+.custom-select {
+    box-shadow: none !important; /* Remove the box shadow */
+    outline: none !important; /* Remove the outline */
+    -webkit-appearance: none; /* Remove default appearance on webkit browsers */
+    -moz-appearance: none; /* Remove default appearance on firefox */
+    appearance: none; /* Remove default appearance on modern browsers */
+    border: 1px solid #ccc; /* Add a custom border to replace the shadow */
+}
+
+    .custom-select:focus {
+        outline: none !important; /* Ensure outline is removed on focus */
+        box-shadow: none !important; /* Ensure shadow is removed on focus */
+
