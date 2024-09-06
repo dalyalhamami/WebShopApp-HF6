@@ -36,11 +36,18 @@
     }
 </div>
 
-@if (products == null)
+<div class="search-container">
+    <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
+    <button type="button" class="search-button" @onclick="FilterProducts">
+        <i class="fa fa-search" aria-hidden="true"></i>
+    </button>
+</div>
+
+@if (filteredProducts == null)
 {
     <span>Loading...</span>
 }
-else if (products.Count == 0)
+else if (filteredProducts.Count == 0)
 {
     <span>No products available</span>
 }
@@ -49,7 +56,7 @@ else
     <div class="column content">
         <div class="container">
             <div class="row">
-                @foreach (var prod in products)
+                @foreach (var prod in filteredProducts)
                 {
                     <div class="col-md-4">
                         <div class="col-md-12 stuff">
@@ -80,8 +87,7 @@ else
 
 @if (showProductModal)
 {
-    <div class="modal show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog" role="document">
+    <div class="modal" tabindex="-1" role="dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">@selectedProduct.Name</h5>
@@ -107,7 +113,6 @@ else
                     }
                 </div>
             </div>
-        </div>
     </div>
 }
 
@@ -146,10 +151,14 @@ else
     public List<CartModel> myCart { get; set; }
     public int cartCount = 0;
 
+    public List<ProductModel> filteredProducts { get; set; } 
+    public string searchTerm { get; set; } = string.Empty; 
+
     protected override async Task OnInitializedAsync()
     {
         products = await webShopAppService.GetProductsAsync();
-        await UpdateCartText(); // Ensure the cart status is reflected in the UI
+        await UpdateCartText(); 
+        filteredProducts = products; // Initialize with all products
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -303,5 +312,14 @@ else
     private void NavigateToAdminPanel()
     {
         navManager.NavigateTo("/admin");
+    }
+
+    private void FilterProducts()
+    {
+        string searchText = searchTerm?.ToLower() ?? string.Empty;
+        filteredProducts = products
+            .Where(p => p.Name.ToLower().Contains(searchText))
+            .ToList();
+        StateHasChanged(); // Refresh the UI
     }
 }
