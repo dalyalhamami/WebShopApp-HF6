@@ -99,6 +99,7 @@ else
                     <img src="@selectedProduct.ImageUrl" style="width:100%; height:auto;" />
                     <p><strong>Price:</strong> $@selectedProduct.Price</p>
                     <p><strong>Stock:</strong> @selectedProduct.Stock</p>
+                    <p><strong>Category:</strong> @selectedProduct.CategoryName</p>
                     <p><strong>Description:</strong> @selectedProduct.Description</p>
                 </div>
                 <div class="modal-footer">
@@ -127,7 +128,7 @@ else
                 </button>
             </div>
             <div class="modal-body">
-                <p>You need to log in to add items to your cart. Do you want to log in now?</p>
+                <p>You need to login to add items to your cart. Do you want to log in now?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @onclick="ConfirmLogin">Yes, log in</button>
@@ -151,6 +152,8 @@ else
     public int cartCount = 0;
     public List<ProductModel> filteredProducts { get; set; } 
     public string searchTerm { get; set; } = string.Empty; 
+
+    public List<ProductModel> pc { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

@@ -294,14 +294,32 @@ public class WebShopAppService : IWebShopAppService
         }
     }
 
-    // Get all products
+    // Get all products with category
     public async Task<List<ProductModel>> GetProductsAsync()
     {
         try
         {
+            // Fetch products
             var response = await httpClient.GetAsync($"api/Product/GetProducts");
             response.EnsureSuccessStatusCode();
             var products = await response.Content.ReadFromJsonAsync<List<ProductModel>>();
+
+            // Fetch categories
+            var categories = await GetCategoriesAsync();
+
+            // Match products with their respective category names
+            if (products != null && categories != null)
+            {
+                foreach (var product in products)
+                {
+                    var category = categories.FirstOrDefault(c => c.Id == product.CategoryId);
+                    if (category != null)
+                    {
+                        product.CategoryName = category.Name;
+                    }
+                }
+            }
+
             return products;
         }
         catch (HttpRequestException httpEx)
