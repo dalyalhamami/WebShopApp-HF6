@@ -5,6 +5,83 @@
 @inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
+<style>
+
+    .cart-container {
+        max-width: 100%;
+        padding-right: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .cart-info {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    th {
+        text-align: left;
+        padding: 5px;
+        color: #ffffff;
+        background: #808080;
+        font-weight: normal;
+    }
+
+    td {
+        padding: 10px 5px;
+    }
+
+        td input {
+            width: 40px;
+            height: 30px;
+            padding: 5px;
+        }
+
+        td a {
+            font-size: 20px;
+            padding-left: 20px;
+        }
+
+    .fa-trash {
+        color: #ff523b !important;
+    }
+
+    td img {
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+    }
+
+    .total-price {
+        border-top: 3px solid #ff523b;
+        text-align: center;
+        width: 100%;
+        padding: 20px;
+    }
+
+        .total-price textarea {
+            width: 90%;
+            height: 50px;
+        }
+
+    .empty-cart-image {
+        text-align: center;
+        width: 100%;
+        padding: 20px;
+    }
+
+        .empty-cart-image img {
+            width: 50%;
+            max-width: 200px;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+        }
+</style>
+
 <div class="cart-container">
     @if (@myCart != null && @myCart.Count > 0)
     {

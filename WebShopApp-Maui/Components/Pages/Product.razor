@@ -5,7 +5,8 @@
 @inject NavigationManager navManager;
 
 <style>
-    .content {
+    .content
+    {
         padding: 10px;
     }
 
@@ -196,27 +197,28 @@
                             <ValidationMessage For="@(() => productModel.CategoryId)" />
                         </div>
                     </div>
-                    <br />
+
                     <div class="form-group row">
-                        <div class="form-group col-3">
+                        <div class="form-group col-6">
                             <label>Select Photo :</label>
-                            <label style="border:1px ridge #808080;">
+                            <label style="border:1px ridge #808080; display: block;">
                                 <InputFile OnChange="@OnInputFileChange" multiple></InputFile>
                             </label>
-
-                            <table style="border:1px ridge #808080;">
-                                <tr>
-                                    @foreach (var imgsrc in imageUrls)
-                                    {
-                                        <td>
-                                            <img src="@imgsrc">
-                                        </td>
-                                    }
-                                </tr>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table" style="border:1px ridge #808080; width: 100%;">
+                                    <tr>
+                                        @foreach (var imgsrc in imageUrls)
+                                        {
+                                            <td style="padding: 10px;">
+                                                <img src="@imgsrc" style="max-width: 100%; height: auto; border: 1px solid #ddd;">
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                    <br />
+
                     <div class="text-left">
                         <input type="submit" class="btn btn-primary" value="Save" />
                         <input type="button" class="btn btn-primary" value="Clear" @onclick="ClearForm" />
