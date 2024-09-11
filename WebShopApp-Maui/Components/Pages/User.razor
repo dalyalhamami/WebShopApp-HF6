@@ -1,4 +1,6 @@
 ﻿@using WebShopApp_Maui.Services
+@using Microsoft.Maui.Storage;
+@using Newtonsoft.Json;
 @inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
@@ -156,6 +158,24 @@
     }
 </div>
 
+@if (showAlertMessage)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Alert</h5>
+                <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+            </div>
+            <div class="modal-body">
+                @Message
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+            </div>
+        </div>
+    </div>
+}
+
 @if (showEditPopup)
 {
     <div class="modal">
@@ -283,6 +303,9 @@
     public bool showEditPopup = false;
     public bool showOrderDetailsPopup = false;
 
+    public bool showAlertMessage = false;
+    public string Message = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         await GetUsers();
@@ -305,14 +328,16 @@
         if (updatedUser != null)
         {
             ToggleEditPopup();
+            Message = "User Updated Successfully !!";
+            ToggleSuccessPopup();
             await GetUsers(); // Reload users after update
         }
         else
         {
             Console.WriteLine("Failed to update user role");
+            ToggleSuccessPopup();
         }
     }
-
 
     private async Task ViewUserOrderDetails(int userId)
     {
@@ -354,5 +379,10 @@
     private void ToggleOrderDetailsPopup()
     {
         showOrderDetailsPopup = !showOrderDetailsPopup;
+    }
+
+    private void ToggleSuccessPopup()
+    {
+        showAlertMessage = showAlertMessage == true ? false : true;
     }
 }
