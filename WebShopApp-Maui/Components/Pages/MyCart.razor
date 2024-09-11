@@ -6,53 +6,58 @@
 @inject NavigationManager navManager;
 
 <style>
-
-    .cart-container {
-        max-width: 100%;
-        padding-right: 10px;
+    .container {
+        max-width: 1200px;
+        background-color: transparent;
+        margin-top: 40px;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center; /* Center content within container */
     }
 
     table {
         width: 100%;
+        max-width: 600px; /* Limit the width for better alignment on mobile */
         border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto; /* Center the table */
+        text-align: left;
     }
 
     .cart-info {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center; /* Center items in the row */
     }
 
-    th {
-        text-align: left;
-        padding: 5px;
-        color: #ffffff;
-        background: #808080;
-        font-weight: normal;
-    }
-
-    td {
+    th, td {
         padding: 10px 5px;
+        text-align: center; /* Align all table data and headers to the center */
     }
 
-        td input {
-            width: 40px;
-            height: 30px;
-            padding: 5px;
-        }
-
-        td a {
-            font-size: 20px;
-            padding-left: 20px;
-        }
-
-    .fa-trash {
-        color: #ff523b !important;
+    .total-price {
+        border-top: 3px solid #ff523b;
+        text-align: center;
+        width: 100%;
+        padding: 20px;
     }
 
-    td img {
-        width: 80px;
-        height: 80px;
-        margin-right: 10px;
+    .empty-cart-image img {
+        width: 50%;
+        max-width: 200px;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+    }
+
+    /* Adjusting the image and input sizes directly for mobile use */
+    .cart-info img {
+        width: 60px; /* Smaller image size for mobile */
+        height: 60px;
+    }
+
+    td input {
+        width: 50px; /* Smaller input width for mobile */
     }
 
     .total-price {
@@ -63,7 +68,7 @@
     }
 
         .total-price textarea {
-            width: 90%;
+            width: 100%;
             height: 50px;
         }
 
@@ -82,80 +87,83 @@
         }
 </style>
 
-<div class="cart-container">
-    @if (@myCart != null && @myCart.Count > 0)
-    {
-        <table>
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-                <th>Remove</th>
-            </tr>
-            @foreach (var cart in myCart)
-            {
-                <tr>
-                    <td>
-                        <div class="cart-info">
-                            <img src="@cart.ProductImage" alt="Product Photo" />
-                            <div>
-                                <p>@cart.ProductName</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>$@cart.Price</td>
-                    <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" style="width:60px;" /></td>
-                    <td>$@(cart.Price * cart.Quantity).00</td>
-                    <td><a @onclick="(() => RemoveFromCart_Click(cart))"><i class="fa fa-trash"></i></a></td>
-                </tr>
-            }
-        </table>
-
-        <div class="total-price">
+<Header></Header>
+<div class="container">
+        @if (@myCart != null && @myCart.Count > 0)
+        {
             <table>
                 <tr>
-                    <td>Subtotal</td>
-                    <td>
-                        $@subTotal.00
-                    </td>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th>Remove</th>
                 </tr>
-                <tr>
-                    <td>Shipping Charges</td>
-                    <td>$@shippingCharges.00</td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td>$@finalTotal.00</td>
-                </tr>
-                <tr>
-                    <td>Shipping Address</td>
-                    <td>
-                        <textarea rows="3" cols="30" name="shippingaddress" placeholder="Shipping Address" @bind="shippingAddress"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Payment Mode</td>
-                    <td>
-                        @paymentMode
-                    </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <button type="button" value="Checkout" class="btn btn-primary" @onclick="@Checkout_Click">Checkout</button>
-                    </td>
-                </tr>
+                @foreach (var cart in myCart)
+                {
+                    <tr>
+                        <td>
+                            <div class="cart-info">
+                                <img src="@cart.ProductImage" alt="Product Photo" />
+                                <div>
+                                    <p>@cart.ProductName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>$@cart.Price</td>
+                        <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" style="width:60px;" /></td>
+                        <td>$@(cart.Price * cart.Quantity).00</td>
+                        <td><a @onclick="(() => RemoveFromCart_Click(cart))"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                }
             </table>
-        </div>
-    }
-    else
-    {
-        <div class="empty-cart-image">
-            <img src="./Images/empty-cart.png" />
-        </div>
-    }
+
+            <div class="total-price">
+                <table>
+                    <tr>
+                        <td>Subtotal</td>
+                        <td>
+                            $@subTotal.00
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Shipping Charges</td>
+                        <td>$@shippingCharges.00</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>$@finalTotal.00</td>
+                    </tr>
+                    <tr>
+                        <td>Shipping Address</td>
+                        <td>
+                            <textarea rows="3" cols="30" name="shippingaddress" placeholder="Shipping Address" @bind="shippingAddress"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Payment Mode</td>
+                        <td>
+                            @paymentMode
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type="button" value="Checkout" class="btn btn-primary" @onclick="@Checkout_Click">Checkout</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-cart-image">
+                <img src="./Images/empty-cart.png" />
+            </div>
+        }
 </div>
+
+
 
 @code {
     [CascadingParameter]

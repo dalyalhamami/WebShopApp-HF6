@@ -6,14 +6,11 @@
 @inject NavigationManager navManager;
 
 <style>
-    /* Container styling */
+
 .container {
-    margin: 20px auto;
-    padding: 20px;
     max-width: 1200px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: transparent;
+    margin-top: 35px;
 }
 
 /* Row styling for product grid */
@@ -44,7 +41,7 @@
 
 /* Product name button styling */
 button.btn {
-    background-color: #17a2b8;
+    background-color: olive;
     color: #ffffff;
     border: none;
     padding: 10px;
@@ -146,37 +143,25 @@ span {
     justify-content: space-between;
     align-items: center;
     background-color: transparent;
+    padding-top: 10px;
 }
 
 .welcome-text {
     margin: 0;
     font-weight: bold;
-    color: #333;
+    color: dimgray;
     font-size: 16px;
     flex: 1;
     white-space: nowrap;
+    font-family: Arial, sans-serif;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.logout-button {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    background-color: transparent;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-    .logout-button i {
-        margin-right: 8px;
+    .product-container {
+        max-width: 1200px;
+        background-color: transparent;
     }
-
 /* Cart container and cart icon styling */
 .cart-container {
     display: flex;
@@ -268,7 +253,7 @@ span {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    max-width:1200px;
     padding: 10px;
     margin-bottom: -15px;
 }
@@ -282,6 +267,7 @@ span {
     background-color: white; 
     color: black;
     height: 42px;
+    max-width: 1200px;
     outline: none;
     box-shadow: none; 
 }
@@ -356,68 +342,59 @@ span {
 
 </style>
 
-<div class="user-info">
-    @if (IsUserLoggedIn)
-    {
-        <p class="welcome-text">Welcome, @user.Name!</p>
-
-        @if (user.Roles == 1)
+<Header></Header>
+<div class="container">
+    <div class="user-info">
+        @if (IsUserLoggedIn)
         {
-            <button class="admin-button" @onclick="NavigateToAdminPanel">
-                <i class="fa fa-cog"></i> Admin
-            </button>
+            <p class="welcome-text">Welcome, @user.Name!</p>
+
+            <div class="cart-container">
+                <a href="/mycart" class="cart-link">
+                    <i class="fa fa-shopping-cart">
+                        <span class="cart-count"><sup>@cartCount</sup></span>
+                    </i>
+                </a>
+            </div>
         }
+        else
+        {
+            <p class="welcome-text">Welcome</p>
+        }
+    </div>
+</div>
 
-        <button class="logout-button" @onclick="@Logout">
-            <i class="fa fa-sign-out"></i>Logout
+
+    <div class="search-container">
+        <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
+        <button type="button" class="search-button" @onclick="FilterProducts">
+            <i class="fa fa-search" aria-hidden="true"></i>
         </button>
+    </div>
 
-        <div class="cart-container">
-            <a href="/mycart" class="cart-link">
-                <i class="fa fa-shopping-cart">
-                    <span class="cart-count"><sup>@cartCount</sup></span>
-                </i>
-            </a>
-        </div>
-    }
-    else
-    {
-        <p class="welcome-text">Welcome</p>
-        <button class="logout-button" @onclick="@Login"><i class="fa fa-sign-in"></i>Login</button>
-    }
-</div>
-
-<div class="search-container">
-    <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
-    <button type="button" class="search-button" @onclick="FilterProducts">
-        <i class="fa fa-search" aria-hidden="true"></i>
-    </button>
-</div>
-
-<div class="filter-container">
-    <!-- Category Filter -->
-<div class="form-group filter-select">
-    @if (categories != null)
-    {
-        <select class="form-control custom-select" @onchange="@CategoryClicked">
-                <option value="0">Category</option>
-            @foreach (var cat in categories)
+    <div class="filter-container">
+        <!-- Category Filter -->
+        <div class="form-group filter-select">
+            @if (categories != null)
             {
-                <option value="@cat.Id">@cat.Name</option>
+                <select class="form-control custom-select" @onchange="@CategoryClicked">
+                    <option value="0">Category</option>
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat.Id">@cat.Name</option>
+                    }
+                </select>
             }
-        </select>
-    }
-</div>
-    <!-- Price Filter -->
-<div class="form-group filter-select">
-    <select class="form-control custom-select" @onchange="@SortByPrice">
-        <option value="0">Price</option>
-        <option value="1">Low - High</option>
-        <option value="2">High - Low</option>
-    </select>
-</div>
-</div>
-
+        </div>
+        <!-- Price Filter -->
+        <div class="form-group filter-select">
+            <select class="form-control custom-select" @onchange="@SortByPrice">
+                <option value="0">Price</option>
+                <option value="1">Low - High</option>
+                <option value="2">High - Low</option>
+            </select>
+        </div>
+    </div>
 
 @if (filteredProducts == null)
 {
@@ -429,8 +406,7 @@ else if (filteredProducts.Count == 0)
 }
 else
 {
-    <div class="column content">
-        <div class="container">
+        <div class="product-container" >
             <div class="row">
                 @foreach (var prod in filteredProducts)
                 {
@@ -458,7 +434,6 @@ else
                 }
             </div>
         </div>
-    </div>
 }
 
 @if (showProductModal)
@@ -676,22 +651,6 @@ else
         showLoginModal = false;
         navManager.NavigateTo("/login");
     } 
-
-    private void Logout()
-    {
-        SecureStorage.RemoveAll();
-        navManager.NavigateTo("/login");
-    }
-
-    private void Login()
-    {
-        navManager.NavigateTo("/login");
-    }
-
-    private void NavigateToAdminPanel()
-    {
-        navManager.NavigateTo("/admin");
-    }
 
     private void CategoryClicked(ChangeEventArgs e)
     {

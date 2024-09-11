@@ -2,6 +2,12 @@
 @inject NavigationManager navManager;
 
 <style>
+    .container {
+        max-width: 1200px;
+        background-color: transparent;
+        margin-top: 40px;
+    }
+
     .clearfix::after {
     content: "";
     display: table;
@@ -105,42 +111,43 @@ h4 {
 }
 </style>
 
-<h3>Admin Panel</h3>
+<Header></Header>
 
-<div class="clearfix">
-    <div class="column menu">
-        <div class="vertical-menu">
-            <a class="@(productFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Products"))'>Manage Products</a>
-            <a class="@(categoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Categories"))'>Manage Categories</a>
-            <a class="@(usersFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Users"))'>Manage Users</a>
+<div class="container">
+    <div class="clearfix">
+        <div class="column menu">
+            <div class="vertical-menu">
+                <a class="@(productFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Products"))'>Manage Products</a>
+                <a class="@(categoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Categories"))'>Manage Categories</a>
+                <a class="@(usersFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Users"))'>Manage Users</a>
+            </div>
+        </div>
+
+        <div class="column content">
+
+            @if (productFlag)
+            {
+                <div>
+                    <Product />
+                </div>
+            }
+
+            @if (categoryFlag)
+            {
+                <div>
+                    <Category />
+                </div>
+            }
+
+            @if (usersFlag)
+            {
+                <div>
+                    <User />
+                </div>
+            }
         </div>
     </div>
-
-    <div class="column content">
-
-        @if (productFlag)
-        {
-            <div>
-                <Product />
-            </div>
-        }
-
-        @if (categoryFlag)
-        {
-            <div>
-               <Category />
-            </div>
-        }
-
-        @if (usersFlag)
-        {
-            <div>
-                <User />
-            </div>
-        }
-    </div>
 </div>
-
 
 
 @code {

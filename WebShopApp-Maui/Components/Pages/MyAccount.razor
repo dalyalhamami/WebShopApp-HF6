@@ -6,7 +6,11 @@
 @inject NavigationManager navManager;
 
 <style>
-    /* Mobile-first styles */
+    .container {
+        max-width: 1200px;
+        background-color: transparent;
+        margin-top: 50px;
+    }
 
     /* Layout adjustments */
     .clearfix::after {
@@ -214,279 +218,284 @@
     }
 </style>
 
-@if (user != null)
-{
-    <div class="clearfix">
-        <div class="column menu">
-            <div class="vertical-menu">
-                <a class="@(myAccountFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>My Account</a>
-                <a class="@(changePasswordFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Change Password</a>
-                <a class="@(orderHistoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Order History</a>
+<Header></Header>
+
+<div class="container">
+    @if (user != null)
+    {
+        <div class="clearfix">
+            <div class="column menu">
+                <div class="vertical-menu">
+                    <a class="@(myAccountFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>My Account</a>
+                    <a class="@(changePasswordFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Change Password</a>
+                    <a class="@(orderHistoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Order History</a>
+                </div>
             </div>
-        </div>
-        <div class="column content">
-            <div>
-                <h4>@headerText</h4>
-            </div>
-            <br />
-            @if (myAccountFlag)
-            {
+            <div class="column content">
                 <div>
-                    <p><strong>Name:</strong> @user.Name</p>
-                    <p><strong>Email:</strong> @user.Email</p>
-                    <p><strong>Mobile:</strong> @user.Mobile</p>
-                    <p><strong>Address:</strong> @user.Address</p>
-                    <button class="btn btn-primary" @onclick="() => EditButtonClick(user)">Edit</button>
+                    <h4>@headerText</h4>
                 </div>
-            }
-
-            @if (changePasswordFlag)
-            {
-                <div class="form-group">
-                    <EditForm Model="@passwordModel" OnValidSubmit="ChangePassword_Click">
-                        <DataAnnotationsValidator />
-                        <div class="form-group">
-                            <label>Old Password:</label>
-                            <InputText type="password" class="form-control" id="oldpwd" @bind-Value="passwordModel.OldPassword" autocomplete="off"></InputText>
-                            <ValidationMessage For="@(() => passwordModel.OldPassword)"></ValidationMessage>
-                        </div>
-                        <div class="form-group">
-                            <label>New Password:</label>
-                            <InputText type="password" class="form-control" id="newpwd" @bind-Value="passwordModel.Password" autocomplete="off"></InputText>
-                            <ValidationMessage For="@(() => passwordModel.Password)"></ValidationMessage>
-                        </div>
-                        <div class="form-group">
-                            <label>Confirm Password:</label>
-                            <InputText type="password" class="form-control" id="confirmpwd" @bind-Value="confirmPassword" autocomplete="off"></InputText>
-                            <ValidationMessage For="@(() => confirmPassword)"></ValidationMessage>
-                        </div>
-                        <br />
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </EditForm>
-                </div>
-            }
-
-            @if (orderHistoryFlag)
-            {
-                @if (userOrders == null || userOrders.Count == 0)
+                <br />
+                @if (myAccountFlag)
                 {
-                    <p>No orders found</p>
+                    <div>
+                        <p><strong>Name:</strong> @user.Name</p>
+                        <p><strong>Email:</strong> @user.Email</p>
+                        <p><strong>Mobile:</strong> @user.Mobile</p>
+                        <p><strong>Address:</strong> @user.Address</p>
+                        <button class="btn btn-primary" @onclick="() => EditButtonClick(user)">Edit</button>
+                    </div>
                 }
-                else
+
+                @if (changePasswordFlag)
                 {
-                    <table class="table table-striped table-bordered bg-light">
-                        <thead>
-                            <tr>
-                                <th>Order</th>
-                                <th>Order Date</th>
-                                <th style="width:80px;">Track</th>
-                                <th style="width:80px;">Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var ord in userOrders)
-                            {
+                    <div class="form-group">
+                        <EditForm Model="@passwordModel" OnValidSubmit="ChangePassword_Click">
+                            <DataAnnotationsValidator />
+                            <div class="form-group">
+                                <label>Old Password:</label>
+                                <InputText type="password" class="form-control" id="oldpwd" @bind-Value="passwordModel.OldPassword" autocomplete="off"></InputText>
+                                <ValidationMessage For="@(() => passwordModel.OldPassword)"></ValidationMessage>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password:</label>
+                                <InputText type="password" class="form-control" id="newpwd" @bind-Value="passwordModel.Password" autocomplete="off"></InputText>
+                                <ValidationMessage For="@(() => passwordModel.Password)"></ValidationMessage>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password:</label>
+                                <InputText type="password" class="form-control" id="confirmpwd" @bind-Value="confirmPassword" autocomplete="off"></InputText>
+                                <ValidationMessage For="@(() => confirmPassword)"></ValidationMessage>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                }
+
+                @if (orderHistoryFlag)
+                {
+                    @if (userOrders == null || userOrders.Count == 0)
+                    {
+                        <p>No orders found</p>
+                    }
+                    else
+                    {
+                        <table class="table table-striped table-bordered bg-light">
+                            <thead>
                                 <tr>
-                                    <td class="button-cell">@ord.OrderId</td>
-                                    <td class="button-cell">@ord.CreatedOn</td>
-                                    <td class="button-cell">
-                                        <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
-                                            <i class="fa fa-truck"></i>
-                                        </button>
-                                    </td>
-                                    <td class="button-cell">
-                                        <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
-                                            <i class="fa fa-info-circle"></i>
-                                        </button>
-                                    </td>
+                                    <th>Order</th>
+                                    <th>Order Date</th>
+                                    <th style="width:80px;">Track</th>
+                                    <th style="width:80px;">Details</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var ord in userOrders)
+                                {
+                                    <tr>
+                                        <td class="button-cell">@ord.OrderId</td>
+                                        <td class="button-cell">@ord.CreatedOn</td>
+                                        <td class="button-cell">
+                                            <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
+                                                <i class="fa fa-truck"></i>
+                                            </button>
+                                        </td>
+                                        <td class="button-cell">
+                                            <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
+                                                <i class="fa fa-info-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
                 }
-            }
 
-            @if (showAlertMessage == true)
-            {
-                <div class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            @Message
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+                @if (showAlertMessage == true)
+                {
+                    <div class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                @Message
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
 
-            @if (showEditPopup == true)
-            {
-                <div class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5>Edit User</h5>
-                            <span class="close" @onclick="ToggleEditPopup">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            <EditForm Model="@userToUpdate" OnValidSubmit="UpdateUser">
-                                <DataAnnotationsValidator />
-                                <div class="form-group">
-                                    <label>Name:</label>
-                                    <InputText @bind-Value="userToUpdate.Name" class="form-control" />
-                                    <ValidationMessage For="@(() => userToUpdate.Name)" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Email:</label>
-                                    <InputText @bind-Value="userToUpdate.Email" class="form-control" />
-                                    <ValidationMessage For="@(() => userToUpdate.Email)" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Mobile:</label>
-                                    <InputText @bind-Value="userToUpdate.Mobile" class="form-control" />
-                                    <ValidationMessage For="@(() => userToUpdate.Mobile)" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Address:</label>
-                                    <InputText @bind-Value="userToUpdate.Address" class="form-control" />
-                                    <ValidationMessage For="@(() => userToUpdate.Address)" />
-                                </div>
-                                <br />
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                    <button type="button" class="btn btn-secondary" @onclick="ToggleEditPopup">Cancel</button>
-                                </div>
-                            </EditForm>
+                @if (showEditPopup == true)
+                {
+                    <div class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Edit User</h5>
+                                <span class="close" @onclick="ToggleEditPopup">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                <EditForm Model="@userToUpdate" OnValidSubmit="UpdateUser">
+                                    <DataAnnotationsValidator />
+                                    <div class="form-group">
+                                        <label>Name:</label>
+                                        <InputText @bind-Value="userToUpdate.Name" class="form-control" />
+                                        <ValidationMessage For="@(() => userToUpdate.Name)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email:</label>
+                                        <InputText @bind-Value="userToUpdate.Email" class="form-control" />
+                                        <ValidationMessage For="@(() => userToUpdate.Email)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mobile:</label>
+                                        <InputText @bind-Value="userToUpdate.Mobile" class="form-control" />
+                                        <ValidationMessage For="@(() => userToUpdate.Mobile)" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address:</label>
+                                        <InputText @bind-Value="userToUpdate.Address" class="form-control" />
+                                        <ValidationMessage For="@(() => userToUpdate.Address)" />
+                                    </div>
+                                    <br />
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-secondary" @onclick="ToggleEditPopup">Cancel</button>
+                                    </div>
+                                </EditForm>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
 
-            @if (showOrderDetail == true)
-            {
-                <div class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5>Order Details</h5>
-                            <span class="close" @onclick="ToggleOrderDetailPopup">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            @if (myCart != null && myCart.Count > 0)
-                            {
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th class="button-cell">Product</th>
-                                                    <th class="button-cell">Quantity</th>
-                                                    <th class="button-cell">Prise</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var cart in myCart)
-                                                {
+                @if (showOrderDetail == true)
+                {
+                    <div class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Order Details</h5>
+                                <span class="close" @onclick="ToggleOrderDetailPopup">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                @if (myCart != null && myCart.Count > 0)
+                                {
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
                                                     <tr>
-                                                        <td class="button-cell">
-                                                            <div class="product-info">
-                                                                <div class="product-image">
-                                                                    <img src="@cart.ProductImage" alt="Product" />
-                                                                </div>
-                                                                <div class="product-details">
-                                                                    <p>@cart.ProductName</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="button-cell">@cart.Quantity</td>
-                                                        <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
+                                                        <th class="button-cell">Product</th>
+                                                        <th class="button-cell">Quantity</th>
+                                                        <th class="button-cell">Prise</th>
                                                     </tr>
-                                                }
-                                            </tbody>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var cart in myCart)
+                                                    {
+                                                        <tr>
+                                                            <td class="button-cell">
+                                                                <div class="product-info">
+                                                                    <div class="product-image">
+                                                                        <img src="@cart.ProductImage" alt="Product" />
+                                                                    </div>
+                                                                    <div class="product-details">
+                                                                        <p>@cart.ProductName</p>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="button-cell">@cart.Quantity</td>
+                                                            <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <table class="summary-table">
+                                            <tr>
+                                                <td style="font-weight:bold;">Subtotal</td>
+                                                <td class="button-cell">$@subTotal.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Shipping Charges</td>
+                                                <td class="button-cell">$@shippingCharges.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Total</td>
+                                                <td class="button-cell">$@finalTotal.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Shipping Address</td>
+                                                <td class="button-cell">@shippingAddress</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Payment Mode</td>
+                                                <td class="button-cell">@paymentMode</td>
+                                            </tr>
                                         </table>
                                     </div>
-                                    <table class="summary-table">
-                                        <tr>
-                                            <td style="font-weight:bold;">Subtotal</td>
-                                            <td class="button-cell">$@subTotal.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight:bold;">Shipping Charges</td>
-                                            <td class="button-cell">$@shippingCharges.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight:bold;">Total</td>
-                                            <td class="button-cell">$@finalTotal.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight:bold;">Shipping Address</td>
-                                            <td class="button-cell">@shippingAddress</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight:bold;">Payment Mode</td>
-                                            <td class="button-cell">@paymentMode</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            }
-                            else
-                            {
-                                <p>No items found in the order.</p>
-                            }
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-secondary" value="Close" @onclick="ToggleOrderDetailPopup" />
+                                }
+                                else
+                                {
+                                    <p>No items found in the order.</p>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-secondary" value="Close" @onclick="ToggleOrderDetailPopup" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
 
-            @if (showTrackOrder == true)
-            {
-                <div class="modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5>Track Order</h5>
-                            <span class="close" @onclick="ToggleTrackOrderPopup">&times;</span>
-                        </div>
-                        <div class="modal-body">
-                            @if (shippingStatuses != null && shippingStatuses.Count > 0)
-                            {
-                                <table>
-                                    <tbody>
-                                        @foreach (var status in shippingStatuses)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <i class="fa fa-check-circle" style="color: green;"></i> @status
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            }
-                            else
-                            {
-                                <span>No update on order shipping. Please check after some time.</span>
-                            }
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleTrackOrderPopup" />
+                @if (showTrackOrder == true)
+                {
+                    <div class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Track Order</h5>
+                                <span class="close" @onclick="ToggleTrackOrderPopup">&times;</span>
+                            </div>
+                            <div class="modal-body">
+                                @if (shippingStatuses != null && shippingStatuses.Count > 0)
+                                {
+                                    <table>
+                                        <tbody>
+                                            @foreach (var status in shippingStatuses)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <i class="fa fa-check-circle" style="color: green;"></i> @status
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <span>No update on order shipping. Please check after some time.</span>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleTrackOrderPopup" />
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
-    </div>
-}
-else
-{
-    <p>No user data found. Please <a href="/login">login</a>.</p>
-}
+    }
+    else
+    {
+        <p>No user data found. Please <a href="/login">login</a>.</p>
+    }
+</div>
+
 
 @code {
     // User Properties

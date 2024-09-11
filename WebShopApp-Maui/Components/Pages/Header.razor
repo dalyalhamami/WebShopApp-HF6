@@ -1,0 +1,124 @@
+﻿@using WebShopApp_Maui.Services
+@using Microsoft.Maui.Storage;
+@using Newtonsoft.Json;
+@inject IWebShopAppService webShopAppService;
+@inject NavigationManager navManager;
+    
+<style>
+    .header {
+        background-color: #f8f9fa;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        position: fixed; 
+        top: 0; 
+        left: 0;
+        width: 100%; 
+        z-index: 1000; 
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: gray;
+    }
+
+    .header-button {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        background-color: transparent;
+        color: dimgray;
+        border: none;
+        cursor: pointer;
+        margin-right: 5px;
+        font-size: 16px;
+        white-space: nowrap;
+        font-family: Arial, sans-serif;
+    }
+
+        .header-button i {
+            margin-right: 8px;
+        }
+ </style>
+
+
+<div class="header">
+    <nav class="navbar">
+
+        <button class="header-button" @onclick="@HomeClick">
+            <i class="fa fa-home"></i>
+        </button>
+
+        <button class="header-button" @onclick="@MyAccountClick">
+            <i class="fa fa-user"></i>
+        </button>
+
+        @if (!IsUserLoggedIn)
+        {
+            <button class="header-button" @onclick="@LoginClick">
+                <i class="fa fa-sign-in"></i>Login
+            </button>
+        }
+        else
+        {
+            <button class="header-button" @onclick="@LogoutClick">
+                <i class="fa fa-sign-out"></i>Logout
+            </button>
+            @if (user.Roles == 1)
+            {
+                <button class="header-button" @onclick="@AdminClick">
+                    <i class="fa fa-cog"/>Admin
+                </button>
+            }
+        }
+    </nav>
+</div>
+
+@code {
+    public bool IsUserLoggedIn = false;
+    private UserModel user;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var userJson = await SecureStorage.Default.GetAsync("User");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                user = JsonConvert.DeserializeObject<UserModel>(userJson);
+                IsUserLoggedIn = true;
+                StateHasChanged();
+            }
+            else
+            {
+                navManager.NavigateTo("/");
+            }
+        }
+    }
+
+    private void HomeClick()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void MyAccountClick()
+    {
+        navManager.NavigateTo("/myaccount");
+    }
+
+    private void LoginClick()
+    {
+        navManager.NavigateTo("/login");
+    }
+
+    private void LogoutClick()
+    {
+        SecureStorage.RemoveAll();
+        navManager.NavigateTo("/login");
+    }
+
+    private void AdminClick()
+    {
+        navManager.NavigateTo("/admin");
+    }
+}
