@@ -1,7 +1,5 @@
-﻿@using WebShopApp_Maui.Services
-@using Microsoft.Maui.Storage;
+﻿@using Microsoft.Maui.Storage;
 @using Newtonsoft.Json;
-@inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
     
 <style>
@@ -12,14 +10,19 @@
         top: 0; 
         left: 0;
         width: 100%; 
-        z-index: 1000; 
+        height: 55px;
+        z-index: 1000;
     }
 
     .navbar {
         display: flex;
-        justify-content: center;
+        justify-content: space-between; 
         align-items: center;
-        color: gray;
+    }
+
+    .navbar-left, .navbar-right {
+        display: flex;
+        align-items: center;
     }
 
     .header-button {
@@ -36,41 +39,46 @@
         font-family: Arial, sans-serif;
     }
 
-        .header-button i {
-            margin-right: 8px;
-        }
- </style>
-
+    .header-button i {
+        margin-right: 8px;
+    }
+</style>
 
 <div class="header">
     <nav class="navbar">
-
-        <button class="header-button" @onclick="@HomeClick">
-            <i class="fa fa-home"></i>
-        </button>
-
-        <button class="header-button" @onclick="@MyAccountClick">
-            <i class="fa fa-user"></i>
-        </button>
-
-        @if (!IsUserLoggedIn)
-        {
-            <button class="header-button" @onclick="@LoginClick">
-                <i class="fa fa-sign-in"></i>Login
+        <!-- Left section -->
+        <div class="navbar-left">
+            <button class="header-button" @onclick="@HomeClick">
+                <i class="fa fa-home"></i>
             </button>
-        }
-        else
-        {
-            <button class="header-button" @onclick="@LogoutClick">
-                <i class="fa fa-sign-out"></i>Logout
+
+            <button class="header-button" @onclick="@MyAccountClick">
+                <i class="fa fa-user"></i> 
             </button>
-            @if (user.Roles == 1)
+        </div>
+
+        <!-- Right section -->
+        <div class="navbar-right">
+            @if (!IsUserLoggedIn)
             {
-                <button class="header-button" @onclick="@AdminClick">
-                    <i class="fa fa-cog"/>Admin
+                <button class="header-button" @onclick="@LoginClick">
+                    <i class="fa fa-sign-in"></i>Login
                 </button>
             }
-        }
+            else
+            {
+                @if (user?.Roles == 1)
+                {
+                    <button class="header-button" @onclick="@AdminClick">
+                        <i class="fa fa-cog"></i>Admin
+                    </button>
+                }
+
+                <button class="header-button" @onclick="@LogoutClick">
+                    <i class="fa fa-sign-out"></i>Logout
+                </button>         
+            }
+        </div>
     </nav>
 </div>
 
