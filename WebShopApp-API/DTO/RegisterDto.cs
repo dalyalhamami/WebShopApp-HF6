@@ -1,21 +1,10 @@
 ﻿namespace WebShopApp_API.DTO;
     public class RegisterDto
     {
-    [Required]
     public string Name { get; set; }
-
-    [Required]
-    [EmailAddress]
     public string Email { get; set; }
-
-    [Required]
-    [MinLength(6)]
-    public string Password { get; set; }
-    
-    [Required]
+    public string Password { get; set; }    
     public string Mobile { get; set; }
- 
-    [Required]
     public string Address { get; set; }
 }
 

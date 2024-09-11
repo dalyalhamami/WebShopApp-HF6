@@ -133,6 +133,8 @@ public class UserController : ControllerBase
         if (userUpdate.Address != null)
             existingUser.Address = userUpdate.Address;
 
+        if (userUpdate.Roles != null)
+            existingUser.Roles = userUpdate.Roles;
         try
         {
             await webShopAppDBContext.SaveChangesAsync();

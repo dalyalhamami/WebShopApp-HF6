@@ -169,19 +169,19 @@
                     <DataAnnotationsValidator />
                     <div class="form-group">
                         <label>Name :</label>
-                        <InputText @bind-Value="userToEdit.Name" class="form-control" readonly="true" />
+                        <InputText @bind-Value="userToEdit.Name" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Email :</label>
-                        <InputText @bind-Value="userToEdit.Email" class="form-control" readonly="true" />
+                        <InputText @bind-Value="userToEdit.Email" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Mobile :</label>
-                        <InputText @bind-Value="userToEdit.Mobile" class="form-control" readonly="true" />
+                        <InputText @bind-Value="userToEdit.Mobile" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Address :</label>
-                        <InputText @bind-Value="userToEdit.Address" class="form-control" readonly="true" />
+                        <InputText @bind-Value="userToEdit.Address" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label>Role :</label>
@@ -309,7 +309,6 @@
         }
         else
         {
-            // Handle failure
             Console.WriteLine("Failed to update user role");
         }
     }
