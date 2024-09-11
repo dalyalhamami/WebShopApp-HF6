@@ -81,6 +81,31 @@
     div {
         margin-top: 20px;
     }
+
+    /* New style for the registration link */
+    .registerBox {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .registerBox p {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .registerBox button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .registerBox button:hover {
+                background-color: #0056b3;
+            }
 </style>
 
     <div class="loginBox">
@@ -106,6 +131,12 @@
                 <h4>@alertMessage</h4>
             </p>
         </div>
+
+    <!-- New section for registration prompt -->
+    <div class="registerBox">
+        <p>Don't have an account?</p>
+        <button @onclick="NavigateToRegister">Register</button>
+    </div>
     </div>
 
 @code {
@@ -170,5 +201,10 @@
             }
             return builder.ToString();
         }
+    }
+
+    private void NavigateToRegister()
+    {
+        navManager.NavigateTo("/register");
     }
 }
