@@ -52,9 +52,12 @@
                 <i class="fa fa-home"></i>
             </button>
 
-            <button class="header-button" @onclick="@MyAccountClick">
-                <i class="fa fa-user"></i> 
-            </button>
+            @if (IsUserLoggedIn)
+            {
+                <button class="header-button" @onclick="@MyAccountClick">
+                    <i class="fa fa-user"></i>
+                </button>
+            }
         </div>
 
         <!-- Right section -->

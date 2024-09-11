@@ -77,6 +77,8 @@
 
     .modal-body {
         margin: 20px 0;
+        max-height: 400px; 
+        overflow-y: auto; 
     }
 
     .modal-footer {
@@ -208,53 +210,62 @@
                 <span class="close" @onclick="ToggleOrderDetailsPopup">&times;</span>
             </div>
             <div class="modal-body">
-                @if (orderDetails == null || orderDetails.Count == 0)
+                @if (orderDetailsWithOrderId == null || orderDetailsWithOrderId.Count == 0)
                 {
                     <p>No orders found for this user</p>
                 }
                 else
                 {
-                    <table class="table table-striped table-bordered bg-light">
-                        <tbody>
-                            @foreach (var item in orderDetails)
-                            {                  
-                                <tr>
-                                    <th>Product Name:</th>
-                                    <td>@item.ProductName</td>
-                                </tr>
-                                <tr>
-                                    <th>Product Image:</th>
-                                    <td>
-                                        <img src="@item.ProductImage" alt="@item.ProductName" style="width: 100px; height: auto;" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Quantity:</th>
-                                    <td>@item.Quantity</td>
-                                </tr>                             
-                                <tr>
-                                    <th>Shipping Address:</th>
-                                    <td>@item.ShippingAddress</td>
-                                </tr>
-                                <tr>
-                                    <th>Price:</th>
-                                    <td>$@item.Price.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Shipping Charges:</th>
-                                    <td>$@item.ShippingCharges.00</td>
-                                </tr> 
-                                <tr>
-                                    <th>Total:</th>
-                                    <td>$@item.Total.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Payment Mode:</th>
-                                    <td>@item.PaymentMode</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    @foreach (var order in orderDetailsWithOrderId)
+                    {
+                        <div class="order-container" style="margin-bottom: 20px;">
+                            <h6>Order ID: @order.OrderId</h6>  @* Display Order ID *@
+
+                            <table class="table table-striped table-bordered bg-light">
+                                <tbody>
+                                    @foreach (var item in order.Details)
+                                    {
+                                        <tr>
+                                            <th>Product Name:</th>
+                                            <td>@item.ProductName</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Product Image:</th>
+                                            <td>
+                                                <img src="@item.ProductImage" alt="@item.ProductName" style="width: 100px; height: auto;" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Quantity:</th>
+                                            <td>@item.Quantity</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping Address:</th>
+                                            <td>@item.ShippingAddress</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Price:</th>
+                                            <td>$@item.Price.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping Charges:</th>
+                                            <td>$@item.ShippingCharges.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total:</th>
+                                            <td>$@item.Total.00</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Payment Mode:</th>
+                                            <td>@item.PaymentMode</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr style="border-top: 1px solid #ddd;" />
+                    }
                 }
             </div>
             <div class="modal-footer">
@@ -262,12 +273,13 @@
             </div>
         </div>
     </div>
+
 }
 
 @code {
     public List<UserModel> users { get; set; }
     public UserModel userToEdit { get; set; }
-    public List<CartModel> orderDetails { get; set; }
+    public List<OrderWithDetails> orderDetailsWithOrderId { get; set; }
     public bool showEditPopup = false;
     public bool showOrderDetailsPopup = false;
 
@@ -306,23 +318,31 @@
     private async Task ViewUserOrderDetails(int userId)
     {
         var orders = await webShopAppService.GetOrdersByUserId(userId);
-        // If orders exist, display the order details
+
         if (orders != null && orders.Count > 0)
         {
-            var orderNumber = orders.FirstOrDefault()?.OrderId;
-            if (!string.IsNullOrEmpty(orderNumber))
+            orderDetailsWithOrderId = new List<OrderWithDetails>();  // Use the new class here
+
+            foreach (var order in orders)
             {
-                orderDetails = await webShopAppService.GetOrderDetailForUser(userId, orderNumber);
-            }
-            else
-            {
-                orderDetails = null; // No valid order number found
+                if (!string.IsNullOrEmpty(order.OrderId))
+                {
+                    var details = await webShopAppService.GetOrderDetailForUser(userId, order.OrderId);
+                    if (details != null)
+                    {
+                        orderDetailsWithOrderId.Add(new OrderWithDetails
+                            {
+                                OrderId = order.OrderId,
+                                Details = details
+                            });
+                    }
+                }
             }
         }
         else
         {
             // No orders found for this user
-            orderDetails = null;
+            orderDetailsWithOrderId = null;
         }
         ToggleOrderDetailsPopup();
     }
