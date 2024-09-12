@@ -4,77 +4,63 @@
 @inject NavigationManager navManager;
 @inject ProtectedSessionStorage sessionStorage;
 
-<div style="min-height: 700px;">
-    <div class="loginBox">
-        <div class="box">
-            <h1>Register</h1>
-            <EditForm Model="@userModel" OnValidSubmit="Register_Click">
-                <DataAnnotationsValidator />
-                <InputText type="text" name="name" placeholder="Name" class="email" @bind-Value="userModel.Name" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Name)" class="validation-message" />
-                <br /><br />
-                <InputText type="email" name="email" placeholder="Email" class="email" @bind-Value="userModel.Email" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Email)" class="validation-message" />
-                <br /><br />
-                <InputText type="text" name="mobile" placeholder="Mobile" class="email" @bind-Value="userModel.Mobile" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Mobile)" class="validation-message" />
-                <br /><br />
-                <InputText type="password" name="password" placeholder="Password" class="password" @bind-Value="userModel.Password" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Password)" class="validation-message" />
-                <br /><br />
-                <InputText type="password" name="confirmPassword" placeholder="Confirm Password" class="password" @bind-Value="userModel.ConfirmPassword" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.ConfirmPassword)" class="validation-message" />
-                <br /><br />
-                <InputText type="text" name="address" placeholder="Address" class="email" @bind-Value="userModel.Address" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Address)" class="validation-message" />
-                <br /><br />
-                <input type="submit" class="btn-primary" value="Register" />
-            </EditForm>
-            <a href="login"><div class="btn-primary" style="margin-top: 10px;">Login</div></a>
-        </div>
-        <div>
+<div class="loginBox">
+    <div class="box">
+        <h1>Register</h1>
+        <EditForm Model="@userModel" OnValidSubmit="Register_Click">
+            <ValidationSummary />
+
+            <InputText type="text" name="name" placeholder="Name" class="email" @bind-Value="userModel.Name" autocomplete="off" />
+            <ValidationMessage For="@(() => userModel.Name)" class="validation-message" />
             <br /><br />
-            <p style="color:#e52e50">
-                <h4>@alertMessage</h4>
-            </p>
-        </div>
+            <InputText type="email" name="email" placeholder="Email" class="email" @bind-Value="userModel.Email" autocomplete="off" />
+            <ValidationMessage For="@(() => userModel.Email)" class="validation-message" />
+            <br /><br />
+            <InputText type="text" name="mobile" placeholder="Mobile" class="email" @bind-Value="userModel.Mobile" autocomplete="off" />
+            <ValidationMessage For="@(() => userModel.Mobile)" class="validation-message" />
+            <br /><br />
+            <InputText type="password" name="password" placeholder="Password" class="password" @bind-Value="userModel.Password" autocomplete="off" />
+            <ValidationMessage For="@(() => userModel.Password)" class="validation-message" />
+            <br /><br />
+            <InputText type="password" name="confirmPassword" placeholder="Confirm Password" class="password" @bind-Value="userModel.ConfirmPassword" autocomplete="off" />
+            <ValidationMessage For="@(() => userModel.ConfirmPassword)" class="validation-message" />
+            <br /><br />
+            <InputText type="text" name="address" placeholder="Address" class="email" @bind-Value="userModel.Address" autocomplete="off" />
+            <ValidationMessage For="@(() => userModel.Address)" class="validation-message" />
+            <br /><br />
+            <input type="submit" class="btn-primary" value="Register" />
+        </EditForm>
+        <a href="login"><div class="btn-primary" style="margin-top: 10px;">Login</div></a>
+    </div>
+    <div>
+        <br /><br />
+        <p style="color:#e52e50">
+            <h4>@alertMessage</h4>
+        </p>
     </div>
 </div>
+
 
 @code {
     [CascadingParameter]
     public EventCallback notify { get; set; }
 
-    public UserModel userModel { get; set; } = new UserModel();
+    public RegisterModel userModel { get; set; } = new RegisterModel();
     public string alertMessage { get; set; }
 
     private async Task Register_Click()
     {
         alertMessage = "";
 
-        // Validate the full name
-        var fullName = userModel.Name;
-        var nameParts = fullName?.Trim().Split(' ');
-
-        if (nameParts == null || nameParts.Length < 2 || nameParts.Any(part => part.Length < 2))
-        {
-            alertMessage = "Please enter your full name";
-            StateHasChanged();
-            return;
-        }
-
-        // Validate the password
         if (userModel.Password != userModel.ConfirmPassword)
         {
-            alertMessage = "Passwords do not match";
+            alertMessage = "Password and confirm password do not match";
             StateHasChanged();
             return;
         }
 
         // Hash the password
-        string hashedPassword = ComputeSha256Hash(userModel.Password);
-        userModel.Password = hashedPassword;
-        userModel.ConfirmPassword = hashedPassword;
+        userModel.Password = ComputeSha256Hash(userModel.Password);
 
         var result = await webShopAppService.RegisterUser(userModel);
 

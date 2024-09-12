@@ -34,7 +34,7 @@ public class UserController : ControllerBase
 
         if (existingPassword != null)
         {
-            return BadRequest("Password already in use, please choose another password");
+            return BadRequest("Please choose another password");
         }
 
         var newUser = new User
