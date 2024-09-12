@@ -113,9 +113,8 @@ h4 {
 
 <Header></Header>
 
-<div class="container">
     <div class="clearfix">
-        <div class="column menu">
+        <div class="column menu container">
             <div class="vertical-menu">
                 <a class="@(productFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Products"))'>Manage Products</a>
                 <a class="@(categoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Categories"))'>Manage Categories</a>
@@ -147,7 +146,6 @@ h4 {
             }
         </div>
     </div>
-</div>
 
 
 @code {
