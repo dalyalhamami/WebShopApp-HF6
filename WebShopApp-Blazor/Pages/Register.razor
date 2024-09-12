@@ -52,9 +52,72 @@
     {
         alertMessage = "";
 
+        // Validate Name
+        if (string.IsNullOrEmpty(userModel.Name))
+        {
+            alertMessage = "Name is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Email
+        if (string.IsNullOrEmpty(userModel.Email))
+        {
+            alertMessage = "Email is required";
+            StateHasChanged();
+            return;
+        }
+        else if (!new EmailAddressAttribute().IsValid(userModel.Email))  // Using built-in validation
+        {
+            alertMessage = "Invalid email address";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Mobile
+        if (string.IsNullOrEmpty(userModel.Mobile))
+        {
+            alertMessage = "Mobile number is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password
+        if (string.IsNullOrEmpty(userModel.Password))
+        {
+            alertMessage = "Password is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password Length
+        if (userModel.Password.Length < 6)
+        {
+            alertMessage = "Password must be at least 6 characters long";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Confirm Password
+        if (string.IsNullOrEmpty(userModel.ConfirmPassword))
+        {
+            alertMessage = "Confirm Password is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Check if Password and Confirm Password match
         if (userModel.Password != userModel.ConfirmPassword)
         {
             alertMessage = "Password and confirm password do not match";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Address
+        if (string.IsNullOrEmpty(userModel.Address))
+        {
+            alertMessage = "Address is required";
             StateHasChanged();
             return;
         }
@@ -66,6 +129,7 @@
 
         if (result.user != null)
         {
+            // Save user information using SecureStorage
             await sessionStorage.SetAsync("User", result.user);
             await notify.InvokeAsync();
             navManager.NavigateTo("/login");
