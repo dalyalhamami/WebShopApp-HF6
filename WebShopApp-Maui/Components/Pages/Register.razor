@@ -5,6 +5,85 @@
 @inject IWebShopAppService webShopAppService;
 @inject NavigationManager navManager;
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .loginBox {
+        background-color: #ffffff;
+        width: 350px;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+        .loginBox h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    input[type="submit"],
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        margin-top: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        input[type="submit"]:hover,
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .validation-message {
+        color: red;
+        font-size: 12px;
+        text-align: left;
+    }
+
+    .register-link {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #333;
+    }
+
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            .register-link a:hover {
+                color: #0056b3;
+            }
+</style>
+
     <div class="loginBox">
         <div class="box">
             <h1>Register</h1>
@@ -13,22 +92,22 @@
 
                 <InputText type="text" name="name" placeholder="Name" class="email" @bind-Value="userModel.Name" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.Name)" class="validation-message" />
-                <br /><br />
+                <br />
                 <InputText type="email" name="email" placeholder="Email" class="email" @bind-Value="userModel.Email" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.Email)" class="validation-message" />
-                <br /><br />
+                <br />
                 <InputText type="text" name="mobile" placeholder="Mobile" class="email" @bind-Value="userModel.Mobile" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.Mobile)" class="validation-message" />
-                <br /><br />
+                <br />
                 <InputText type="password" name="password" placeholder="Password" class="password" @bind-Value="userModel.Password" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.Password)" class="validation-message" />
-                <br /><br />
+                <br />
                 <InputText type="password" name="confirmPassword" placeholder="Confirm Password" class="password" @bind-Value="userModel.ConfirmPassword" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.ConfirmPassword)" class="validation-message" />
-                <br /><br />
+                <br />
                 <InputText type="text" name="address" placeholder="Address" class="email" @bind-Value="userModel.Address" autocomplete="off" />
                 <ValidationMessage For="@(() => userModel.Address)" class="validation-message" />
-                <br /><br />
+                <br /> <br />
                 <input type="submit" class="btn-primary" value="Register" />
             </EditForm>
             <a href="login"><div class="btn-primary" style="margin-top: 10px;">Login</div></a>
@@ -52,9 +131,66 @@
     {
         alertMessage = "";
 
+        // Validate Name
+        if (string.IsNullOrEmpty(userModel.Name))
+        {
+            alertMessage = "Name is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Email
+        if (string.IsNullOrEmpty(userModel.Email))
+        {
+            alertMessage = "Email is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Mobile
+        if (string.IsNullOrEmpty(userModel.Mobile))
+        {
+            alertMessage = "Mobile is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password
+        if (string.IsNullOrEmpty(userModel.Password))
+        {
+            alertMessage = "Password is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password Length
+        if (userModel.Password.Length < 6)
+        {
+            alertMessage = "Password must be at least 6 characters long";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Confirm Password
+        if (string.IsNullOrEmpty(userModel.ConfirmPassword))
+        {
+            alertMessage = "Confirm Password is required";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password Match
         if (userModel.Password != userModel.ConfirmPassword)
         {
             alertMessage = "Password and confirm password do not match";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Address
+        if (string.IsNullOrEmpty(userModel.Address))
+        {
+            alertMessage = "Address is required";
             StateHasChanged();
             return;
         }
