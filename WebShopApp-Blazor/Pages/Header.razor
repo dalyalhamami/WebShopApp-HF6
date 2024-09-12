@@ -1,0 +1,101 @@
+﻿@inject NavigationManager navManager;
+@inject ProtectedSessionStorage sessionStorage;
+
+<div class="header">
+    <nav class="navbar">
+        <!-- Left section -->
+        <div class="navbar-left">
+            <button class="header-button" @onclick="@HomeClick">
+                <i class="fa fa-home"></i>
+            </button>
+
+            @if (IsUserLoggedIn)
+            {
+                <button class="header-button" @onclick="@MyAccountClick">
+                    <i class="fa fa-user"></i>
+                </button>
+            }
+        </div>
+
+        <!-- Right section -->
+        <div class="navbar-right">
+            @if (!IsUserLoggedIn)
+            {
+                <button class="header-button" @onclick="@LoginClick">
+                    <i class="fa fa-sign-in"></i>Login
+                </button>
+            }
+            else
+            {
+                @if (user?.Roles == 1)
+                {
+                    <button class="header-button" @onclick="@AdminClick">
+                        <i class="fa fa-cog"></i>Admin
+                    </button>
+                }
+
+                <button class="header-button" @onclick="@LogoutClick">
+                    <i class="fa fa-sign-out"></i>Logout
+                </button>
+            }
+        </div>
+    </nav>
+</div>
+
+@code {
+    private UserModel user;
+    public bool IsUserLoggedIn = false;
+
+    EventCallback event_notify => EventCallback.Factory.Create(this, NotifyLayout);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await NotifyLayout();
+        }
+    }
+
+    private async Task NotifyLayout()
+    {
+        var loggedInUser = await sessionStorage.GetAsync<UserModel>("loggedInUser");
+        if (loggedInUser.Success && loggedInUser.Value != null)
+        {
+            IsUserLoggedIn = true;
+            user = loggedInUser.Value;
+            StateHasChanged();
+        }
+        else
+        {
+            IsUserLoggedIn = false;
+            navManager.NavigateTo("/login");
+        }
+    }
+
+    private void HomeClick()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void MyAccountClick()
+    {
+        navManager.NavigateTo("/myaccount");
+    }
+
+    private void LoginClick()
+    {
+        navManager.NavigateTo("/login");
+    }
+
+    public async Task LogoutClick()
+    {
+        await sessionStorage.DeleteAsync("loggedInUser");
+        await NotifyLayout();
+        navManager.NavigateTo("/login");
+    }
+
+    private void AdminClick()
+    {
+        navManager.NavigateTo("/admin");
+    }
+}
