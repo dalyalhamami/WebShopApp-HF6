@@ -92,7 +92,7 @@ else
                             </div>
                             @if (prod.CartFlag)
                             {
-                                <button type="button" class="btn add-to-cart" style="background-color:#ffd800;" @onclick="(()=> AddToCart_Click(prod))">Remove Form Cart</button>
+                                <button type="button" class="btn add-to-cart" style="background-color:#ffd800;" @onclick="(()=> AddToCart_Click(prod))">Remove From Cart</button>
                             }
                             else
                             {
@@ -177,12 +177,19 @@ else
     public List<CategoryModel> categories { get; set; }
     public int selectedCategoryId { get; set; }
     private int selectedSortOption = 0; // 0 = Default, 1 = Low to High, 2 = High to Low
-
+   
     protected override async Task OnInitializedAsync()
     {
-        products = await webShopAppService.GetProductsAsync();
-        categories = await webShopAppService.GetCategoriesAsync(); // Fetch categories
-        await UpdateCartText();
+        if (products == null) // Fetch products if not already initialized
+        {
+            products = await webShopAppService.GetProductsAsync();
+        }
+
+        if (categories == null) // Fetch categories if not already initialized
+        {
+            categories = await webShopAppService.GetCategoriesAsync(); // Fetch categories
+        }
+
         filteredProducts = products; // Initialize with all products
     }
 
@@ -190,21 +197,22 @@ else
     {
         if (firstRender)
         {
-            await notify.InvokeAsync();
+            await notify.InvokeAsync(); 
 
             var loggedInUser = await sessionStorage.GetAsync<UserModel>("loggedInUser");
             if (loggedInUser.Success && loggedInUser.Value != null)
             {
                 IsUserLoggedIn = true;
                 user = loggedInUser.Value;
-                await LoadCartData();
-                StateHasChanged();
+                await LoadCartData(); 
             }
             else
             {
                 IsUserLoggedIn = false;
                 navManager.NavigateTo("/");
             }
+            await UpdateCartText(); // Ensure cart count is updated
+            StateHasChanged();
         }
     }
 
@@ -215,8 +223,15 @@ else
         {
             myCart = result.Value;
             cartCount = myCart.Count;
+
+            if (products != null) // Ensure products are not null
+            {
+                foreach (var product in products)
+                {
+                    product.CartFlag = myCart.Any(cartItem => cartItem.ProductId == product.Id);
+                }
+            }
             await sessionStorage.DeleteAsync("UpdateCartFlag");
-            StateHasChanged();
         }
         else
         {
@@ -244,84 +259,57 @@ else
             StateHasChanged();
             return;
         }
-        cartFlag = true;
+
         var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
         if (!result.Success)
         {
             myCart = new List<CartModel>();
-            if (productClicked.CartFlag)
-            {
-                var existing_product = myCart.Where(x => x.ProductId == productClicked.Id).FirstOrDefault();
-                if (existing_product != null)
-                {
-                    myCart.Remove(existing_product);
-                    await sessionStorage.SetAsync("myCart", myCart);
-                }
-            }
-            else
-            {
-                CartModel cm = new CartModel();
-                cm.ProductId = productClicked.Id;
-                cm.Quantity = 1;
-                cm.AvailableStock = Convert.ToInt32(productClicked.Stock);
-                cm.ProductName = productClicked.Name;
-                cm.ProductImage = productClicked.ImageUrl;
-                cm.Price = Convert.ToInt32(productClicked.Price);
-                myCart.Add(cm);
-                await sessionStorage.SetAsync("myCart", myCart);
-            }
         }
         else
         {
             myCart = result.Value;
-            if (productClicked.CartFlag)
-            {
-                var existing_product = myCart.Where(x => x.ProductId == productClicked.Id).FirstOrDefault();
-                if (existing_product != null)
-                {
-                    myCart.Remove(existing_product);
-                    await sessionStorage.SetAsync("myCart", myCart);
-                }
-            }
-            else
-            {
-                CartModel cm = new CartModel();
-                cm.ProductId = productClicked.Id;
-                cm.Quantity = 1;
-                cm.AvailableStock = Convert.ToInt32(productClicked.Stock);
-                cm.ProductName = productClicked.Name;
-                cm.ProductImage = productClicked.ImageUrl;
-                cm.Price = Convert.ToInt32(productClicked.Price);
-                myCart.Add(cm);
-                await sessionStorage.SetAsync("myCart", myCart);
-            }
         }
+
+        if (productClicked.CartFlag) // If product is already in the cart, remove it
+        {
+            var existingProduct = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
+            if (existingProduct != null)
+            {
+                myCart.Remove(existingProduct);
+            }
+            productClicked.CartFlag = false; // Update CartFlag
+        }
+        else // Otherwise, add it to the cart
+        {
+            CartModel cm = new CartModel
+                {
+                    ProductId = productClicked.Id,
+                    Quantity = 1,
+                    AvailableStock = Convert.ToInt32(productClicked.Stock),
+                    ProductName = productClicked.Name,
+                    ProductImage = productClicked.ImageUrl,
+                    Price = Convert.ToInt32(productClicked.Price)
+                };
+            myCart.Add(cm);
+            productClicked.CartFlag = true; // Update CartFlag
+        }
+
+        await sessionStorage.SetAsync("myCart", myCart);
         await UpdateCartText();
-        await notify.InvokeAsync();
+
+        cartCount = myCart.Count;
+        await notify.InvokeAsync(); // Notify other components to update
+        StateHasChanged();
     }
 
     private async Task UpdateCartText()
     {
-        if (cartFlag)
+        var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
+        if (result.Success)
         {
-            var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
-            if (result.Success)
-            {
-                foreach (var product in products)
-                {
-                    product.CartFlag = false;
-                }
-
-                myCart = result.Value;
-                foreach (var cart in myCart)
-                {
-                    var cartProduct = products.Where(x => x.Id == cart.ProductId).FirstOrDefault();
-                    if (cartProduct != null)
-                    {
-                        cartProduct.CartFlag = true;
-                    }
-                }
-            }
+            myCart = result.Value;
+            cartCount = myCart.Count;  // Update the cart count here
+            StateHasChanged();
         }
     }
 
