@@ -5,29 +5,35 @@
 @inject NavigationManager navManager;
 @inject ProtectedSessionStorage sessionStorage;
 
-<Header></Header>
+<Header/>
 
-<div class="container">
-    <div class="user-info">
+<div class="container-fluid">
+    <div class="header">
         @if (IsUserLoggedIn)
         {
-            <p class="welcome-text">Welcome, @user.Name!</p>
-
-            <div class="cart-container">
-                <a href="/mycart" class="cart-link">
+            <div class="left">
+                <div class="divleft">
+                    <p class="welcome-text">Welcome, @user.Name!</p>
+                </div>
+            </div>
+            <div class="right">
+                <a href="/mycart">
                     <i class="fa fa-shopping-cart">
-                        <span class="cart-count"><sup>@cartCount</sup></span>
+                        <span><sup>@cartCount</sup></span>
                     </i>
                 </a>
             </div>
         }
         else
         {
-            <p class="welcome-text">Welcome</p>
+            <div class="left">
+                <div class="divleft">
+                    <p class="welcome-text">Welcome</p>
+                </div>
+            </div>
         }
     </div>
 </div>
-
 
 <div class="search-container">
     <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
@@ -156,6 +162,7 @@ else
 @code {
     [CascadingParameter]
     public EventCallback notify { get; set; }
+
     public List<ProductModel> products { get; set; }
     public bool IsUserLoggedIn = false;
     private UserModel user;
@@ -237,6 +244,7 @@ else
             StateHasChanged();
             return;
         }
+        cartFlag = true;
         var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
         if (!result.Success)
         {
