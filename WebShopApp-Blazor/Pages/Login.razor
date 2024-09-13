@@ -42,26 +42,28 @@
     public LoginModel userLoginModel { get; set; } = new LoginModel();
     public string alertMessage { get; set; }
 
-    private async Task Login_Click()
+private async Task Login_Click()
+{
+    alertMessage = "";
+
+    // Validate Email
+    if (string.IsNullOrEmpty(userLoginModel.Email))
     {
-        alertMessage = "";
+        alertMessage = "Email is required";
+        StateHasChanged();
+        return;
+    }
 
-        // Validate Email
-        if (string.IsNullOrEmpty(userLoginModel.Email))
-        {
-            alertMessage = "Email is required";
-            StateHasChanged();
-            return;
-        }
-
-        // Validate Password
-        if (string.IsNullOrEmpty(userLoginModel.Password))
-        {
-            alertMessage = "Password is required";
-            StateHasChanged();
-            return;
-        }
-        else
+    // Validate Password
+    if (string.IsNullOrEmpty(userLoginModel.Password))
+    {
+        alertMessage = "Password is required";
+        StateHasChanged();
+        return;
+    }
+    else
+    {
+        try
         {
             string hashedPassword = ComputeSha256Hash(userLoginModel.Password);
             var loggedInUser = await webShopAppService.LoginAsync(userLoginModel.Email, hashedPassword);
@@ -72,13 +74,25 @@
                 await notify.InvokeAsync();
                 navManager.NavigateTo("/");
             }
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message.Contains("Email not registered"))
+            {
+                alertMessage = "Email not registered";
+            }
+            else if (ex.Message.Contains("Incorrect password"))
+            {
+                alertMessage = "Incorrect password";
+            }
             else
             {
-                alertMessage = "Your email or password is incorrect. Please try again";
+                alertMessage = "An error occurred during login. Please try again later";
             }
         }
-        StateHasChanged();
     }
+    StateHasChanged();
+}
 
     private string ComputeSha256Hash(string rawData)
     {
