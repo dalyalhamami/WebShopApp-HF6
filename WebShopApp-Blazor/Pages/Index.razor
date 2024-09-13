@@ -2,34 +2,393 @@
 @using WebShopApp_Blazor.Models
 @using WebShopApp_Blazor.Services
 @inject IWebShopAppService webShopAppService
+@inject NavigationManager navManager;
+@inject ProtectedSessionStorage sessionStorage;
 
 <Header></Header>
 
-<h3>ProductComponent</h3>
+<div class="container">
+    <div class="user-info">
+        @if (IsUserLoggedIn)
+        {
+            <p class="welcome-text">Welcome, @user.Name!</p>
 
-@if (products == null)
+            <div class="cart-container">
+                <a href="/mycart" class="cart-link">
+                    <i class="fa fa-shopping-cart">
+                        <span class="cart-count"><sup>@cartCount</sup></span>
+                    </i>
+                </a>
+            </div>
+        }
+        else
+        {
+            <p class="welcome-text">Welcome</p>
+        }
+    </div>
+</div>
+
+
+<div class="search-container">
+    <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
+    <button type="button" class="search-button" @onclick="FilterProducts">
+        <i class="fa fa-search" aria-hidden="true"></i>
+    </button>
+</div>
+
+<div class="filter-container">
+    <!-- Category Filter -->
+    <div class="form-group filter-select">
+        @if (categories != null)
+        {
+            <select class="form-control custom-select" @onchange="@CategoryClicked">
+                <option value="0">Category</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat.Id">@cat.Name</option>
+                }
+            </select>
+        }
+    </div>
+    <!-- Price Filter -->
+    <div class="form-group filter-select">
+        <select class="form-control custom-select" @onchange="@SortByPrice">
+            <option value="0">Price</option>
+            <option value="1">Low - High</option>
+            <option value="2">High - Low</option>
+        </select>
+    </div>
+</div>
+
+@if (filteredProducts == null)
 {
-    <p>Loading products...</p>
+    <span>Loading...</span>
 }
-else if (products.Count == 0)
+else if (filteredProducts.Count == 0)
 {
-    <p>No products available.</p>
+    <span>No products available</span>
 }
 else
 {
-    <ul>
-        @foreach (var product in products)
-        {
-            <li>@product.Name - @product.Price $</li>
-        }
-    </ul>
+    <div class="product-container">
+        <div class="row">
+            @foreach (var prod in filteredProducts)
+            {
+                <div class="col-md-4">
+                    <div class="col-md-12 stuff">
+                        <div style="width: 100%; border-radius: 2px; background-color: white;">
+                            <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;" @onclick="(() => OpenProductModal(prod))">
+                                @prod.Name
+                            </button>
+                            <img src=@prod.ImageUrl style="width:100%; height:50%;border-radius:1px;" />
+                            <div>
+                                Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.Stock</span>
+                            </div>
+                            @if (prod.CartFlag)
+                            {
+                                <button type="button" class="btn add-to-cart" style="background-color:#ffd800;" @onclick="(()=> AddToCart_Click(prod))">Remove Form Cart</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Add To Cart</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (showProductModal)
+{
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@selectedProduct.Name</h5>
+                <button type="button" class="close custom-close" @onclick="CloseProductModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="@selectedProduct.ImageUrl" style="width:100%; height:auto;" />
+                <p><strong>Price:</strong> $@selectedProduct.Price</p>
+                <p><strong>Stock:</strong> @selectedProduct.Stock</p>
+                <p><strong>Category:</strong> @selectedProduct.CategoryName</p>
+                <p><strong>Description:</strong> @selectedProduct.Description</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseProductModal">Close</button>
+                @if (selectedProduct.CartFlag)
+                {
+                    <button type="button" class="btn btn-warning" @onclick="(() => AddToCart_Click(selectedProduct))">Remove from Cart</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary" @onclick="(() => AddToCart_Click(selectedProduct))">Add to Cart</button>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@if (showLoginModal)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login Required</h5>
+                <button type="button" class="close custom-close" @onclick="CloseLoginModal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>You need to login to add items to your cart. Do you want to log in now?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="ConfirmLogin">Yes, log in</button>
+                <button type="button" class="btn btn-secondary" @onclick="CloseLoginModal">Cancel</button>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
-    private List<ProductModel> products;
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
+    public List<ProductModel> products { get; set; }
+    public bool IsUserLoggedIn = false;
+    private UserModel user;
+    public bool cartFlag = false;
+    public bool showProductModal = false;
+    public ProductModel selectedProduct { get; set; }
+    private bool showLoginModal = false;
+    public List<CartModel> myCart { get; set; }
+    public int cartCount = 0;
+    public List<ProductModel> filteredProducts { get; set; }
+    public string searchTerm { get; set; } = string.Empty;
+    public List<CategoryModel> categories { get; set; }
+    public int selectedCategoryId { get; set; }
+    private int selectedSortOption = 0; // 0 = Default, 1 = Low to High, 2 = High to Low
 
     protected override async Task OnInitializedAsync()
     {
         products = await webShopAppService.GetProductsAsync();
+        categories = await webShopAppService.GetCategoriesAsync(); // Fetch categories
+        await UpdateCartText();
+        filteredProducts = products; // Initialize with all products
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await notify.InvokeAsync();
+
+            var loggedInUser = await sessionStorage.GetAsync<UserModel>("loggedInUser");
+            if (loggedInUser.Success && loggedInUser.Value != null)
+            {
+                IsUserLoggedIn = true;
+                user = loggedInUser.Value;
+                await LoadCartData();
+                StateHasChanged();
+            }
+            else
+            {
+                IsUserLoggedIn = false;
+                navManager.NavigateTo("/");
+            }
+        }
+    }
+
+    private async Task LoadCartData()
+    {
+        var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
+        if (result.Success)
+        {
+            myCart = result.Value;
+            cartCount = myCart.Count;
+            await sessionStorage.DeleteAsync("UpdateCartFlag");
+            StateHasChanged();
+        }
+        else
+        {
+            cartCount = 0;
+        }
+        StateHasChanged();
+    }
+
+    private void OpenProductModal(ProductModel product)
+    {
+        selectedProduct = product;
+        showProductModal = true;
+    }
+
+    private void CloseProductModal()
+    {
+        showProductModal = false;
+    }
+
+    private async Task AddToCart_Click(ProductModel productClicked)
+    {
+        if (!IsUserLoggedIn)
+        {
+            showLoginModal = true;
+            StateHasChanged();
+            return;
+        }
+        var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
+        if (!result.Success)
+        {
+            myCart = new List<CartModel>();
+            if (productClicked.CartFlag)
+            {
+                var existing_product = myCart.Where(x => x.ProductId == productClicked.Id).FirstOrDefault();
+                if (existing_product != null)
+                {
+                    myCart.Remove(existing_product);
+                    await sessionStorage.SetAsync("myCart", myCart);
+                }
+            }
+            else
+            {
+                CartModel cm = new CartModel();
+                cm.ProductId = productClicked.Id;
+                cm.Quantity = 1;
+                cm.AvailableStock = Convert.ToInt32(productClicked.Stock);
+                cm.ProductName = productClicked.Name;
+                cm.ProductImage = productClicked.ImageUrl;
+                cm.Price = Convert.ToInt32(productClicked.Price);
+                myCart.Add(cm);
+                await sessionStorage.SetAsync("myCart", myCart);
+            }
+        }
+        else
+        {
+            myCart = result.Value;
+            if (productClicked.CartFlag)
+            {
+                var existing_product = myCart.Where(x => x.ProductId == productClicked.Id).FirstOrDefault();
+                if (existing_product != null)
+                {
+                    myCart.Remove(existing_product);
+                    await sessionStorage.SetAsync("myCart", myCart);
+                }
+            }
+            else
+            {
+                CartModel cm = new CartModel();
+                cm.ProductId = productClicked.Id;
+                cm.Quantity = 1;
+                cm.AvailableStock = Convert.ToInt32(productClicked.Stock);
+                cm.ProductName = productClicked.Name;
+                cm.ProductImage = productClicked.ImageUrl;
+                cm.Price = Convert.ToInt32(productClicked.Price);
+                myCart.Add(cm);
+                await sessionStorage.SetAsync("myCart", myCart);
+            }
+        }
+        await UpdateCartText();
+        await notify.InvokeAsync();
+    }
+
+    private async Task UpdateCartText()
+    {
+        if (cartFlag)
+        {
+            var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
+            if (result.Success)
+            {
+                foreach (var product in products)
+                {
+                    product.CartFlag = false;
+                }
+
+                myCart = result.Value;
+                foreach (var cart in myCart)
+                {
+                    var cartProduct = products.Where(x => x.Id == cart.ProductId).FirstOrDefault();
+                    if (cartProduct != null)
+                    {
+                        cartProduct.CartFlag = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void CloseLoginModal()
+    {
+        showLoginModal = false;
+        StateHasChanged();
+    }
+
+    private void ConfirmLogin()
+    {
+        showLoginModal = false;
+        navManager.NavigateTo("/login");
+    }
+
+    private void CategoryClicked(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value.ToString();
+
+        if (int.TryParse(selectedValue, out var categoryId))
+        {
+            selectedCategoryId = categoryId;
+
+            if (selectedCategoryId == 0)
+            {
+                filteredProducts = products;
+            }
+            else
+            {
+                filteredProducts = products.Where(p => p.CategoryId == selectedCategoryId).ToList();
+            }
+        }
+        else
+        {
+            filteredProducts = products;
+        }
+
+        StateHasChanged(); // Trigger UI update
+    }
+
+    private void FilterProducts()
+    {
+        string searchText = searchTerm?.ToLower() ?? string.Empty;
+        filteredProducts = products
+            .Where(p => p.Name.ToLower().Contains(searchText))
+            .ToList();
+        StateHasChanged();
+    }
+
+    private void SortByPrice(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value.ToString();
+
+        if (int.TryParse(selectedValue, out var sortOption))
+        {
+            selectedSortOption = sortOption;
+
+            if (selectedSortOption == 0)
+            {
+                filteredProducts = products.ToList();
+            }
+            else if (selectedSortOption == 1)
+            {
+                filteredProducts = filteredProducts.OrderBy(p => p.Price).ToList();
+            }
+            else if (selectedSortOption == 2)
+            {
+                filteredProducts = filteredProducts.OrderByDescending(p => p.Price).ToList();
+            }
+        }
+        else
+        {
+            filteredProducts = products.ToList();
+        }
+        StateHasChanged();
     }
 }
+
