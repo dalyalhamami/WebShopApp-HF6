@@ -59,6 +59,7 @@
 .filter-container {
     display: flex;
     align-items: center;
+    margin-top: 18px;
 }
 
 .filter-select {
@@ -116,11 +117,13 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin-top: 20px;
+    margin-left: 140px;
 }
 
 .col-md-4 {
-    flex: 0 0 30%; /* Set the width for each product card */
+    flex: 0 0 22%; /* Set width to 22% to fit four items */
     margin-bottom: 20px;
+    margin-right: 1%; /* Adjust margin to control spacing between cards */
 }
 
 .stuff {
@@ -137,7 +140,7 @@
         box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
     }
 
-/* Buttons styling */
+/* Adjust buttons styling */
 button.btn {
     background-color: olive;
     color: #ffffff;
