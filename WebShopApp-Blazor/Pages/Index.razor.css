@@ -5,24 +5,100 @@
 }
 
 .header {
-    background-color: lightgray;
-    height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: transparent;
+    padding: 10px 30px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .left {
+    flex-basis: 20%;
     text-align: left;
-    padding-left: 50px;
-    margin-top: 25px;
 }
 
 .right {
+    flex-basis: 20%;
     text-align: right;
-    padding-right: 50px;
-    margin-top: 25px;
 }
+
+/* Search and Filter Container */
+.search-filter-container {
+    display: flex;
+    flex-basis: 60%;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Search Input */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.search-input {
+    width: 300px;
+    height: 35px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.search-button {
+    background-color: olive;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+    margin-left: 5px;
+}
+
+/* Filter Container */
+.filter-container {
+    display: flex;
+    align-items: center;
+}
+
+.filter-select {
+    margin-left: 10px;
+}
+
+    .filter-select select {
+        width: 150px;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+
+.fa-shopping-cart {
+    position: relative;
+    font-size: 24px;
+    color: darkolivegreen;
+}
+
+    .fa-shopping-cart span {
+        position: absolute;
+        top: -10px;
+        right: -15px;
+        background-color: darkorange;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 50%;
+        padding: 5px;
+        min-width: 24px;
+        text-align: center;
+    }
+
+/* Hover effect for shopping cart */
+.right a:hover .fa-shopping-cart {
+    color: #388e3c;
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
 
 /* Adjust welcome text styling for desktop */
 .welcome-text {

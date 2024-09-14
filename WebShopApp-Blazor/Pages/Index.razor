@@ -16,53 +16,85 @@
                     <p class="welcome-text">Welcome, @user.Name!</p>
                 </div>
             </div>
+
+            <div class="search-container">
+                <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
+                <button type="button" class="search-button" @onclick="FilterProducts">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="filter-container">
+                <!-- Category Filter -->
+                <div class="form-group filter-select">
+                    @if (categories != null)
+                    {
+                        <select class="form-control custom-select" @onchange="@CategoryClicked">
+                            <option value="0">Category</option>
+                            @foreach (var cat in categories)
+                            {
+                                <option value="@cat.Id">@cat.Name</option>
+                            }
+                        </select>
+                    }
+                </div>
+                <!-- Price Filter -->
+                <div class="form-group filter-select">
+                    <select class="form-control custom-select" @onchange="@SortByPrice">
+                        <option value="0">Price</option>
+                        <option value="1">Low - High</option>
+                        <option value="2">High - Low</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="right">
                 <a href="/mycart">
                     <i class="fa fa-shopping-cart">
-                        <span><sup>@cartCount</sup></span>
+                        <span>@cartCount</span>
                     </i>
                 </a>
             </div>
         }
         else
         {
-            <div class="left">
-                <div class="divleft">
-                    <p class="welcome-text">Welcome</p>
+            <div class="left"/>
+              
+            <div class="search-container">
+                <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
+                <button type="button" class="search-button" @onclick="FilterProducts">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="filter-container">
+                <!-- Category Filter -->
+                <div class="form-group filter-select">
+                    @if (categories != null)
+                    {
+                        <select class="form-control custom-select" @onchange="@CategoryClicked">
+                            <option value="0">Category</option>
+                            @foreach (var cat in categories)
+                            {
+                                <option value="@cat.Id">@cat.Name</option>
+                            }
+                        </select>
+                    }
+                </div>
+                <!-- Price Filter -->
+                <div class="form-group filter-select">
+                    <select class="form-control custom-select" @onchange="@SortByPrice">
+                        <option value="0">Price</option>
+                        <option value="1">Low - High</option>
+                        <option value="2">High - Low</option>
+                    </select>
                 </div>
             </div>
-        }
-    </div>
-</div>
 
-<div class="search-container">
-    <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
-    <button type="button" class="search-button" @onclick="FilterProducts">
-        <i class="fa fa-search" aria-hidden="true"></i>
-    </button>
-</div>
-
-<div class="filter-container">
-    <!-- Category Filter -->
-    <div class="form-group filter-select">
-        @if (categories != null)
-        {
-            <select class="form-control custom-select" @onchange="@CategoryClicked">
-                <option value="0">Category</option>
-                @foreach (var cat in categories)
-                {
-                    <option value="@cat.Id">@cat.Name</option>
-                }
-            </select>
+            <div class="right">
+               
+            </div>
         }
-    </div>
-    <!-- Price Filter -->
-    <div class="form-group filter-select">
-        <select class="form-control custom-select" @onchange="@SortByPrice">
-            <option value="0">Price</option>
-            <option value="1">Low - High</option>
-            <option value="2">High - Low</option>
-        </select>
     </div>
 </div>
 
