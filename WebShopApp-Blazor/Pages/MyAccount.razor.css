@@ -1,1 +1,147 @@
-﻿
+﻿.column {
+    float: left;
+    padding: 4px;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.menu {
+    width: 25%;
+    margin-top: 5px;
+    color: black;
+    margin-top:60px;
+}
+
+.content {
+    width: 75%;
+}
+
+.vertical-menu {
+    width: 200px;
+    border: 2px ridge #bacf67;
+}
+
+    .vertical-menu a {
+        background-color: #eee;
+        color: black;
+        display: block;
+        padding: 12px;
+        text-decoration: none;
+    }
+
+        .vertical-menu a:hover {
+            background-color: #ccc;
+        }
+
+        .vertical-menu a.active {
+            background-color: #bacf67;
+            color: white;
+        }
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    overflow: hidden;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    max-width: 100%;
+    margin-bottom: 0;
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray;
+    border-radius: 4px;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #dee2e6;
+        padding: .75rem;
+        vertical-align: top;
+    }
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.card-body {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-image img {
+    max-width: 80px;
+    max-height: 80px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.product-details p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.summary-table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray;
+    border-radius: 4px;
+}
+
+    .summary-table td {
+        padding: .75rem;
+        vertical-align: top;
+    }
