@@ -1,9 +1,73 @@
 ﻿@page "/admin"
+@inject NavigationManager navManager;
 
-<Header></Header>
+<Header/>
 
-<h3 style="margin-top:100px;">Admin</h3>
+<div class="container">
+    <div class="clearfix">
+        <div class="column menu">
+            <div class="vertical-menu">
+                <a class="@(productFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Products"))'>Manage Products</a>
+                <a class="@(categoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Categories"))'>Manage Categories</a>
+                <a class="@(usersFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Users"))'>Manage Users</a>
+            </div>
+        </div>
+
+        <div class="column content">
+
+            @if (productFlag)
+            {
+                <div>
+                    <Product />
+                </div>
+            }
+
+            @if (categoryFlag)
+            {
+                <div>
+                    <Category />
+                </div>
+            }
+
+            @if (usersFlag)
+            {
+                <div>
+                    <User />
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
+    private string headerText = "Products";
+    private bool productFlag = true;
+    private bool categoryFlag = false;
+    private bool usersFlag = false;
 
+    private void ChangeActiveMenu(string menu)
+    {
+        headerText = menu;
+
+        switch (menu)
+        {
+            case "Products":
+                productFlag = true;
+                categoryFlag = false;
+                usersFlag = false;
+                break;
+
+            case "Categories":
+                productFlag = false;
+                categoryFlag = true;
+                usersFlag = false;
+                break;
+
+            case "Users":
+                productFlag = false;
+                categoryFlag = false;
+                usersFlag = true;
+                break;
+        }
+    }
 }

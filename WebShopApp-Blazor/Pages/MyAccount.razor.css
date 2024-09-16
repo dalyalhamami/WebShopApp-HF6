@@ -1,44 +1,56 @@
-﻿.column {
-    float: left;
-    padding: 4px;
+﻿.container {
+    max-width: 1200px;
+    background-color: transparent;
+    margin-top: 40px;
 }
 
 .clearfix::after {
     content: "";
-    clear: both;
     display: table;
+    clear: both;
+}
+
+.column {
+    width: 100%;
+    float: none;
+    padding: 0;
 }
 
 .menu {
-    width: 25%;
-    margin-top: 5px;
-    color: black;
-    margin-top:60px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
 }
 
 .content {
-    width: 75%;
+    width: 90%;
+    margin: 20px;
 }
 
 .vertical-menu {
-    width: 200px;
-    border: 2px ridge #bacf67;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
 }
 
     .vertical-menu a {
-        background-color: #eee;
-        color: black;
-        display: block;
+        display: inline-block;
         padding: 12px;
         text-decoration: none;
+        color: black;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
-
         .vertical-menu a:hover {
-            background-color: #ccc;
+            background-color: #ddd;
         }
 
         .vertical-menu a.active {
-            background-color: #bacf67;
+            background-color: olivedrab;
             color: white;
         }
 

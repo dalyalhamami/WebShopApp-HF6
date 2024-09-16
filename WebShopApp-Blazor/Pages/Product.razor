@@ -1,0 +1,416 @@
+﻿@using WebShopApp_Blazor.Models
+@using WebShopApp_Blazor.Services
+@inject IWebShopAppService webShopAppService
+@inject NavigationManager navManager;
+@inject ProtectedSessionStorage sessionStorage;
+
+<div class="column content">
+    @if (productModel == null)
+    {
+        <span>Loading...</span>
+    }
+    else
+    {
+        <div class="card">
+            <h4 class="card-header">Add New Product</h4>
+
+            <div class="card-body">
+                <EditForm Model="@productModel" OnValidSubmit="SaveProduct">
+                    <DataAnnotationsValidator />
+
+                    <div class="form-group row">
+                        <div class="form-group col-3">
+                            <label>Name :</label>
+                            <InputText @bind-Value="productModel.Name" class="form-control" />
+                            <ValidationMessage For="@(() => productModel.Name)" />
+                        </div>
+                        <div class="form-group col-3">
+                            <label>Price :</label>
+                            <InputNumber @bind-Value="productModel.Price" class="form-control" />
+                            <ValidationMessage For="@(() => productModel.Price)" />
+                        </div>
+                        <div class="form-group col-3">
+                            <label>Stock :</label>
+                            <InputNumber @bind-Value="productModel.Stock" class="form-control" />
+                            <ValidationMessage For="@(() => productModel.Stock)" />
+                        </div>
+                        <div class="form-group col-3">
+                            <label>Category :</label>
+                            @if (categories != null)
+                            {
+                                <select class="form-control" @onchange="@CategoryClicked">
+                                    <option value="">- Select -</option>
+                                    @foreach (var cat in categories)
+                                    {
+                                        <option value="@cat.Id">@cat.Name</option>
+                                    }
+                                </select>
+                            }
+                            <ValidationMessage For="@(() => productModel.CategoryId)" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="form-group col-6">
+                            <label>Description :</label>
+                            <InputText @bind-Value="productModel.Description" class="form-control" />
+                            <ValidationMessage For="@(() => productModel.Description)" />
+                        </div>
+                        <div class="form-group col-6">
+                            <label>Select Photo :</label>
+                            <label style="border:1px ridge #808080; display: block;">
+                                <InputFile OnChange="@OnInputFileChange" multiple></InputFile>
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table" style="border:1px ridge #808080; width: 100%;">
+                                    <tr>
+                                        @foreach (var imgsrc in imageUrls)
+                                        {
+                                            <td style="padding: 10px;">
+                                                <img src="@imgsrc" style="max-width: 100%; height: auto; border: 1px solid #ddd;">
+                                            </td>
+                                        }
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-left">
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                        <input type="button" class="btn btn-primary" value="Clear" @onclick="ClearForm" />
+                    </div>
+                </EditForm>
+            </div>
+
+            <div class="card-body">
+                @if (products == null)
+                {
+                    <span>Loading...</span>
+                }
+                else
+                {
+                    <table class="table table-striped table-bordered bg-light">
+                        <thead>
+                            <tr>
+                                <th class="button-cell">No.</th>
+                                <th class="button-cell">Title</th>
+                                <th class="button-cell">Edit</th>
+                                <th class="button-cell">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var (index, prod) in products.Select((prod, i) => (i + 1, prod)))
+                            {
+                                <tr>
+                                    <td class="button-cell">@index</td>
+                                    <td class="button-cell">@prod.Name</td>
+                                    <td class="button-cell">
+                                        <button class="btn custom-btn" @onclick="(() => EditButtonClick(prod))">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    </td>
+                                    <td class="button-cell">
+                                        <button class="btn custom-btn" @onclick="(() => DeleteButtonClick(prod))">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>   
+    }
+</div>    
+
+@if (showEditPopup == true)
+{
+  <div class="modal">
+      <div class="modal-content">
+            <div class="modal-header">
+                <h5>Edit Product</h5>
+                <span class="close" @onclick="ToggleEditPopup">&times;</span>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@productToUpdate" OnInvalidSubmit="UpdateProduct">
+                    <DataAnnotationsValidator />
+                    <div class="form-row">
+                        <div class="form-group col-5">
+                            <label>Name :</label>
+                            <InputText @bind-Value="productToUpdate.Name" class="form-control" />
+                            <ValidationMessage For="@(() => productToUpdate.Name)" />
+                        </div>
+                        <div class="form-group col-5">
+                            <label>Price :</label>
+                            <InputNumber @bind-Value="productToUpdate.Price" class="form-control" />
+                            <ValidationMessage For="@(() => productToUpdate.Price)" />
+                        </div>
+                        <div class="form-group col-5">
+                            <label>Stock :</label>
+                            <InputNumber @bind-Value="productToUpdate.Stock" class="form-control" />
+                            <ValidationMessage For="@(() => productToUpdate.Stock)" />
+                        </div>
+                        <div class="form-group col-5">
+                            <label>Description :</label>
+                            <InputText @bind-Value="productToUpdate.Description" class="form-control" />
+                            <ValidationMessage For="@(() => productToUpdate.Description)" />
+                        </div>
+                        <div class="form-group col-5">
+                            <label>Category :</label>
+                            <select class="form-control" @bind="@productToUpdate.CategoryId">
+                                @if (categories != null)
+                                {
+                                    foreach (var cat in categories)
+                                    {
+                                        <option value="@cat.Id">@cat.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Save" @onclick="UpdateProduct" />
+                <input type="button" class="btn btn-primary" value="Cancel" @onclick="ToggleEditPopup" />
+            </div>
+      </div>
+  </div>  
+}
+
+@if (showDeletePopup == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Delete Product</h5>
+                <span class="close" @onclick="ToggleDeletePopup">&times;</span>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Delete <span style="background-color:yellow;">@productToDelete.Name</span> Product?
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Yes" @onclick="DeleteProduct" />
+                <input type="button" class="btn btn-primary" value="No" @onclick="ToggleDeletePopup" />
+            </div>
+        </div>
+    </div>
+}
+
+@if (successPopup == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+            </div>
+            <div class="modal-body">
+                @Message
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [CascadingParameter]
+    public EventCallback notify { get; set; }
+
+    public ProductModel productModel { get; set; }
+    public List<CategoryModel> categories { get; set; }
+    public List<ProductModel> products { get; set; }
+    public int categoryId { get; set; }
+    IReadOnlyList<IBrowserFile> selectedFiles;
+    List<string> imageUrls = new List<string>();
+    public ProductModel productToUpdate { get; set; }
+    public ProductModel productToDelete { get; set; }
+    public bool showEditPopup = false;
+    public bool showDeletePopup = false;
+    public bool successPopup = false;
+    string Message = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        productModel = new ProductModel();
+        await GetCategories();
+        await GetProducts();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await notify.InvokeAsync();
+        }
+    }
+
+    private async Task GetCategories()
+    {
+        categories = await webShopAppService.GetCategoriesAsync();
+    }
+
+    private async Task<string> UploadImage(IReadOnlyList<IBrowserFile> files)
+    {
+        if (files != null && files.Count > 0)
+        {
+            var file = files.FirstOrDefault();
+            using var stream = file.OpenReadStream();
+            var fileName = file.Name;
+            var imagePath = Path.Combine("wwwroot", "images", fileName);
+            using var fileStream = new FileStream(imagePath, FileMode.Create);
+            await stream.CopyToAsync(fileStream);
+            var imageUrl = $"/images/{fileName}";
+            return imageUrl;
+        }
+        return null;
+    }
+
+    private async Task SaveProduct()
+    {
+        var imageUrl = await UploadImage(selectedFiles);
+        if (imageUrl != null)
+        {
+            productModel.ImageUrl = imageUrl;
+            var savedProduct = await webShopAppService.SaveProductAsync(productModel);
+            if (savedProduct != null)
+            {
+                await GetProducts(); 
+                ClearForm(); 
+            }
+            else
+            {
+                Console.WriteLine("Failed to save product");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Failed to upload image");
+        }
+    }
+
+    private async Task UpdateProduct()
+    {
+        // Retrieve category details based on selected CategoryId
+        var selectedCategory = categories.FirstOrDefault(c => c.Id == productToUpdate.CategoryId);
+        if (selectedCategory != null)
+        {
+            productToUpdate.CategoryName = selectedCategory.Name;
+        }
+
+        var updatedProduct = await webShopAppService.UpdateProductAsync(productToUpdate);
+
+        if (updatedProduct != null)
+        {
+            ToggleEditPopup();
+            Message = "Product Updated Successfully !!";
+            ToggleSuccessPopup();
+            productToUpdate = new ProductModel();
+            await GetProducts();
+        }
+        else
+        {
+            Message = "Product Not Updated. Try Again !!";
+            ToggleSuccessPopup();
+        }
+    }
+
+    private async Task DeleteProduct()
+    {
+        if (productToDelete != null)
+        {
+            var flag = await webShopAppService.DeleteProductAsync(productToDelete.Id);
+            ToggleDeletePopup();
+            if (flag)
+            {
+                Message = "Product Deleted Successfully !!";
+            }
+            else
+            {
+                Message = "Product Not Deleted. Try Again !!";
+            }
+
+            ToggleSuccessPopup();
+            productToDelete = new ProductModel();
+            await GetProducts();
+        }
+    }
+
+    private async Task GetProducts()
+    {
+        products = await webShopAppService.GetProductsAsync();
+    }
+
+    private void CategoryClicked(ChangeEventArgs categoryEvent)
+    {
+        if (categoryEvent.Value != null && int.TryParse(categoryEvent.Value.ToString(), out int selectedCategoryId))
+        {
+            categoryId = selectedCategoryId;
+            productModel.CategoryId = categoryId;
+
+            // Find the category with the matching ID
+            var selectedCategory = categories.FirstOrDefault(c => c.Id == categoryId);
+
+            // Update the product's category name
+            if (selectedCategory != null)
+            {
+                productModel.CategoryName = selectedCategory.Name;
+            }
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        imageUrls.Clear(); // Clear previous images
+
+        foreach (var imageFile in selectedFiles)
+        {
+            var resizedImage = await imageFile.RequestImageFileAsync("image/jpg", 100, 100);
+            var buffer = new byte[resizedImage.Size];
+            await resizedImage.OpenReadStream().ReadAsync(buffer);
+            var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
+            imageUrls.Add(imgData);
+        }
+        Message = $"{selectedFiles.Count} file(s) selected";
+        StateHasChanged();
+    }
+
+    private void ClearForm()
+    {
+        productModel = new ProductModel();
+        imageUrls = new List<string>();
+    }
+
+    private void EditButtonClick(ProductModel productToUpdate)
+    {
+        this.productToUpdate = productToUpdate;
+        ToggleEditPopup();
+    }
+
+    private void DeleteButtonClick(ProductModel productToDelete)
+    {
+        this.productToDelete = productToDelete; 
+        ToggleDeletePopup(); 
+    }
+
+    private void ToggleEditPopup()
+    {
+        showEditPopup = showEditPopup == true ? false : true;
+    }
+
+    private void ToggleDeletePopup()
+    {
+        showDeletePopup = showDeletePopup == true ? false : true;
+    }
+
+    private void ToggleSuccessPopup()
+    {
+        successPopup = successPopup == true ? false : true;
+    }
+
+}
