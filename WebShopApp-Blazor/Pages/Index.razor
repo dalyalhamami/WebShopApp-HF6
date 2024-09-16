@@ -113,9 +113,9 @@ else
             @foreach (var prod in filteredProducts)
             {
                 <div class="col-md-4">
-                    <div class="col-md-12 stuff">
+                    <div class="stuff">
                         <div style="width: 100%; border-radius: 2px; background-color: white;">
-                            <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;" @onclick="(() => OpenProductModal(prod))">
+                            <button type="button" class="btn" style="width: 100%;" @onclick="(() => OpenProductModal(prod))">
                                 @prod.Name
                             </button>
                             <img src=@prod.ImageUrl style="width:100%; height:50%;border-radius:1px;" />
@@ -181,7 +181,7 @@ else
                 </button>
             </div>
             <div class="modal-body">
-                <p>You need to login to add items to your cart. Do you want to log in now?</p>
+                <p>You need to login to add items to your cart. Do you want to login now?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @onclick="ConfirmLogin">Yes, log in</button>

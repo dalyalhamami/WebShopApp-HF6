@@ -142,8 +142,8 @@
 
 /* Adjust buttons styling */
 button.btn {
-    background-color: olive;
-    color: #ffffff;
+    background-color: #ffc107;
+    color: #212529;
     border: none;
     padding: 10px;
     font-size: 1.2em;
@@ -153,7 +153,8 @@ button.btn {
 }
 
     button.btn:hover {
-        background-color: #138496;
+        background-color: #e0a800;
+        color: #ffffff;
     }
 
 /* Cart link and icon styling */
@@ -244,3 +245,18 @@ button.add-to-cart {
     justify-content: space-between;
     align-items: center;
 }
+
+/* Custom Close Button Styles */
+.custom-close {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #000;
+    cursor: pointer;
+}
+
+    .custom-close:hover {
+        color: #ff0000;
+        transform: scale(1.2);
+    }
+
