@@ -1,4 +1,5 @@
-﻿.container {
+﻿
+.container {
     max-width: 1200px;
     background-color: transparent;
     margin-top: 40px;
@@ -31,33 +32,31 @@
     gap: 10px; 
 }
 
-    .vertical-menu a {
-        display: inline-block;
-        padding: 12px;
-        text-decoration: none;
-        color: black;
-        background-color: #f1f1f1;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-        margin-bottom: 0; /* Remove bottom margin for horizontal alignment */
-    }
+.vertical-menu a {
+    display: inline-block;
+    padding: 12px;
+    text-decoration: none;
+    color: black;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 0;
+}
 
-        .vertical-menu a:hover {
-            background-color: #ddd;
-        }
+.vertical-menu a:hover {
+    background-color: #ddd;
+}
 
-        .vertical-menu a.active {
-            background-color: olivedrab;
-            color: white;
-        }
+.vertical-menu a.active {
+    background-color: olivedrab;
+    color: white;
+}
 
 .content {
     padding: 10px;
-    background-color: #f9f9f9;
     border-radius: 10px;
     margin-top: 20px;
 }
-
 
 .column {
     width: 100%; /* Make columns full-width to stack vertically */
@@ -71,7 +70,6 @@
     margin-top: 10px;
 }
 
-/* Button styles */
 .btn {
     padding: 10px 15px;
     background-color: #4CAF50;
@@ -83,9 +81,9 @@
     margin-top: 10px;
 }
 
-    .btn:hover {
-        background-color: #45a049;
-    }
+.btn:hover {
+    background-color: #45a049;
+}
 
 h3 {
     font-size: 1.5rem;
