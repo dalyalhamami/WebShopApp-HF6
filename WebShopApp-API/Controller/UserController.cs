@@ -244,4 +244,40 @@ public class UserController : ControllerBase
 
         return Ok(true);
     }
+
+    // Reset password
+    [HttpPut("ResetPassword")]
+    public async Task<ActionResult<bool>> ResetPassword([FromBody] PasswordDTO password)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid input");
+        }
+
+        var user = await webShopAppDBContext.User.FirstOrDefaultAsync(u => u.Id == password.UserId);
+        if (user == null)
+        {
+            return NotFound("User not found");
+        }
+
+        // Check if the new password already exists
+        if (await webShopAppDBContext.User.AnyAsync(u => u.Password == password.HashedPassword))
+        {
+            return BadRequest("You can't use that password. Please choose another");
+        }
+
+        // Update user's password
+        user.Password = password.HashedPassword;
+
+        try
+        {
+            await webShopAppDBContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return StatusCode(500, "Failed to update password");
+        }
+
+        return Ok(true);
+    }
 }

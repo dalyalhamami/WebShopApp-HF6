@@ -138,6 +138,13 @@ public class WebShopAppService : IWebShopAppService
         return response;
     }
 
+    // Reset password
+    public async Task<HttpResponseMessage> ResetPassword(PasswordModel passwordModel)
+    {
+        var jsonContent = JsonContent.Create(passwordModel);
+        var response = await httpClient.PutAsync("api/User/ResetPassword", jsonContent);
+        return response;
+    }
     //...................................................... Category ......................................................//
 
     // Create new category

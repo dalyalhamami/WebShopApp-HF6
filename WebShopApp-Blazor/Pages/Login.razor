@@ -28,10 +28,14 @@
         </p>
     </div>
 
+    <div class="forgot-password">
+        <p><a @onclick="NavigateToForgotPassword" class="primary-blue-link">Forgot Password?</a></p>
+    </div>
+
     <!-- New section for registration prompt -->
     <div class="registerBox">
         <p>Don't have an account?</p>
-        <button @onclick="NavigateToRegister">Register</button>
+        <a class="primary-blue-link" @onclick="NavigateToRegister">Register</a>
     </div>
 </div>
 
@@ -42,57 +46,57 @@
     public LoginModel userLoginModel { get; set; } = new LoginModel();
     public string alertMessage { get; set; }
 
-private async Task Login_Click()
-{
-    alertMessage = "";
+    private async Task Login_Click()
+    {
+        alertMessage = "";
 
-    // Validate Email
-    if (string.IsNullOrEmpty(userLoginModel.Email))
-    {
-        alertMessage = "Email is required";
-        StateHasChanged();
-        return;
-    }
-
-    // Validate Password
-    if (string.IsNullOrEmpty(userLoginModel.Password))
-    {
-        alertMessage = "Password is required";
-        StateHasChanged();
-        return;
-    }
-    else
-    {
-        try
+        // Validate Email
+        if (string.IsNullOrEmpty(userLoginModel.Email))
         {
-            string hashedPassword = ComputeSha256Hash(userLoginModel.Password);
-            var loggedInUser = await webShopAppService.LoginAsync(userLoginModel.Email, hashedPassword);
+            alertMessage = "Email is required";
+            StateHasChanged();
+            return;
+        }
 
-            if (loggedInUser != null)
+        // Validate Password
+        if (string.IsNullOrEmpty(userLoginModel.Password))
+        {
+            alertMessage = "Password is required";
+            StateHasChanged();
+            return;
+        }
+        else
+        {
+            try
             {
-                await sessionStorage.SetAsync("loggedInUser", loggedInUser);
-                await notify.InvokeAsync();
-                navManager.NavigateTo("/");
+                string hashedPassword = ComputeSha256Hash(userLoginModel.Password);
+                var loggedInUser = await webShopAppService.LoginAsync(userLoginModel.Email, hashedPassword);
+
+                if (loggedInUser != null)
+                {
+                    await sessionStorage.SetAsync("loggedInUser", loggedInUser);
+                    await notify.InvokeAsync();
+                    navManager.NavigateTo("/");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("Email not registered"))
+                {
+                    alertMessage = "Email not registered";
+                }
+                else if (ex.Message.Contains("Incorrect password"))
+                {
+                    alertMessage = "Incorrect password";
+                }
+                else
+                {
+                    alertMessage = "An error occurred during login. Please try again later";
+                }
             }
         }
-        catch (Exception ex)
-        {
-            if (ex.Message.Contains("Email not registered"))
-            {
-                alertMessage = "Email not registered";
-            }
-            else if (ex.Message.Contains("Incorrect password"))
-            {
-                alertMessage = "Incorrect password";
-            }
-            else
-            {
-                alertMessage = "An error occurred during login. Please try again later";
-            }
-        }
+        StateHasChanged();
     }
-    StateHasChanged();
-}
 
     private string ComputeSha256Hash(string rawData)
     {
@@ -111,5 +115,11 @@ private async Task Login_Click()
     private void NavigateToRegister()
     {
         navManager.NavigateTo("/register");
+    }
+
+    private void NavigateToForgotPassword()
+    {
+        navManager.NavigateTo("/forgot-password");
+
     }
 }
