@@ -69,34 +69,31 @@ else if (filteredProducts.Count == 0)
 }
 else
 {
-    <div class="product-container">
-        <div class="row">
-            @foreach (var prod in filteredProducts)
-            {
-                <div class="col-md-4">
-                    <div class="stuff">
-                        <div style="width: 100%; border-radius: 2px; background-color: white;">
-                            <button type="button" class="btn" style="width: 100%;" @onclick="(() => OpenProductModal(prod))">
-                                @prod.Name
-                            </button>
-                            <img src=@prod.ImageUrl style="width:100%; height:50%;border-radius:1px;" />
-                            <div>
-                                Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.Stock</span>
-                            </div>
-                            @if (prod.CartFlag)
-                            {
-                                <button type="button" class="btn add-to-cart" style="background-color:#ffd800;" @onclick="(()=> AddToCart_Click(prod))">Remove From Cart</button>
-                            }
-                            else
-                            {
-                                <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Add To Cart</button>
-                            }
+ <div class="product-container">
+    <div class="row">
+        @foreach (var prod in filteredProducts)
+        {
+            <div class="col-md-4">
+                <div class="product-card">
+                        <img src="@prod.ImageUrl" alt="@prod.Name" class="product-image" @onclick="(() => OpenProductModal(prod))" />
+                    <div class="product-details">
+                            <h5 class="product-title">@prod.Name</h5>
+                        <p class="product-description">Pleated Chiffon High Low Maxi Dress</p>
+                            <strong>@prod.Price</strong> <span class="currency">Kr</span>
                         </div>
-                    </div>
+                    @if (prod.CartFlag)
+                    {
+                        <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Remove From Cart</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Add To Cart</button>
+                    }
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
+</div>
 }
 
 @if (showProductModal)
