@@ -9,23 +9,32 @@
     justify-content: space-between;
     align-items: center;
     background-color: transparent;
-    padding: 10px 30px;
-    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 50px;
+    border-bottom: 1px solid coral;
 }
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: -15px;
+}
+
+/* Welcome text */
+
+.welcome-text {
+    font-weight: bold;
+    color: dimgray;
+    font-size: 20px;
+    font-family: Arial, sans-serif;
+    margin-right: 20px;
+}
+
 
 .left {
     flex-basis: 20%;
     text-align: left;
-}
-
-/* Welcome text */
-.welcome-text {
-    margin: 0;
-    font-weight: bold;
-    color: dimgray;
-    font-size: 20px;
-    flex: 1;
-    font-family: Arial, sans-serif;
 }
 
 .right {
