@@ -196,7 +196,11 @@
     cursor: pointer;
 }
 
-/* Product details */
+/* Product details in product-card */
+.product-details{
+    padding: 10px;
+}
+
 .product-title {
     font-size: 1.2em;
     font-weight: bold;
@@ -217,27 +221,27 @@
     margin-bottom: 15px;
 }
 
-/* Optional styling for the currency if needed */
 .currency {
-    font-weight: normal; /* Ensure "Kr" is not bold */
+    font-weight: normal;
 }
 
-/* Add to Cart button */
-button.add-to-cart {
-    background-color: #ffc107;
-    color: #212529;
-    border: none;
-    padding: 10px;
-    font-size: 1em;
-    border-radius: 5px;
+.product-price-cart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px; 
+}
+
+.product-price-cart .price {
+    font-size: 18px;
+}
+
+.product-price-cart .cart-icon i {
+    font-size: 24px; 
     cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
+    color: coral; 
 }
 
-    button.add-to-cart:hover {
-        background-color: #e0a800;
-    }
 
 /* Adjust buttons styling */
 button.btn {

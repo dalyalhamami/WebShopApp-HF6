@@ -73,24 +73,24 @@ else
     <div class="row">
         @foreach (var prod in filteredProducts)
         {
-            <div class="col-md-4">
-                <div class="product-card">
+                <div class="col-md-4">
+                    <div class="product-card">
                         <img src="@prod.ImageUrl" alt="@prod.Name" class="product-image" @onclick="(() => OpenProductModal(prod))" />
-                    <div class="product-details">
+                        <div class="product-details">
                             <h5 class="product-title">@prod.Name</h5>
-                        <p class="product-description">Pleated Chiffon High Low Maxi Dress</p>
-                            <strong>@prod.Price</strong> <span class="currency">Kr</span>
+                            <p class="product-description">Pleated Chiffon High Low Maxi Dress</p>
+                            <!-- Flex container for price and cart icon -->
+                            <div class="product-price-cart">
+                                <div class="price">
+                                    <strong>@prod.Price</strong> <span class="currency">Kr</span>
+                                </div>
+                                <div class="cart-icon">
+                                    <i class="fa fa-cart-plus" aria-hidden="true" @onclick="(() => AddToCart_Click(prod))"></i>
+                                </div>
+                            </div>
                         </div>
-                    @if (prod.CartFlag)
-                    {
-                        <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Remove From Cart</button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Add To Cart</button>
-                    }
+                    </div>
                 </div>
-            </div>
         }
     </div>
 </div>
@@ -115,15 +115,9 @@ else
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" @onclick="CloseProductModal">Close</button>
-                @if (selectedProduct.CartFlag)
-                {
-                    <button type="button" class="btn btn-warning" @onclick="(() => AddToCart_Click(selectedProduct))">Remove from Cart</button>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-primary" @onclick="(() => AddToCart_Click(selectedProduct))">Add to Cart</button>
-                }
+                <button type="button" class="btn btn-primary" @onclick="(() => AddToCart_Click(selectedProduct))">Add to Cart</button>
             </div>
+
         </div>
     </div>
 }
@@ -156,7 +150,6 @@ else
     public List<ProductModel> products { get; set; }
     public bool IsUserLoggedIn = false;
     private UserModel user;
-    public bool cartFlag = false;
     public bool showProductModal = false;
     public ProductModel selectedProduct { get; set; }
     private bool showLoginModal = false;
@@ -167,7 +160,7 @@ else
     public List<CategoryModel> categories { get; set; }
     public int selectedCategoryId { get; set; }
     private int selectedSortOption = 0; // 0 = Default, 1 = Low to High, 2 = High to Low
-   
+
     protected override async Task OnInitializedAsync()
     {
         if (products == null) // Fetch products if not already initialized
@@ -213,15 +206,6 @@ else
         {
             myCart = result.Value;
             cartCount = myCart.Count;
-
-            if (products != null) // Ensure products are not null
-            {
-                foreach (var product in products)
-                {
-                    product.CartFlag = myCart.Any(cartItem => cartItem.ProductId == product.Id);
-                }
-            }
-            await sessionStorage.DeleteAsync("UpdateCartFlag");
         }
         else
         {
@@ -260,14 +244,11 @@ else
             myCart = result.Value;
         }
 
-        if (productClicked.CartFlag) // If product is already in the cart, remove it
+        var existingProduct = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
+
+        if (existingProduct != null)
         {
-            var existingProduct = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
-            if (existingProduct != null)
-            {
-                myCart.Remove(existingProduct);
-            }
-            productClicked.CartFlag = false; // Update CartFlag
+            existingProduct.Quantity += 1;
         }
         else // Otherwise, add it to the cart
         {
@@ -281,13 +262,11 @@ else
                     Price = Convert.ToInt32(productClicked.Price)
                 };
             myCart.Add(cm);
-            productClicked.CartFlag = true; // Update CartFlag
         }
-
         await sessionStorage.SetAsync("myCart", myCart);
         await UpdateCartText();
 
-        cartCount = myCart.Count;
+        cartCount = myCart.Sum(item => item.Quantity); // Calculate total quantity of items in the cart
         await notify.InvokeAsync(); // Notify other components to update
         StateHasChanged();
     }
@@ -298,7 +277,7 @@ else
         if (result.Success)
         {
             myCart = result.Value;
-            cartCount = myCart.Count;  // Update the cart count here
+            cartCount = myCart.Sum(item => item.Quantity);  // Update the cart count to reflect the total quantity of items
             StateHasChanged();
         }
     }
