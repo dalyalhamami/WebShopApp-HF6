@@ -9,55 +9,11 @@
 
 <div class="container-fluid">
     <div class="header">
-        @if (IsUserLoggedIn)
-        {
-            <div class="header-content">
-                <p class="welcome-text">Welcome, @user.Name!</p>
-      
-
-            <div class="search-container">
-                <input type="text" class="form-control search-input" placeholder="Søg ..." @bind="searchTerm" />
-                <button type="button" class="search-button" @onclick="FilterProducts">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-            </div>
-
-            <div class="filter-container">
-                <!-- Category Filter -->
-                <div class="form-group filter-select">
-                    @if (categories != null)
-                    {
-                        <select class="form-control custom-select" @onchange="@CategoryClicked">
-                            <option value="0">Kategori</option>
-                            @foreach (var cat in categories)
-                            {
-                                <option value="@cat.Id">@cat.Name</option>
-                            }
-                        </select>
-                    }
-                </div>
-                <!-- Price Filter -->
-                <div class="form-group filter-select">
-                    <select class="form-control custom-select" @onchange="@SortByPrice">
-                        <option value="0">Pris</option>
-                        <option value="1">Low - High</option>
-                        <option value="2">High - Low</option>
-                    </select>
-                </div>
-            </div>
-
-                <a href="/mycart">
-                    <i class="fa fa-shopping-cart">
-                        <span>@cartCount</span>
-                    </i>
-                </a>
-            </div>
-        }
-        else
-        {
         <div class="header-content">
-            <div class="left"/>
-              
+            <div class="left">
+                <img src="/Images/brandlogo.png" alt="Logo" class="logo-image" />
+            </div>
+
             <div class="search-container">
                 <input type="text" class="form-control search-input" placeholder="Søg ..." @bind="searchTerm" />
                 <button type="button" class="search-button" @onclick="FilterProducts">
@@ -89,9 +45,17 @@
                 </div>
             </div>
 
-            <div class="right"/>
+            <div class="right">
+                @if (IsUserLoggedIn)
+                {
+                    <a href="/mycart" class="shopping-cart">
+                        <i class="fa fa-shopping-cart">
+                            <span>@cartCount</span>
+                        </i>
+                    </a>
+                }
+            </div>
         </div>
-        }
     </div>
 </div>
 

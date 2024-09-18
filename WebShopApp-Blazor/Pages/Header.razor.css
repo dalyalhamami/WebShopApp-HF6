@@ -36,7 +36,11 @@
     font-family: Arial, sans-serif;
 }
 
-    .header-button i {
-        margin-right: 8px;
-    }
+.header-button i {
+    margin-right: 8px;
+}
+
+.header-button:hover{
+    color: coral;
+}
 

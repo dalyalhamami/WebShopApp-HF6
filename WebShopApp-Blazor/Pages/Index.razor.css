@@ -9,8 +9,8 @@
     justify-content: space-between;
     align-items: center;
     background-color: transparent;
-    padding: 10px 50px;
-    border-bottom: 1px solid coral;
+    padding: 10px 100px;
+    border-bottom: 1px  solid coral;
 }
 
 .header-content {
@@ -18,42 +18,42 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: -15px;
+    margin-bottom: -10px;
 }
 
-/* Welcome text */
-
-.welcome-text {
-    font-weight: bold;
-    color: dimgray;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    margin-right: 20px;
+/* Logo */
+.logo-image {
+    max-height: 40px; 
+    width: auto;
+    margin-right: 20px; 
 }
-
 
 .left {
-    flex-basis: 20%;
-    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
 }
 
 .right {
-    flex-basis: 20%;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 15px;
 }
 
 /* Shopping cart */
 .fa-shopping-cart {
     position: relative;
-    font-size: 24px;
-    color: darkolivegreen;
+    font-size: 28px;
+    color: dimgray;
 }
 
 .fa-shopping-cart span {
     position: absolute;
     top: -10px;
     right: -15px;
-    background-color: darkorange;
+    background-color: coral;
     color: white;
     font-size: 16px;
     font-weight: bold;
