@@ -5,12 +5,22 @@
 }
 
 .header {
+    position: relative; /* Ensure the pseudo-element positions relative to the header */
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: transparent;
-    padding: 10px 100px;
-    border-bottom: 1px  solid coral;
+    padding: 10px 10px;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, coral, transparent); /* Fading effect */
 }
 
 .header-content {
@@ -18,14 +28,15 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 2px;
 }
 
 /* Logo */
 .logo-image {
-    max-height: 40px; 
+    max-height: 120px; 
     width: auto;
     margin-right: 20px; 
+    margin-top: -30px;
 }
 
 .left {
@@ -319,20 +330,13 @@
 
 
 .modal-btn {
-
     border: none;
     padding: 10px;
     font-size: 1em;
     border-radius: 5px;
     cursor: pointer;
-    width: 30%;
-    transition: background-color 0.3s ease;
+    width: 25%;
 }
-
-/*.modal-btn:hover {
-    background-color:  coral;
-    color: white;
-}*/
 
 .confirm {
     background-color: coral;

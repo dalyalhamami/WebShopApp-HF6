@@ -37,7 +37,7 @@ main {
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #f1f1f1;
+    background: linear-gradient(90deg, #ced4da, #f8f9fa 50%, #ced4da); /* Darker at the ends, lighter in the middle */
     text-align: center;
     padding: 10px 0;
     z-index: 9999;
