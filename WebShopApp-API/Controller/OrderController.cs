@@ -11,7 +11,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost("Checkout")]
-    public async Task<ActionResult> Checkout(List<Cart> cartItems)
+    public async Task<ActionResult<string>> Checkout(List<Cart> cartItems)
     {
         if (cartItems == null || !cartItems.Any())
         {
@@ -62,13 +62,14 @@ public class OrderController : ControllerBase
             }
 
             await webShopAppDBContext.SaveChangesAsync();
+
+            // Return the order ID as a response
+            return Ok(orderId);
         }
         catch (Exception ex)
         {
             return BadRequest(("Error processing order.", ex.Message));
         }
-
-        return Ok(cartItems);
     }
 
     private string GenerateOrderId()

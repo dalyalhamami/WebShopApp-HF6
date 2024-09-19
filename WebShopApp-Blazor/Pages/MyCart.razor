@@ -82,6 +82,23 @@
 </div>
 
 
+@if (successPopup == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Alert <span class="close" @onclick="NavigateToMyAccount">&times;</span>
+            </div>
+            <div class="modal-body">
+                @Message
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" value="Close" @onclick="NavigateToMyAccount" />
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     [CascadingParameter]
     public EventCallback notify { get; set; }
@@ -92,6 +109,8 @@
     public int shippingCharges { get; set; }
     public int finalTotal { get; set; }
     private UserModel user;
+    public bool successPopup = false;
+    string Message = string.Empty;
 
     protected override Task OnInitializedAsync()
     {
@@ -171,19 +190,35 @@
                 item.UserId = user.Id;
             });
             await sessionStorage.SetAsync("myCart", myCart);
-            var result = await webShopAppService.Checkout(myCart);
-            if (result)
+
+            // Get the orderId from the Checkout service
+            var orderId = await webShopAppService.Checkout(myCart);
+            if (!string.IsNullOrEmpty(orderId))
             {
+                Message = $"Tak for din ordre. Din ordrenummer er: {orderId}";  // Display orderId in the message
+                ToggleSuccessPopup();
                 myCart.Clear();
                 await sessionStorage.SetAsync("myCart", myCart);
                 await notify.InvokeAsync();
-                navManager.NavigateTo("/myaccount");
             }
             else
             {
                 Console.WriteLine("Checkout failed");
             }
         }
+    }
+
+
+    private void ToggleSuccessPopup()
+    {
+        successPopup = !successPopup;
+    }
+
+    // New method to navigate after closing the modal
+    private void NavigateToMyAccount()
+    {
+        successPopup = false;
+        navManager.NavigateTo("/myaccount");
     }
 }
 
