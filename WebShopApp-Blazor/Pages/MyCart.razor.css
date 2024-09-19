@@ -123,6 +123,23 @@ textarea {
     font-weight: bold;
 }
 
+.checkout-row {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+
+/* Message Section */
+.message-section {
+    font-size: 20px;
+    text-align: center;
+}
+
+.message-section p {
+    color: coral;
+    margin: 0;
+}
+
 /* Checkout Button */
 .checkout-btn {
     background-color: coral;
@@ -131,12 +148,13 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    text-transform: uppercase;
+    margin-left: auto;
 }
 
 .checkout-btn:hover {
     background-color: black;
     color: coral;
+    margin-left:auto;
 }
 
 /* Empty Cart Image */

@@ -67,7 +67,16 @@
                 <tr>
                     <td></td>
                     <td>
-                        <button type="button" value="Checkout" class="checkout-btn" @onclick="@Checkout_Click">Til betaling</button>
+                        <div class="checkout-row">
+                            <!-- Message Section -->
+                            <div class="message-section" style="display: @(string.IsNullOrEmpty(alertMessage) ? "none" : "inline-block"); color: red; margin-right: 10px;">
+                                <p>@alertMessage</p>
+                            </div>
+
+                            <!-- Checkout Button -->
+                            <button type="button" value="Checkout" class="checkout-btn" @onclick="@Checkout_Click">Til betaling</button>
+                        </div>
+
                     </td>
                 </tr>
             </table>
@@ -113,6 +122,7 @@
     private UserModel user;
     public bool successPopup = false;
     string OnderNumber = string.Empty;
+    public string alertMessage { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -178,6 +188,16 @@
 
     private async Task Checkout_Click()
     {
+
+        // Validate Address
+        if (string.IsNullOrWhiteSpace(shippingAddress))
+        {
+            alertMessage = "Address er påkrævet";
+            return;
+        }
+
+        alertMessage = string.Empty;
+
         if (myCart != null && myCart.Count > 0)
         {
             // Calculate total before updating cart items
@@ -210,13 +230,11 @@
         }
     }
 
-
     private void ToggleSuccessPopup()
     {
         successPopup = !successPopup;
     }
 
-    // New method to navigate after closing the modal
     private void NavigateToMyAccount()
     {
         successPopup = false;
