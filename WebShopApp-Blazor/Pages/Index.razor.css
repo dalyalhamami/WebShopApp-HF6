@@ -51,6 +51,7 @@
     align-items: center;
     justify-content: flex-end;
     margin-top: 15px;
+    width:40px;
 }
 
 /* Shopping cart */
@@ -58,24 +59,25 @@
     position: relative;
     font-size: 28px;
     color: dimgray;
+    margin-right: 30px;
 }
 
 .fa-shopping-cart span {
     position: absolute;
-    top: -10px;
+    top: -12px;
     right: -15px;
     background-color: coral;
     color: white;
     font-size: 16px;
-    font-weight: bold;
     border-radius: 50%;
     padding: 5px;
     min-width: 24px;
     text-align: center;
+    font-family: sans-serif;
 }
 
 .right a:hover .fa-shopping-cart {
-    color: #388e3c;
+    color: black;
     transform: scale(1.1);
     transition: transform 0.2s ease;
 }
@@ -88,8 +90,8 @@
     overflow: hidden;
     background-color: #f1f1f1;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 400px; 
-    margin-top: 14px;
+    width: 300px;
+    margin-left: 550px;
 }
 
 .search-input {
@@ -133,7 +135,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 10px;
+    justify-content: flex-end; 
+    margin-left: auto;
+    margin-right: 100px;
 }
 
 .filter-select {
@@ -144,6 +148,7 @@
     background-color: #f1f1f1;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     padding: 0;
+    width:160px;
 }
 
 .custom-select {
@@ -157,7 +162,6 @@
     height: 42px;
     appearance: none;
     color: dimgrey;
-    transition: background-color 0.3s ease;
 }
 
 .custom-select option {

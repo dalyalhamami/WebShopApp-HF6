@@ -108,14 +108,14 @@ else
             </div>
             <div class="modal-body">
                 <img src="@selectedProduct.ImageUrl" alt="@selectedProduct.Name" />
-                <p><strong>Price:</strong> @selectedProduct.Price Kr</p>
-                <p><strong>Stock:</strong> @selectedProduct.Stock</p>
-                <p><strong>Category:</strong> @selectedProduct.CategoryName</p>
-                <p><strong>Description:</strong> @selectedProduct.Description</p>
+                <p><strong>Pris:</strong> @selectedProduct.Price Kr</p>
+                <p><strong>Lager:</strong> @selectedProduct.Stock</p>
+                <p><strong>Kategori:</strong> @selectedProduct.CategoryName</p>
+                <p><strong>Beskrivelse:</strong> @selectedProduct.Description</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="modal-btn cancel" @onclick="CloseProductModal">Close</button>
-                <button type="button" class="modal-btn confirm" @onclick="(() => AddToCart_Click(selectedProduct))">Add to Cart</button>
+                <button type="button" class="modal-btn cancel" @onclick="CloseProductModal">Luk</button>
+                <button type="button" class="modal-btn confirm" @onclick="(() => AddToCart_Click(selectedProduct))">Læg i kurv</button>
             </div>
         </div>
     </div>
@@ -126,17 +126,17 @@ else
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Login Required</h5>
+                <h5 class="modal-title">Login påkrævet</h5>
                 <button type="button" class="close custom-close" @onclick="CloseLoginModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>You need to login to add items to your cart. Do you want to login now?</p>
+                <p>Du skal logge ind for at tilføje varer til kurven. Vil du logge ind nu?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="modal-btn cancel" @onclick="CloseLoginModal">Cancel</button>
-                <button type="button" class="modal-btn confirm" @onclick="ConfirmLogin">Yes, log in</button>
+                <button type="button" class="modal-btn cancel" @onclick="CloseLoginModal">Nej tak</button>
+                <button type="button" class="modal-btn confirm" @onclick="ConfirmLogin">Ja</button>
             </div>
         </div>
     </div>
