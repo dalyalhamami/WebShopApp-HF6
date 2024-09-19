@@ -78,7 +78,7 @@ else
                         <img src="@prod.ImageUrl" alt="@prod.Name" class="product-image" @onclick="(() => OpenProductModal(prod))" />
                         <div class="product-details">
                             <h5 class="product-title">@prod.Name</h5>
-                            <p class="product-description">Pleated Chiffon High Low Maxi Dress</p>
+                            <p class="product-description">@prod.Description</p>
                             <!-- Flex container for price and cart icon -->
                             <div class="product-price-cart">
                                 <div class="price">
@@ -109,7 +109,6 @@ else
             <div class="modal-body">
                 <img src="@selectedProduct.ImageUrl" alt="@selectedProduct.Name" />
                 <p><strong>Pris:</strong> @selectedProduct.Price Kr</p>
-                <p><strong>Lager:</strong> @selectedProduct.Stock</p>
                 <p><strong>Kategori:</strong> @selectedProduct.CategoryName</p>
                 <p><strong>Beskrivelse:</strong> @selectedProduct.Description</p>
             </div>

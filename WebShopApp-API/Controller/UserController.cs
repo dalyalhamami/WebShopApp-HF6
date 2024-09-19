@@ -227,7 +227,7 @@ public class UserController : ControllerBase
         // Check if the new password already exists
         if (await webShopAppDBContext.User.AnyAsync(u => u.Password == password.HashedPassword))
         {
-            return BadRequest("You can't use that password. Please choose another");
+            return BadRequest("Du kan ikke bruge den adgangskode. Vælg venligst en anden");
         }
 
         // Update the user's password
@@ -263,7 +263,7 @@ public class UserController : ControllerBase
         // Check if the new password already exists
         if (await webShopAppDBContext.User.AnyAsync(u => u.Password == password.HashedPassword))
         {
-            return BadRequest("You can't use that password. Please choose another");
+            return BadRequest("Du kan ikke bruge den adgangskode. Vælg venligst en anden");
         }
 
         // Update user's password

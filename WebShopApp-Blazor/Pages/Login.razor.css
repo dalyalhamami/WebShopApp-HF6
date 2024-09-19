@@ -1,15 +1,4 @@
 ﻿
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #e0e0e0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .login-container {
     display: flex;
     width: 900px;
@@ -20,6 +9,7 @@ body {
     overflow: hidden;
     margin-left: 480px;
     margin-top: 240px;
+    font-family: 'Arial', sans-serif;
 }
 
 /* Register section */

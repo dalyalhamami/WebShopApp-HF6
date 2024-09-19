@@ -50,7 +50,7 @@
         // Validate Name
         if (string.IsNullOrEmpty(userModel.Name))
         {
-            alertMessage = "Name is required";
+            alertMessage = "Navn er påkrævet";
             StateHasChanged();
             return;
         }
@@ -58,13 +58,13 @@
         // Validate Email
         if (string.IsNullOrEmpty(userModel.Email))
         {
-            alertMessage = "Email is required";
+            alertMessage = "E-mail er påkrævet";
             StateHasChanged();
             return;
         }
         else if (!new EmailAddressAttribute().IsValid(userModel.Email))  // Using built-in validation
         {
-            alertMessage = "Invalid email address";
+            alertMessage = "Ugyldig e-mailadresse";
             StateHasChanged();
             return;
         }
@@ -72,7 +72,7 @@
         // Validate Mobile
         if (string.IsNullOrEmpty(userModel.Mobile))
         {
-            alertMessage = "Mobile number is required";
+            alertMessage = "Mobilnummer er påkrævet";
             StateHasChanged();
             return;
         }
@@ -80,7 +80,7 @@
         // Validate Password
         if (string.IsNullOrEmpty(userModel.Password))
         {
-            alertMessage = "Password is required";
+            alertMessage = "Adgangskode er påkrævet";
             StateHasChanged();
             return;
         }
@@ -88,7 +88,7 @@
         // Validate Password Length
         if (userModel.Password.Length < 6)
         {
-            alertMessage = "Password must be at least 6 characters long";
+            alertMessage = "Adgangskoden skal være mindst 6 tegn lang";
             StateHasChanged();
             return;
         }
@@ -96,7 +96,7 @@
         // Validate Confirm Password
         if (string.IsNullOrEmpty(userModel.ConfirmPassword))
         {
-            alertMessage = "Confirm Password is required";
+            alertMessage = "Bekræft adgangskode er påkrævet";
             StateHasChanged();
             return;
         }
@@ -104,7 +104,7 @@
         // Check if Password and Confirm Password match
         if (userModel.Password != userModel.ConfirmPassword)
         {
-            alertMessage = "Password and confirm password do not match";
+            alertMessage = "Adgangskode og bekræft adgangskode stemmer ikke overens";
             StateHasChanged();
             return;
         }
@@ -112,7 +112,7 @@
         // Validate Address
         if (string.IsNullOrEmpty(userModel.Address))
         {
-            alertMessage = "Address is required";
+            alertMessage = "Adresse er påkrævet";
             StateHasChanged();
             return;
         }
@@ -133,9 +133,13 @@
         {
             if (result.errorMessage.Contains("Email already exists"))
             {
-                alertMessage = "Error: The email address already exists";
+                alertMessage = "Fejl: E-mail adressen findes allerede, Vælg venligst en anden e-mail";
             }
-            else
+            else if (result.errorMessage.Contains("Please choose another password"))
+            {
+                alertMessage = "Fejl: Vælg venligst en anden adgangskode";
+            }
+            else 
             {
                 alertMessage = $"Error: {result.errorMessage}";
             }
