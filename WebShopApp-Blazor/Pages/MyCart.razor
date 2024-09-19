@@ -33,7 +33,7 @@
                         <td><strong>@cart.Price</strong> <span>Kr</span></td>
                         <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" /></td>
                         <td><strong class="subtotal">@(cart.Price * cart.Quantity)</strong> <span>Kr</span></td>
-                            <td><a @onclick="(() => RemoveFromCart_Click(cart))">Fjern</a></td>
+                        <td><a @onclick="(() => RemoveFromCart_Click(cart))">Fjern</a></td>
                     </tr>
                 }
                 </tbody>
@@ -81,19 +81,21 @@
     }
 </div>
 
-
 @if (successPopup == true)
 {
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                Alert <span class="close" @onclick="NavigateToMyAccount">&times;</span>
+                <span></span>
+                <button class="custom-close" @onclick="NavigateToMyAccount">&times;</button>
             </div>
             <div class="modal-body">
-                @Message
+                <h3>Tak for din bestilling</h3>
+                <h5>Vi går straks i gange med at pakke dine varer</h5>
+                <p>Din ordrenummer er: <span style="color: coral;">@OnderNumber</span></p>
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-primary" value="Close" @onclick="NavigateToMyAccount" />
+                <input type="button" class="close-btn" value="Close" @onclick="NavigateToMyAccount" />
             </div>
         </div>
     </div>
@@ -110,7 +112,7 @@
     public int finalTotal { get; set; }
     private UserModel user;
     public bool successPopup = false;
-    string Message = string.Empty;
+    string OnderNumber = string.Empty;
 
     protected override Task OnInitializedAsync()
     {
@@ -195,7 +197,7 @@
             var orderId = await webShopAppService.Checkout(myCart);
             if (!string.IsNullOrEmpty(orderId))
             {
-                Message = $"Tak for din ordre. Din ordrenummer er: {orderId}";  // Display orderId in the message
+                OnderNumber = $"{orderId}";
                 ToggleSuccessPopup();
                 myCart.Clear();
                 await sessionStorage.SetAsync("myCart", myCart);
