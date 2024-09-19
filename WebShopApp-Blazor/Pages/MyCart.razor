@@ -11,15 +11,15 @@
 <div class="cart-container">
     @if (@myCart != null && @myCart.Count > 0)
     {
-        <h2 class="page-title">Your Shopping Bag</h2>
+        <h2 class="page-title">Din Indkøbskurv</h2>
         <div class="product-table">
             <table>
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
+                        <th>Produkt</th>
+                        <th>Pris</th>
+                        <th>Antal</th>
                         <th>Subtotal</th>
                         <th></th>
                     </tr>
@@ -33,7 +33,7 @@
                         <td><strong>@cart.Price</strong> <span>Kr</span></td>
                         <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" /></td>
                         <td><strong class="subtotal">@(cart.Price * cart.Quantity)</strong> <span>Kr</span></td>
-                        <td><a @onclick="(() => RemoveFromCart_Click(cart))">Remove</a></td>
+                            <td><a @onclick="(() => RemoveFromCart_Click(cart))">Fjern</a></td>
                     </tr>
                 }
                 </tbody>
@@ -47,7 +47,7 @@
                     <td>@subTotal.00 Kr</td>
                 </tr>
                 <tr>
-                    <td>Shipping Charges</td>
+                    <td>Fragt omkostninger</td>
                     <td>@shippingCharges.00 Kr</td>
                 </tr>
                 <tr>
@@ -55,19 +55,19 @@
                     <td>@finalTotal.00 Kr</td>
                 </tr>
                 <tr>
-                    <td>Shipping Address</td>
+                    <td>Address</td>
                     <td>
                         <textarea rows="3" cols="30" name="shippingaddress" @bind="shippingAddress"></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td>Payment Mode</td>
+                    <td>Betalingsmetode</td>
                     <td>@paymentMode</td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
-                        <button type="button" value="Checkout" class="checkout-btn" @onclick="@Checkout_Click">Checkout</button>
+                        <button type="button" value="Checkout" class="checkout-btn" @onclick="@Checkout_Click">Til betaling</button>
                     </td>
                 </tr>
             </table>
