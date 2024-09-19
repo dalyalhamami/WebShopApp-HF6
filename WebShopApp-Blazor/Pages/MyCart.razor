@@ -143,7 +143,6 @@
             {
                 user = loggedInUser.Value;
             }
-            // To ensure UI is updated after data retrieval
             StateHasChanged();
 
             var result = await sessionStorage.GetAsync<List<CartModel>>("myCart");
@@ -168,7 +167,14 @@
 
     private async Task RemoveFromCart_Click(CartModel cartItem)
     {
-        myCart.Remove(cartItem);
+        if (cartItem.Quantity > 1)
+        {
+            cartItem.Quantity--; // Reduce quantity by 1
+        }
+        else
+        {
+            myCart.Remove(cartItem);
+        }
         await sessionStorage.SetAsync("myCart", myCart);
         onQuantityChange();
 
