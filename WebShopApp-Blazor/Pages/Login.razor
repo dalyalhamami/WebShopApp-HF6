@@ -4,38 +4,30 @@
 @inject NavigationManager navManager;
 @inject ProtectedSessionStorage sessionStorage;
 
-<div class="loginBox">
-    <div class="box">
-        <h1>Login</h1>
+<div class="login-container">
+    <!-- Register Section -->
+    <div class="register-section">
+        <h2>Er du ikke medlem?</h2>
+        <p>Bliv medlem for at få al den ekstra forkælelse, som Mercantøj tilbyder.</p>
+        <button class="register-button" @onclick="NavigateToRegister">Opret en profil</button>
+    </div>
 
+    <!-- Login Section -->
+    <div class="login-section">
+        <h1>Log ind</h1>
         <EditForm Model="@userLoginModel" OnValidSubmit="Login_Click">
-            <ValidationSummary />
+            <InputText type="email" name="email" class="email" placeholder="E-mail" @bind-Value="userLoginModel.Email" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;"/>
+                <br /><br />
+                <InputText type="password" name="password" class="password" placeholder="Adgangskode" @bind-Value="userLoginModel.Password" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding: 10px;"/>
+                <br /><br />
+                <a href="#" class="forgot-password" @onclick="NavigateToForgotPassword">Glemt adgangskode?</a>
+                <button type="submit" class="login-button" value="Login">Log ind</button>
+            </EditForm>
 
-            <InputText type="email" name="email" class="email" placeholder="Email" @bind-Value="userLoginModel.Email" autocomplete="off" />
-            <ValidationMessage For="@(() => userLoginModel.Email)" class="validation-message" />
-            <br /><br />
-            <InputText type="password" name="password" class="password" placeholder="Password" @bind-Value="userLoginModel.Password" />
-            <ValidationMessage For="@(() => userLoginModel.Password)" class="validation-message" />
-            <br /><br />
-            <input type="submit" class="btn-primary" value="Login" />
-        </EditForm>
-    </div>
-
-    <div>
-        <br /><br />
-        <p style="color: #e52e50;">
-            <h4>@alertMessage</h4>
-        </p>
-    </div>
-
-    <div class="forgot-password">
-        <p><a @onclick="NavigateToForgotPassword" class="primary-blue-link">Forgot Password?</a></p>
-    </div>
-
-    <!-- New section for registration prompt -->
-    <div class="registerBox">
-        <p>Don't have an account?</p>
-        <a class="primary-blue-link" @onclick="NavigateToRegister">Register</a>
+        <!-- Message Section -->
+        <div class="message-section" style="display: @(string.IsNullOrEmpty(alertMessage) ? "none" : "block")">
+            <p>@alertMessage</p>
+        </div>
     </div>
 </div>
 
