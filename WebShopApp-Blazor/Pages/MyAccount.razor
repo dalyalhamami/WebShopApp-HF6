@@ -72,39 +72,41 @@
                 {
                     @if (userOrders == null || userOrders.Count == 0)
                     {
-                        <p>No orders found</p>
+                        <p>Ingen ordrer fundet</p>
                     }
                     else
                     {
-                        <table class="table table-striped table-bordered bg-light">
-                            <thead>
-                                <tr>
-                                    <th>Order</th>
-                                    <th>Order Date</th>
-                                    <th style="width:80px;">Track</th>
-                                    <th style="width:80px;">Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var ord in userOrders)
-                                {
+                        <div class="order-history-card">
+                            <table class="table table-striped table-bordered bg-light history-table">
+                                <thead>
                                     <tr>
-                                        <td class="button-cell">@ord.OrderId</td>
-                                        <td class="button-cell">@ord.CreatedOn</td>
-                                        <td class="button-cell">
-                                            <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
-                                                <i class="fa fa-truck"></i>
-                                            </button>
-                                        </td>
-                                        <td class="button-cell">
-                                            <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
-                                                <i class="fa fa-info-circle"></i>
-                                            </button>
-                                        </td>
+                                        <th>Ordre</th>
+                                        <th>Ordredato</th>
+                                        <th style="width:80px;">Spor</th>
+                                        <th style="width:80px;">Detaljer</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ord in userOrders)
+                                    {
+                                        <tr>
+                                            <td class="button-cell">@ord.OrderId</td>
+                                            <td class="button-cell">@ord.CreatedOn</td>
+                                            <td class="button-cell">
+                                                <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
+                                                    <i class="fa fa-truck"></i>
+                                                </button>
+                                            </td>
+                                            <td class="button-cell">
+                                                <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>              
                     }
                 }
 
@@ -163,93 +165,15 @@
                     </div>
                 }
 
-                @if (showOrderDetail == true)
-                {
-                    <div class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5>Order Details</h5>
-                                <span class="close" @onclick="ToggleOrderDetailPopup">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                @if (myCart != null && myCart.Count > 0)
-                                {
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="button-cell">Product</th>
-                                                        <th class="button-cell">Quantity</th>
-                                                        <th class="button-cell">Prise</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var cart in myCart)
-                                                    {
-                                                        <tr>
-                                                            <td class="button-cell">
-                                                                <div class="product-info">
-                                                                    <div class="product-image">
-                                                                        <img src="@cart.ProductImage" alt="Product" />
-                                                                    </div>
-                                                                    <div class="product-details">
-                                                                        <p>@cart.ProductName</p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="button-cell">@cart.Quantity</td>
-                                                            <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <table class="summary-table">
-                                            <tr>
-                                                <td style="font-weight:bold;">Subtotal</td>
-                                                <td class="button-cell">$@subTotal.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Shipping Charges</td>
-                                                <td class="button-cell">$@shippingCharges.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Total</td>
-                                                <td class="button-cell">$@finalTotal.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Shipping Address</td>
-                                                <td class="button-cell">@shippingAddress</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Payment Mode</td>
-                                                <td class="button-cell">@paymentMode</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <p>No items found in the order.</p>
-                                }
-                            </div>
-                            <div class="modal-footer">
-                                <input type="button" class="btn btn-secondary" value="Close" @onclick="ToggleOrderDetailPopup" />
-                            </div>
-                        </div>
-                    </div>
-                }
-
                 @if (showTrackOrder == true)
                 {
                     <div class="modal">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5>Track Order</h5>
-                                <span class="close" @onclick="ToggleTrackOrderPopup">&times;</span>
+                                <h5>Spor Ordre</h5>
+                                <span class="custom-close" @onclick="ToggleTrackOrderPopup">&times;</span>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="margin-left: 20px;">
                                 @if (shippingStatuses != null && shippingStatuses.Count > 0)
                                 {
                                     <table>
@@ -267,11 +191,84 @@
                                 }
                                 else
                                 {
-                                    <span>No update on order shipping. Please check after some time.</span>
+                                    <span>Ingen opdatering på ordrelevering. Venligst tjek igen senere</span>
                                 }
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleTrackOrderPopup" />
+                                <input type="button" class="close-btn" value="Luk" @onclick="ToggleTrackOrderPopup" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (showOrderDetail == true)
+                {
+                    <div class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Ordredetaljer</h5>
+                                <button class="custom-close" @onclick="ToggleOrderDetailPopup">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                @if (myCart != null && myCart.Count > 0)
+                                {
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="button-cell">Produkt</th>
+                                                        <th class="button-cell">Antal</th>
+                                                        <th class="button-cell">Pris</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var cart in myCart)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <img class="product-image" src="@cart.ProductImage" alt="Product" />
+                                                            </td>
+                                                            <td class="button-cell">@cart.ProductName</td>
+                                                            <td class="button-cell">@cart.Quantity</td>
+                                                            <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <table class="summary-table">
+                                            <tr>
+                                                <td style="font-weight:bold;">Subtotal</td>
+                                                <td class="button-cell">@subTotal.00 Kr</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Fragt</td>
+                                                <td class="button-cell">@shippingCharges.00 Kr</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Total</td>
+                                                <td class="button-cell">@finalTotal.00 Kr</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Adresse</td>
+                                                <td class="button-cell">@shippingAddress</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Betalingsmetode</td>
+                                                <td class="button-cell">@paymentMode</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Ingen varer fundet i ordren</p>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="close-btn" value="Luk" @onclick="ToggleOrderDetailPopup" />
                             </div>
                         </div>
                     </div>
@@ -281,7 +278,7 @@
     }
     else
     {
-        <p>No user data found. Please <a href="/login">login</a>.</p>
+        <p>Ingen brugerdata fundet. Venligst <a href="/login">log ind</a></p>
     }
 </div>
 
