@@ -26,7 +26,7 @@
                     <div class="profile-card row">
                         <div class="profile-title col-6">
                             <h2>Min Profil</h2> 
-                            <p>Hej, @user.Name!</p>
+                            <p style="margin-top: 10px;">Hej, @user.Name!</p>
                             <p>Du kan administrere din profil og se dine ordrer herfra</p>
                         </div>  
                         <div style="display:flex; justify-content:space-between;" class="col-6">
@@ -46,27 +46,23 @@
 
                 @if (changePasswordFlag)
                 {
-                    <div class="form-group">
+                    <div class="password-change-container">
                         <EditForm Model="@passwordModel" OnValidSubmit="ChangePassword_Click">
-                            <DataAnnotationsValidator />
-                            <div class="form-group">
-                                <label>Old Password:</label>
-                                <InputText type="password" class="form-control" id="oldpwd" @bind-Value="passwordModel.OldPassword" autocomplete="off"></InputText>
-                                <ValidationMessage For="@(() => passwordModel.OldPassword)"></ValidationMessage>
+
+                            <div class="password-form">
+                                <InputText type="password" name="password" placeholder="Nuværende adgangskode" class="password" @bind-Value="passwordModel.OldPassword" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 80%; padding:10px;" />
                             </div>
-                            <div class="form-group">
-                                <label>New Password:</label>
-                                <InputText type="password" class="form-control" id="newpwd" @bind-Value="passwordModel.Password" autocomplete="off"></InputText>
-                                <ValidationMessage For="@(() => passwordModel.Password)"></ValidationMessage>
+
+                            <div class="password-form">
+                                <InputText type="password" name="password" placeholder="Ny adgangskode" class="password" @bind-Value="passwordModel.Password" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 80%; padding:10px;" />
                             </div>
-                            <div class="form-group">
-                                <label>Confirm Password:</label>
-                                <InputText type="password" class="form-control" id="confirmpwd" @bind-Value="confirmPassword" autocomplete="off"></InputText>
-                                <ValidationMessage For="@(() => confirmPassword)"></ValidationMessage>
+
+                            <div class="password-form">
+                                <InputText type="password" name="confirmPassword" placeholder="Bekræft adgangskode" class="password" @bind-Value="confirmPassword" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 80%; padding:10px;" />
                             </div>
-                            <br />
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                            <div class="password-form">
+                                <button type="submit" class="modal-btn confirm">Gem</button>
                             </div>
                         </EditForm>
                     </div>
@@ -443,9 +439,22 @@
 
     private async Task ChangePassword_Click()
     {
+        if (string.IsNullOrEmpty(passwordModel.OldPassword))
+        {
+            Message = "Nuværende Adgangskode er påkrævet";
+            ToggleAlertMessage();
+            return;
+        }
+        else if (string.IsNullOrEmpty(passwordModel.Password))
+        {
+            Message = "Ny Adgangskode er påkrævet";
+            ToggleAlertMessage();
+            return;
+        }
+
         if (passwordModel.Password != confirmPassword)
         {
-            Message = "Password & Confirm Password do not match";
+            Message = "Adgangskode og bekræft adgangskode stemmer ikke overens";
             ToggleAlertMessage();
             return;
         }
@@ -461,7 +470,7 @@
             {
                 passwordModel = new PasswordModel();
                 confirmPassword = string.Empty;
-                Message = "Password changed successfully";
+                Message = "Adgangskode ændret med succes";
             }
             else
             {
