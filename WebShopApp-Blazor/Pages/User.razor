@@ -4,26 +4,26 @@
 @inject NavigationManager navManager;
 @inject ProtectedSessionStorage sessionStorage;
 
-<div class="column content">
     @if (users == null)
     {
-        <span>Loading...</span>
+        <span>Indlæser...</span>
     }
     else
     {
         <div class="card">
-            <h4 class="card-header">Users</h4>
+            <h4 class="card-header">Brugere</h4>
 
             <div class="card-body">
-                <table class="table table-striped table-bordered bg-light">
+                <table class="table table-striped table-bordered bg-light user-table">
                     <thead>
                         <tr>
-                            <th class="button-cell">No.</th>
-                            <th class="button-cell">Name</th>
-                            <th class="button-cell">Email</th>
-                            <th class="button-cell">Role</th>
-                            <th class="button-cell">Details</th>
-                            <th class="button-cell">Orders</th>
+                            <th class="button-cell">Nr.</th>
+                            <th class="button-cell">Navn</th>
+                            <th class="button-cell">E-mail</th>
+                            <th class="button-cell">Mobil</th>
+                            <th class="button-cell">Rolle</th>
+                            <th class="button-cell">Rediger</th>
+                            <th class="button-cell">Ordrer</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,15 +33,16 @@
                                 <td class="button-cell">@index</td>
                                 <td class="button-cell">@user.Name</td>
                                 <td class="button-cell">@user.Email</td>
+                                <td class="button-cell">@user.Mobile</td>
                                 <td class="button-cell">@(user.Roles == 1 ? "Admin" : "User")</td>
                                 <td class="button-cell">
                                     <button class="btn custom-btn" @onclick="(() => EditUser(user))">
-                                        <i class="fa fa-info-circle"></i>
+                                        <i class="fa fa-pencil"></i>
                                     </button>
                                 </td>
                                 <td class="button-cell">
                                     <button class="btn custom-btn" @onclick="(() => ViewUserOrderDetails(user.Id))">
-                                        <i class="fa fa-archive"></i>
+                                        <i class="fa fa-info-circle"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -51,21 +52,20 @@
             </div>
         </div>
     }
-</div>
 
 @if (showAlertMessage)
 {
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>Alert</h5>
-                <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+                <span></span>
+                <button class="custom-close" @onclick="ToggleSuccessPopup">&times;</button>
             </div>
             <div class="modal-body">
                 @Message
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+                <input type="button" class="close-btn" value="Luk" @onclick="ToggleSuccessPopup" />
             </div>
         </div>
     </div>
@@ -76,41 +76,39 @@
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>User Details</h5>
-                <span class="close" @onclick="ToggleEditPopup">&times;</span>
+                <h5>Rediger Bruger</h5>
+                <button class="custom-close" @onclick="ToggleEditPopup">&times;</button>
             </div>
             <div class="modal-body">
                 <EditForm Model="@userToEdit" OnValidSubmit="UpdateUser">
-                    <DataAnnotationsValidator />
-                    <div class="form-group">
-                        <label>Name :</label>
+                    <div class="user-info">
+                        <label>Navn:</label>
                         <InputText @bind-Value="userToEdit.Name" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>Email :</label>
+                    <div class="user-info">
+                        <label>E-mail:</label>
                         <InputText @bind-Value="userToEdit.Email" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>Mobile :</label>
+                    <div class="user-info">
+                        <label>Mobil:</label>
                         <InputText @bind-Value="userToEdit.Mobile" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>Address :</label>
+                    <div class="user-info">
+                        <label>Adresse:</label>
                         <InputText @bind-Value="userToEdit.Address" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label>Role :</label>
+                    <div class="user-info">
+                        <label>Rolle:</label>
                         <select @bind="@userToEdit.Roles" class="form-control">
                             <option value="1">Admin</option>
                             <option value="0">User</option>
                         </select>
-                        <ValidationMessage For="@(() => userToEdit.Roles)" />
                     </div>
                 </EditForm>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Save" @onclick="UpdateUser" />
-                <input type="button" class="btn btn-primary" value="Cancel" @onclick="ToggleEditPopup" />
+                <input type="button" class="modal-btn cancel" value="Annuller" @onclick="ToggleEditPopup" />
+                <input type="submit" class="modal-btn confirm" value="Gem" @onclick="UpdateUser" />
             </div>
         </div>
     </div>
@@ -121,49 +119,49 @@
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>Order Details</h5>
-                <span class="close" @onclick="ToggleOrderDetailsPopup">&times;</span>
+                <h5>Ordredetaljer</h5>
+                <button class="custom-close" @onclick="ToggleOrderDetailsPopup">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="height: 500px; overflow-y:scroll;">
                 @if (orderDetailsWithOrderId == null || orderDetailsWithOrderId.Count == 0)
                 {
-                    <p>No orders found for this user</p>
+                    <p>Ingen ordrer fundet for denne bruger</p>
                 }
                 else
                 {
                     @foreach (var order in orderDetailsWithOrderId)
                     {
                         <div class="order-container" style="margin-bottom: 20px;">
-                            <h6>Order ID: @order.OrderId</h6>  @* Display Order ID *@
+                            <h6 style="color:coral; font-weight:bold; text-align:left; padding:5px;">Ordre-ID: @order.OrderId</h6>  @* Display Order ID *@
 
                             <table class="table table-striped table-bordered bg-light">
                                 <tbody>
                                     @foreach (var item in order.Details)
                                     {
                                         <tr>
-                                            <th>Product Name:</th>
-                                            <td>@item.ProductName</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Product Image:</th>
+                                            <th>Produkt billede:</th>
                                             <td>
-                                                <img src="@item.ProductImage" alt="@item.ProductName" style="width: 100px; height: auto;" />
+                                                <img src="@item.ProductImage" alt="@item.ProductName" style="width: 70px; height: auto;" />
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Quantity:</th>
+                                            <th>Produkt navn:</th>
+                                            <td>@item.ProductName</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Antal:</th>
                                             <td>@item.Quantity</td>
                                         </tr>
                                         <tr>
-                                            <th>Shipping Address:</th>
+                                            <th>Adresse:</th>
                                             <td>@item.ShippingAddress</td>
                                         </tr>
                                         <tr>
-                                            <th>Price:</th>
+                                            <th>Pris:</th>
                                             <td>$@item.Price.00</td>
                                         </tr>
                                         <tr>
-                                            <th>Shipping Charges:</th>
+                                            <th>Fragt:</th>
                                             <td>$@item.ShippingCharges.00</td>
                                         </tr>
                                         <tr>
@@ -171,7 +169,7 @@
                                             <td>$@item.Total.00</td>
                                         </tr>
                                         <tr>
-                                            <th>Payment Mode:</th>
+                                            <th>Betalingsmetode:</th>
                                             <td>@item.PaymentMode</td>
                                         </tr>
                                     }
@@ -184,7 +182,7 @@
                 }
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleOrderDetailsPopup" />
+                <input type="button" class="close-btn" value="Luk" @onclick="ToggleOrderDetailsPopup" />
             </div>
         </div>
     </div>
