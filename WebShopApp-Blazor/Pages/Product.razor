@@ -4,100 +4,92 @@
 @inject NavigationManager navManager;
 @inject ProtectedSessionStorage sessionStorage;
 
-<div class="column content">
     @if (productModel == null)
     {
-        <span>Loading...</span>
+       <span>Indlæser...</span>
     }
     else
     {
         <div class="card">
-            <h4 class="card-header">Add New Product</h4>
+            <h4 class="card-header">Tilføj nyt produkt</h4>
 
             <div class="card-body">
                 <EditForm Model="@productModel" OnValidSubmit="SaveProduct">
-                    <DataAnnotationsValidator />
 
                     <div class="form-group row">
                         <div class="form-group col-3">
-                            <label>Name :</label>
+                            <label>Navn:</label>
                             <InputText @bind-Value="productModel.Name" class="form-control" />
-                            <ValidationMessage For="@(() => productModel.Name)" />
                         </div>
                         <div class="form-group col-3">
-                            <label>Price :</label>
+                            <label>Pris:</label>
                             <InputNumber @bind-Value="productModel.Price" class="form-control" />
-                            <ValidationMessage For="@(() => productModel.Price)" />
                         </div>
                         <div class="form-group col-3">
-                            <label>Stock :</label>
+                            <label>Lager:</label>
                             <InputNumber @bind-Value="productModel.Stock" class="form-control" />
-                            <ValidationMessage For="@(() => productModel.Stock)" />
                         </div>
                         <div class="form-group col-3">
-                            <label>Category :</label>
+                            <label>Kategori:</label>
                             @if (categories != null)
                             {
                                 <select class="form-control" @onchange="@CategoryClicked">
-                                    <option value="">- Select -</option>
+                                <option value="">- Vælg -</option>
                                     @foreach (var cat in categories)
                                     {
                                         <option value="@cat.Id">@cat.Name</option>
                                     }
                                 </select>
                             }
-                            <ValidationMessage For="@(() => productModel.CategoryId)" />
                         </div>
                     </div>
                     <br />
                     <div class="form-group row">
                         <div class="form-group col-6">
-                            <label>Description :</label>
+                        <label>Beskrivelse:</label>
                             <InputText @bind-Value="productModel.Description" class="form-control" />
-                            <ValidationMessage For="@(() => productModel.Description)" />
                         </div>
                         <div class="form-group col-6">
-                            <label>Select Photo :</label>
+                        <label>Vælg billede:</label>
                             <label style="border:1px ridge #808080; display: block;">
                                 <InputFile OnChange="@OnInputFileChange" multiple></InputFile>
                             </label>
-                            <div class="table-responsive">
-                                <table class="table" style="border:1px ridge #808080; width: 100%;">
-                                    <tr>
-                                        @foreach (var imgsrc in imageUrls)
-                                        {
-                                            <td style="padding: 10px;">
-                                                <img src="@imgsrc" style="max-width: 100%; height: auto; border: 1px solid #ddd;">
-                                            </td>
-                                        }
-                                    </tr>
-                                </table>
-                            </div>
+                            <table>
+                                <tr>
+                                   @foreach (var imgsrc in imageUrls)
+                                    {
+                                    <td style="padding: 10px;">
+                                        <img src="@imgsrc" style="max-width: 100%; height: auto; border: 1px solid #ddd; margin-left:450px;">
+                                    </td>
+                                    }
+                                 </tr>
+                            </table>
                         </div>
                     </div>
                     <br />
-                    <div class="text-left">
-                        <input type="submit" class="btn btn-primary" value="Save" />
-                        <input type="button" class="btn btn-primary" value="Clear" @onclick="ClearForm" />
+                    <div class="button-right">
+                        <input type="button" class="btn-clear" value="Ryd" @onclick="ClearForm" />
+                        <input type="submit" class="btn-save" value="Gem" />
                     </div>
                 </EditForm>
             </div>
 
-            <div class="card-body">
+            <div class="product-card">
                 @if (products == null)
                 {
-                    <span>Loading...</span>
+                    <span>Indlæser...</span>
                 }
                 else
                 {
-                    <table class="table table-striped table-bordered bg-light">
+                    <table class="table table-striped table-bordered bg-light product-table">
                         <thead>
                             <tr>
-                                <th class="button-cell">No.</th>
-                                <th class="button-cell">Title</th>
-                                <th class="button-cell">Category</th>
-                                <th class="button-cell">Edit</th>
-                                <th class="button-cell">Delete</th>
+                                <th class="button-cell">Nr.</th>
+                                <th class="button-cell">Titel</th>
+                                <th class="button-cell">Kategori</th>
+                                <th class="button-cell">Lager</th>
+                                <th class="button-cell">Rediger</th>
+                                <th class="button-cell">Slet</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -107,6 +99,7 @@
                                     <td class="button-cell">@index</td>
                                     <td class="button-cell">@prod.Name</td>
                                     <td class="button-cell">@prod.CategoryName</td>
+                                    <td class="button-cell">@prod.Stock</td>
                                     <td class="button-cell">
                                         <button class="btn custom-btn" @onclick="(() => EditButtonClick(prod))">
                                             <i class="fa fa-pencil"></i>
@@ -125,43 +118,36 @@
             </div>
         </div>   
     }
-</div>    
 
 @if (showEditPopup == true)
 {
   <div class="modal">
       <div class="modal-content">
             <div class="modal-header">
-                <h5>Edit Product</h5>
-                <span class="close" @onclick="ToggleEditPopup">&times;</span>
+                <h5>Rediger Produkt</h5>
+                <button class="custom-close" @onclick="ToggleEditPopup">&times;</button>
             </div>
             <div class="modal-body">
                 <EditForm Model="@productToUpdate" OnInvalidSubmit="UpdateProduct">
-                    <DataAnnotationsValidator />
-                    <div class="form-row">
-                        <div class="form-group col-5">
-                            <label>Name :</label>
+                        <div class="product-info">
+                            <label>Navn:</label>
                             <InputText @bind-Value="productToUpdate.Name" class="form-control" />
-                            <ValidationMessage For="@(() => productToUpdate.Name)" />
                         </div>
-                        <div class="form-group col-5">
-                            <label>Price :</label>
+                        <div class="product-info">
+                            <label>Pris:</label>
                             <InputNumber @bind-Value="productToUpdate.Price" class="form-control" />
-                            <ValidationMessage For="@(() => productToUpdate.Price)" />
                         </div>
-                        <div class="form-group col-5">
-                            <label>Stock :</label>
+                        <div class="product-info">
+                            <label>Lager:</label>
                             <InputNumber @bind-Value="productToUpdate.Stock" class="form-control" />
-                            <ValidationMessage For="@(() => productToUpdate.Stock)" />
                         </div>
-                        <div class="form-group col-5">
-                            <label>Description :</label>
+                        <div class="product-info">
+                            <label>Beskrivelse: </label>
                             <InputText @bind-Value="productToUpdate.Description" class="form-control" />
-                            <ValidationMessage For="@(() => productToUpdate.Description)" />
                         </div>
-                        <div class="form-group col-5">
-                            <label>Category :</label>
-                            <select class="form-control" @bind="@productToUpdate.CategoryId">
+                        <div class="product-info">
+                            <label>Kategori:</label>
+                            <select @bind="@productToUpdate.CategoryId" style="width:100%;  border-radius:5px;">
                                 @if (categories != null)
                                 {
                                     foreach (var cat in categories)
@@ -171,12 +157,12 @@
                                 }
                             </select>
                         </div>
-                    </div>
                 </EditForm>
             </div>
+            <br /><br />
             <div class="modal-footer">
-                <input type="button" class="btn btn-primary" value="Save" @onclick="UpdateProduct" />
-                <input type="button" class="btn btn-primary" value="Cancel" @onclick="ToggleEditPopup" />
+                <input type="button" class="modal-btn cancel" value="Annuller" @onclick="ToggleEditPopup" />
+                <input type="button" class="modal-btn confirm" value="Gem" @onclick="UpdateProduct" />
             </div>
       </div>
   </div>  
@@ -187,15 +173,15 @@
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>Delete Product</h5>
-                <span class="close" @onclick="ToggleDeletePopup">&times;</span>
+                <h5>Slet Produkt</h5>
+                <button class="custom-close" @onclick="ToggleDeletePopup">&times;</button>
             </div>
             <div class="modal-body">
-                Are you sure you want to Delete <span style="background-color:yellow;">@productToDelete.Name</span> Product?
+                Er du sikker på, at du vil slette <span style="background-color: #ffc1b3;">@productToDelete.Name</span> produktet?
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-primary" value="Yes" @onclick="DeleteProduct" />
-                <input type="button" class="btn btn-primary" value="No" @onclick="ToggleDeletePopup" />
+                <input type="button" class="modal-btn cancel" value="Nej" @onclick="ToggleDeletePopup" />
+                <input type="button" class="modal-btn confirm" value="Ja" @onclick="DeleteProduct" />
             </div>
         </div>
     </div>
@@ -206,13 +192,14 @@
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+                <span></span>
+                <button class="custom-close" @onclick="ToggleSuccessPopup">&times;</button>
             </div>
             <div class="modal-body">
                 @Message
             </div>
             <div class="modal-footer">
-                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+                <input type="button" class="close-btn" value="Luk" @onclick="ToggleSuccessPopup" />
             </div>
         </div>
     </div>
@@ -285,12 +272,12 @@
             }
             else
             {
-                Console.WriteLine("Failed to save product");
+                Console.WriteLine("Kunne ikke gemme produkt");
             }
         }
         else
         {
-            Console.WriteLine("Failed to upload image");
+            Console.WriteLine("Kunne ikke uploade billede");
         }
     }
 
@@ -308,14 +295,14 @@
         if (updatedProduct != null)
         {
             ToggleEditPopup();
-            Message = "Product Updated Successfully !!";
+            Message = "Produkt opdateret med succes !!";
             ToggleSuccessPopup();
             productToUpdate = new ProductModel();
             await GetProducts();
         }
         else
         {
-            Message = "Product Not Updated. Try Again !!";
+            Message = "Produktet blev ikke opdateret. Prøv igen !!";
             ToggleSuccessPopup();
         }
     }
@@ -328,11 +315,11 @@
             ToggleDeletePopup();
             if (flag)
             {
-                Message = "Product Deleted Successfully !!";
+                Message = "Produktet blev slettet med succes !!";
             }
             else
             {
-                Message = "Product Not Deleted. Try Again !!";
+                Message = "Produktet blev ikke slettet. Prøv igen !!";
             }
 
             ToggleSuccessPopup();
@@ -378,7 +365,7 @@
             var imgData = $"data:image/jpg;base64,{Convert.ToBase64String(buffer)}";
             imageUrls.Add(imgData);
         }
-        Message = $"{selectedFiles.Count} file(s) selected";
+        Message = $"{selectedFiles.Count} fil(er) valgt";
         StateHasChanged();
     }
 

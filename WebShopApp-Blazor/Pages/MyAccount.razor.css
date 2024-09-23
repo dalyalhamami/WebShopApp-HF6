@@ -276,7 +276,15 @@
 
 .button-cell {
    align-content: center;
-} 
+}
+
+.empty-history {
+    font-weight:bold;
+    text-align: center; 
+    font-size:26px; 
+    color: dimgray;
+    margin-top: 25%;
+}
 
 /* Order details modal */
 .card-body {
@@ -315,4 +323,8 @@
 .summary-table td {
    padding: .75rem;
    vertical-align: top;
+}
+
+.custom-btn:hover {
+    color: coral;
 }
