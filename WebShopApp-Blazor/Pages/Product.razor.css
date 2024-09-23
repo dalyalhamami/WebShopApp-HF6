@@ -113,7 +113,7 @@
     color: white;
 }
 
-.product-card {
+.card-body {
     overflow-y: auto;
     max-height: 400px;
     margin-top: 10px;
