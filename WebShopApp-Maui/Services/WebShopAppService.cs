@@ -391,7 +391,7 @@ public class WebShopAppService : IWebShopAppService
 
     //...................................................... Order .......................................................//
 
-    public async Task<bool> Checkout(List<CartModel> cartItems)
+    public async Task<string> Checkout(List<CartModel> cartItems)
     {
         try
         {
@@ -400,17 +400,19 @@ public class WebShopAppService : IWebShopAppService
 
             if (response.IsSuccessStatusCode)
             {
-                return true;
+                // Read the orderId from the API response
+                var orderId = await response.Content.ReadAsStringAsync();
+                return orderId;  // Return the orderId to Blazor page
             }
             else
             {
-                return false;
+                return null;  // Return null if the request fails
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Exception occurred: {ex.Message}");
-            return false;
+            return null;
         }
     }
 

@@ -6,164 +6,373 @@
 @inject NavigationManager navManager;
 
 <style>
-    .container {
-        max-width: 1200px;
-        background-color: transparent;
-        margin-top: 40px;
-        margin-right: auto;
-        margin-left: auto;
-        text-align: center; /* Center content within container */
+    .cart-container {
+        width: 100%; 
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 50px;
     }
 
-    table {
-        width: 100%;
-        max-width: 600px; /* Limit the width for better alignment on mobile */
-        border-collapse: collapse;
-        margin-left: auto;
-        margin-right: auto; /* Center the table */
-        text-align: left;
-    }
-
-    .cart-info {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center; /* Center items in the row */
-    }
-
-    th, td {
-        padding: 10px 5px;
+    .page-title {
+        color: coral;
+        margin: 50px 10px 10px; 
         text-align: center; 
     }
 
-    .total-price {
-        border-top: 3px solid #ff523b;
-        text-align: center;
+    .product-table {
         width: 100%;
-        padding: 20px;
+        border-collapse: collapse;
+        table-layout: fixed;
     }
 
-    .empty-cart-image img {
-        width: 50%;
-        max-width: 200px;
-        height: auto;
-        margin: 0 auto;
+   .product-table thead th {
+       background-color: #f2f2f2;
+       text-transform: uppercase;
+       padding: 10px;
+       position: sticky;
+       top: 0;
+       z-index: 1;
+       text-align: center;
+       vertical-align: middle;
+   }
+
+    .product-table tbody {
+        display: table-row-group;
+        max-height: 320px; 
+        overflow-y: auto;
+    }
+
+    .product-table tbody td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+        vertical-align: middle;
+        overflow: hidden; 
+        white-space: nowrap; 
+    }
+
+    .product-table thead, .product-table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    /* Product Image Styling */
+    .product-table tbody td img {
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    .product-table tbody td:nth-child(1) {
+        width: 40%; 
+    }
+
+    .product-table tbody td:nth-child(2) {
+        width: 20%; 
+        padding-left: 10px; 
+    }
+
+    .product-table th:nth-child(4),
+    .product-table td:nth-child(4) {
+        width: 10%; 
+        text-align: center; 
+    }
+
+    .product-table tbody td .fa-trash {
         display: block;
+        margin: 0 auto; 
+        font-size: 18px; 
+        color: coral;
     }
 
-    /* Adjusting the image and input sizes directly for mobile use */
-    .cart-info img {
-        width: 60px; /* Smaller image size for mobile */
-        height: 60px;
+    .product-table input {
+        width: 50px;
+        height: 30px;
+        margin-left: 10px;
+        padding: 5px;
     }
 
-    td input {
-        width: 50px; /* Smaller input width for mobile */
+    .subtotal {
+        margin-left: 10px; 
     }
 
-    .total-price {
-        border-top: 3px solid #ff523b;
+    .cart-container a {
+        color: coral;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .total-tabel {
+        background: linear-gradient(to right, coral, transparent);
+        content: '';
+        height: 3px;
+        padding-top: 20px;
+        margin-top: 20px;
+    }
+
+   .total-tabel table {
+       width: 100%; 
+       margin-left: 0;
+       margin-top: 10px;
+   }
+
+   .total-tabel table td {
+       padding: 8px 0;
+   }
+
+    .total-tabel table td:first-child {
+       text-align: left;
+    }
+
+    .total-tabel table td:last-child {
+       text-align: right;
+       font-weight: bold;
+    }
+
+    textarea {
+        width: 100%;
+        height: 50px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .payment-mode {
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .checkout-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .message-section {
+        font-size: 16px; 
+        text-align: center;
+    }
+
+    .message-section p {
+        color: coral;
+        margin: 0;
+    }
+
+    .checkout-btn {
+        background-color: coral;
+        color: white;
+        padding: 8px 15px; 
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: auto;
+        width: 100%; 
+        text-align: center;
+    }
+
+    .empty-cart {
         text-align: center;
         width: 100%;
         padding: 20px;
+        margin-top:50%;
     }
 
-        .total-price textarea {
-            width: 100%;
-            height: 50px;
-        }
-
-    .empty-cart-image {
-        text-align: center;
-        width: 100%;
-        padding: 20px;
-    }
-
-        .empty-cart-image img {
+    .empty-cart img{
             width: 50%;
             max-width: 200px;
             height: auto;
             margin: 0 auto;
             display: block;
-        }
+    }
+
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 10px; 
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: 400px; 
+        padding: 15px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header, .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #f1f1f1;
+        padding-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .modal-body {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .modal-body p {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #f1f1f1;
+    }
+
+    .close-btn {
+        border: none;
+        padding: 8px;
+        font-size: 0.9em;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 30%;
+        background-color: coral;
+        color: white;
+    }
+
+    .custom-close {
+        background-color: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: #000;
+        cursor: pointer;
+        position: relative;
+        top: -10px;
+        right: -10px;
+    }
+
+    .custom-close:hover {
+        color: coral;
+    }
 </style>
 
-<Header></Header>
-<div class="container">
+<Header/>
+
+<div class="cart-container">
         @if (@myCart != null && @myCart.Count > 0)
         {
+        <h2 class="page-title">Din Indkøbskurv</h2>
+        <div class="product-table">
             <table>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
-                    <th>Remove</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Pris</th>
+                        <th>Antal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                 @foreach (var cart in myCart)
                 {
                     <tr>
                         <td>
-                            <div class="cart-info">
-                                <img src="@cart.ProductImage" alt="Product Photo" />
-                                <div>
-                                    <p>@cart.ProductName</p>
-                                </div>
+                            <div>
+                               <img src="@cart.ProductImage" alt="Product Photo" />
+                                <p>@cart.ProductName</p>
                             </div>
                         </td>
-                        <td>$@cart.Price</td>
-                        <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" style="width:60px;" /></td>
-                        <td>$@(cart.Price * cart.Quantity).00</td>
+                        <td><strong>@cart.Price</strong> <span>Kr</span></td>
+                        <td><input type="number" @bind="cart.Quantity" min="1" max="@cart.AvailableStock" @onclick="@onQuantityChange" /></td>
                         <td><a @onclick="(() => RemoveFromCart_Click(cart))"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 }
+                </tbody>
             </table>
+        </div>
 
-            <div class="total-price">
-                <table>
-                    <tr>
-                        <td>Subtotal</td>
-                        <td>
-                            $@subTotal.00
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Shipping Charges</td>
-                        <td>$@shippingCharges.00</td>
-                    </tr>
-                    <tr>
-                        <td>Total</td>
-                        <td>$@finalTotal.00</td>
-                    </tr>
-                    <tr>
-                        <td>Shipping Address</td>
-                        <td>
-                            <textarea rows="3" cols="30" name="shippingaddress" placeholder="Shipping Address" @bind="shippingAddress"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Payment Mode</td>
-                        <td>
-                            @paymentMode
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <button type="button" value="Checkout" class="btn btn-primary" @onclick="@Checkout_Click">Checkout</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <div class="total-tabel">
+            <table>
+                <tr>
+                    <td>Subtotal</td>
+                    <td>@subTotal.00 Kr</td>
+                </tr>
+                <tr>
+                    <td>Fragt</td>
+                    <td>@shippingCharges.00 Kr</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>@finalTotal.00 Kr</td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <textarea rows="3" cols="30" name="shippingaddress" @bind="shippingAddress"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Betalingsmetode</td>
+                    <td>@paymentMode</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="checkout-row">
+                            <!-- Message Section -->
+                            <div class="message-section" style="display: @(string.IsNullOrEmpty(alertMessage) ? "none" : "inline-block"); color: red; margin-right: 10px;">
+                                <p>@alertMessage</p>
+                            </div>
+
+                            <!-- Checkout Button -->
+                            <button type="button" value="Checkout" class="checkout-btn" @onclick="@Checkout_Click">Til betaling</button>
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
         }
         else
         {
-            <div class="empty-cart-image">
+            <div class="empty-cart">
                 <img src="./Images/empty-cart.png" />
             </div>
         }
 </div>
 
-
+@if (successPopup == true)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span></span>
+                <button class="custom-close" @onclick="NavigateToMyAccount">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>Tak for din bestilling</h3>
+                <h5>Vi går straks i gange med at pakke dine varer</h5>
+                <p>Din ordrenummer er: <span style="color: coral;">@OnderNumber</span></p>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="close-btn" value="Luk" @onclick="NavigateToMyAccount" />
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [CascadingParameter]
@@ -175,7 +384,9 @@
     public int shippingCharges { get; set; }
     public int finalTotal { get; set; }
     private UserModel user;
-
+    public bool successPopup = false;
+    string OnderNumber = string.Empty;
+    public string alertMessage { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -219,7 +430,14 @@
 
     private async Task RemoveFromCart_Click(CartModel cartItem)
     {
-        myCart.Remove(cartItem);
+        if (cartItem.Quantity > 1)
+        {
+            cartItem.Quantity--; // Reduce quantity by 1
+        }
+        else
+        {
+            myCart.Remove(cartItem);
+        }
         await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
         onQuantityChange();
 
@@ -239,6 +457,15 @@
 
     private async Task Checkout_Click()
     {
+        // Validate Address
+        if (string.IsNullOrWhiteSpace(shippingAddress))
+        {
+            alertMessage = "Address er påkrævet";
+            return;
+        }
+
+        alertMessage = string.Empty;
+
         if (myCart != null && myCart.Count > 0)
         {
             // Calculate total before updating cart items
@@ -253,18 +480,32 @@
                 item.UserId = user.Id;
             });
             await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
-            var result = await webShopAppService.Checkout(myCart);
-            if (result)
+
+            // Get the orderId from the Checkout service
+            var orderId = await webShopAppService.Checkout(myCart);
+            if (!string.IsNullOrEmpty(orderId))
             {
-                myCart.Clear(); 
+                OnderNumber = $"{orderId}";
+                ToggleSuccessPopup();
+                myCart.Clear();
                 await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
                 await notify.InvokeAsync();
-                navManager.NavigateTo("/myaccount");
             }
             else
             {
-                Console.WriteLine("Checkout failed");
+                 Console.WriteLine("Betaling mislykkedes"); //Checkout failed
             }
         }
+    }
+
+    private void ToggleSuccessPopup()
+    {
+        successPopup = !successPopup;
+    }
+
+    private void NavigateToMyAccount()
+    {
+        successPopup = false;
+        navManager.NavigateTo("/myaccount");
     }
 }
