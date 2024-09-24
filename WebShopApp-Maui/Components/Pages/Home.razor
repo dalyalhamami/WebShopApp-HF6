@@ -6,465 +6,397 @@
 @inject NavigationManager navManager;
 
 <style>
-
-.container {
-    max-width: 1200px;
-    background-color: transparent;
-    margin-top: 35px;
-}
-
-/* Row styling for product grid */
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-/* Individual product card styling */
-.col-md-4 {
-    flex: 0 0 30%;
-    margin-bottom: 20px;
-}
-
-.stuff {
-    padding: 15px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-    .stuff:hover {
-        transform: translateY(-5px);
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    .container {
+      max-width: 1200px;
+      background-color: transparent;
+      margin-top: 50px;
     }
 
-/* Product name button styling */
-button.btn {
-    background-color: olive;
-    color: #ffffff;
-    border: none;
-    padding: 10px;
-    font-size: 1.2em;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-    button.btn:hover {
-        background-color: #138496;
-    }
-
-/* Product image styling */
-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 15px;
-}
-
-/* Price and stock information styling */
-div {
-    font-size: 1em;
-    margin-bottom: 15px;
-}
-
-    div span {
-        font-weight: bold;
-        font-size: 1.1em;
-    }
-
-/* Add to Cart button styling */
-button.add-to-cart {
-    background-color: #ffc107;
-    color: #212529;
-    border: none;
-    padding: 10px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-    button.add-to-cart:hover {
-        background-color: #e0a800;
-    }
-
-    /* Remove from Cart button styling */
-    button.add-to-cart[style*='background-color:#ffd800;'] {
-        background-color: #dc3545 !important;
-        color: #ffffff;
-    }
-
-        button.add-to-cart[style*='background-color:#ffd800;']:hover {
-            background-color: #c82333 !important;
-        }
-
-/* Loading and no products available message styling */
-span {
-    display: block;
-    text-align: center;
-    margin-top: 50px;
-    font-size: 1.5em;
-    color: #6c757d;
-}
-
-/* Custom close button styling */
-.custom-close {
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #000;
-    opacity: 1;
-    cursor: pointer;
-    padding: 0;
-    outline: none;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-    .custom-close:hover {
-        color: #ff0000;
-        transform: scale(1.2);
-    }
-
-    .custom-close span {
-        font-weight: bold;
-        display: block;
-        line-height: 1;
-        text-align: center;
+    .product-header {
+        display: flex;
+        flex-direction: column;
         width: 100%;
+        align-items: center; /* Center elements */
     }
 
-/* User info styling */
-.user-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: transparent;
-    padding-top: 10px;
-}
-
-.welcome-text {
-    margin: 0;
-    font-weight: bold;
-    color: dimgray;
-    font-size: 16px;
-    flex: 1;
-    white-space: nowrap;
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-    .product-container {
-        max-width: 1200px;
-        background-color: transparent;
-    }
-/* Cart container and cart icon styling */
-.cart-container {
-    display: flex;
-    align-items: center;
-}
-
-.cart-link {
-    display: flex;
-    align-items: center;
-    position: relative;
-    font-size: 26px;
-    color: green;
-    margin-top: 10px;
-}
-
-.cart-count {
-    font-size: 20px;
-    font-weight: bold;
-    position: absolute;
-    color: darkorange;
-    min-width: 30px;
-    top: -20px;
-}
-
-/* General Modal Styles */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    width: 90%;
-    max-width: 500px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h5 {
-    margin: 0;
-    font-size: 1.2rem;
-}
-
-.modal-body {
-    margin: 20px 0;
-    font-size: 1rem;
-}
-
-.modal-footer {
-    display: flex;
-    justify-content: space-between;
-}
-
-    .modal-footer .btn {
-        width: 45%;
-        font-size: 1rem;
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 20px; 
     }
 
-/* Custom Close Button Styles */
-.custom-close {
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #000;
-    cursor: pointer;
-}
-
-.custom-close:hover {
-    color: #ff0000;
-    transform: scale(1.2);
-}
-
-.search-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    max-width:1200px;
-    padding: 10px;
-    margin-bottom: -15px;
-}
-
-.search-input {
-    flex: 1;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc; 
-    background-color: white; 
-    color: black;
-    height: 42px;
-    max-width: 1200px;
-    outline: none;
-    box-shadow: none; 
-}
-
-    .search-input:focus {
-        border-color: #ccc; 
-        outline: none; 
-        box-shadow: none; 
+    /* Logo to the left */
+    .logo-image {
+        max-height: 50px; 
+        width: auto;
     }
 
-.search-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 4px;
-    background-color: white; 
-    color: black; 
-    border: 1px solid #ccc; 
-    cursor: pointer;
-    height: 42px;
-    width: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-    .search-button i {
-        font-size: 16px;
+    .right {
+        display: flex;
+        align-items: center;
     }
 
-    .search-button:hover,
-    .search-input:hover {
-        background-color: #f0f0f0;
-        border-color: #bbb;
+    .fa-shopping-cart {
+        position: relative;
+        font-size: 50px;
+        color: dimgray;
+    }
+
+    .fa-shopping-cart span {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: coral;
+        color: white;
+        font-size: 12px;
+        border-radius: 50%;
+        padding: 4px;
+        text-align: center;
     }
 
     .search-container {
-        flex-direction: row;
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        border-radius: 25px;
+        overflow: hidden;
+        margin-left: 15px;
+        margin-right: 15px;
+        border: 1px solid lightgray; 
+        width: 150px;
+        height: 40px;
+    }
+
+    .search-input {
+        border: none;
+        padding: 10px;
+        width: 100%;
+        font-size: 16px;
+        outline: none;
+        background-color: white;
+        color: dimgrey;
+        border-radius: 25px;
+        height: 40px;
+    }
+
+    .search-input:focus {
+        outline: none;
+        box-shadow: none;
     }
 
     .search-button {
+        background-color: lightgray;
+        border: none;
         padding: 10px;
-        width: auto;
-        height: 42px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0 25px 25px 0;
+        height: 40px;
     }
 
     .filter-container {
         display: flex;
+        justify-content: flex-start;
+        margin-top: -10px;
+        margin-left: 40px;
     }
 
     .filter-select {
-        flex:1;
-        padding: 10px;
-        border-radius: 10px;
+        width: 110px; 
+        background-color: transparent;
+        border-radius: 25px;
+        padding: 5px;
     }
 
-    /* Dropdown styling to match the width of the filter-select container */
     .custom-select {
         width: 100%;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        box-shadow: none;
-        outline: none;
-        text-align: center; /* Center the text inside the dropdown */
-        appearance: none; /* Remove default appearance for consistency */
+        padding: 10px;
+        font-size: 16px;
+        background-color: white;
+        color: dimgrey;
+        border-radius: 25px;
+        border: 1px solid lightgray;
     }
 
-        /* Focus state for the dropdown */
-        .custom-select:focus {
-            outline: none;
-            box-shadow: none;
+    /* Product container */
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 20px;
+        margin-bottom: 10%;
+        padding: 0 10px;
+    }
+
+    .product-card {
+        width: 48%; /* Adjust width to ensure two products per row */
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 10px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .product-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .product-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .product-title {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .product-description {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .product-price {
+        font-size: 1.2em;
+        color: #212529;
+        font-weight: bold;
+    }
+
+    .product-price-cart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .product-price-cart .cart-icon i {
+        font-size: 22px;
+        color: coral;
+    }
+
+    /* Modal style */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 15px; 
+        box-sizing: border-box;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: 90%; 
+        padding: 15px; 
+        background-color: white;
+        border-radius: 10px; 
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3); 
+    }
+
+    .modal-header, .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #f1f1f1;
+        padding-bottom: 8px; 
+    }
+
+    .modal-body {
+        text-align: center;
+        padding: 15px 0; 
+    }
+
+        .modal-body img {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px; 
+            border-radius: 8px; 
+            margin-bottom: 15px;
+            object-fit: cover;
         }
 
+        .modal-body p {
+            font-size: 0.9rem; 
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px; 
+        padding-top: 8px;
+        border-top: 1px solid #f1f1f1;
+    }
+
+    .modal-btn {
+        border: none;
+        padding: 8px;
+        font-size: 0.9em; 
+        border-radius: 5px;
+        cursor: pointer;
+        width: 40%; 
+    }
+
+    .confirm {
+        background-color: coral;
+        color: white;
+    }
+
+    .cancel {
+        background-color: lightgray;
+        color: coral;
+    }
+
+    .custom-close {
+        background-color: transparent;
+        border: none;
+        font-size: 1.2rem; 
+        color: #000;
+        cursor: pointer;
+        position: relative;
+        top: -10px;
+        right: -10px;
+    }
+
+    .custom-close:hover {
+        color: coral;
+        transform: scale(1.2);
+    }
 </style>
 
-<Header></Header>
+<Header />
+
 <div class="container">
-    <div class="user-info">
-        @if (IsUserLoggedIn)
-        {
-            <p class="welcome-text">Welcome, @user.Name!</p>
-
-            <div class="cart-container">
-                <a href="/mycart" class="cart-link">
-                    <i class="fa fa-shopping-cart">
-                        <span class="cart-count"><sup>@cartCount</sup></span>
-                    </i>
-                </a>
+    <div class="product-header">
+        <div class="header-content">
+            <!-- Logo to the left -->
+            <div class="left">
+                <img src="/Images/brandlogo.png" alt="Logo" class="logo-image" />
             </div>
-        }
-        else
-        {
-            <p class="welcome-text">Welcome</p>
-        }
-    </div>
-</div>
 
+            <!-- Search container -->
+            <div class="search-container">
+                <input type="text" class="form-control search-input" placeholder="Søg ..." @bind="searchTerm" />
+                <button type="button" class="search-button" @onclick="FilterProducts">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </div>
 
-    <div class="search-container">
-        <input type="text" class="form-control search-input" placeholder="Search product..." @bind="searchTerm" />
-        <button type="button" class="search-button" @onclick="FilterProducts">
-            <i class="fa fa-search" aria-hidden="true"></i>
-        </button>
-    </div>
-
-    <div class="filter-container">
-        <!-- Category Filter -->
-        <div class="form-group filter-select">
-            @if (categories != null)
-            {
-                <select class="form-control custom-select" @onchange="@CategoryClicked">
-                    <option value="0">Category</option>
-                    @foreach (var cat in categories)
-                    {
-                        <option value="@cat.Id">@cat.Name</option>
-                    }
-                </select>
-            }
-        </div>
-        <!-- Price Filter -->
-        <div class="form-group filter-select">
-            <select class="form-control custom-select" @onchange="@SortByPrice">
-                <option value="0">Price</option>
-                <option value="1">Low - High</option>
-                <option value="2">High - Low</option>
-            </select>
-        </div>
-    </div>
-
-@if (filteredProducts == null)
-{
-    <span>Loading...</span>
-}
-else if (filteredProducts.Count == 0)
-{
-    <span>No products available</span>
-}
-else
-{
-        <div class="product-container" >
-            <div class="row">
-                @foreach (var prod in filteredProducts)
+            <!-- Cart icon to the right -->
+            <div class="right">
+                @if (IsUserLoggedIn)
                 {
-                    <div class="col-md-4">
-                        <div class="col-md-12 stuff">
-                            <div style="width: 100%; border-radius: 2px; background-color: white;">
-                                <button type="button" class="btn" style="border:2px inset #cff7f9; width: 100%;" @onclick="(() => OpenProductModal(prod))">
-                                    @prod.Name
-                                </button>
-                                <img src=@prod.ImageUrl style="width:100%; height:50%;border-radius:1px;" />
-                                <div>
-                                    Price:&nbsp;$@prod.Price &nbsp;&nbsp;<span style="color:red;"> Stock:&nbsp;@prod.Stock</span>
-                                </div>
-                                @if (prod.CartFlag)
-                                {
-                                    <button type="button" class="btn add-to-cart" style="background-color:#ffd800;" @onclick="(()=> AddToCart_Click(prod))">Remove Form Cart</button>
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn add-to-cart" @onclick="(()=> AddToCart_Click(prod))">Add To Cart</button>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <a href="/mycart" class="shopping-cart">
+                        <i class="fa fa-shopping-cart">
+                            <span>@cartCount</span>
+                        </i>
+                    </a>
                 }
             </div>
         </div>
+
+        <!-- Filters container -->
+        <div class="filter-container">
+            <div class="filter-select">
+                @if (categories != null)
+                {
+                    <select class="custom-select" @onchange="@CategoryClicked">
+                        <option value="0">Kategori</option>
+                        @foreach (var cat in categories)
+                        {
+                            <option value="@cat.Id">@cat.Name</option>
+                        }
+                    </select>
+                }
+            </div>
+
+            <div class="filter-select">
+                <select class="custom-select" @onchange="@SortByPrice">
+                    <option value="0">Pris</option>
+                    <option value="1">Lav-Høj</option>
+                    <option value="2">Høj-Lav</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (filteredProducts == null)
+{
+    <span>Indlæser...</span>
+}
+else if (filteredProducts.Count == 0)
+{
+    <span>Ingen produkter tilgængelige</span>
+}
+else
+{
+    <div class="product-container">
+        @foreach (var prod in filteredProducts)
+        {
+            <div class="product-card">
+                <img src="@prod.ImageUrl" alt="@prod.Name" class="product-image" @onclick="(() => OpenProductModal(prod))" />
+                        <div class="product-details">
+                            <h5 class="product-title">@prod.Name</h5>
+                            <p class="product-description">@prod.Description</p>
+                            <!-- Flex container for price and cart icon -->
+                            <div class="product-price-cart">
+                                <div class="price">
+                                    <strong>@prod.Price</strong> <span class="currency">Kr</span>
+                                </div>
+                                <div class="cart-icon">
+                                    <i class="fa fa-cart-plus" aria-hidden="true" @onclick="(() => AddToCart_Click(prod))"></i>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+        }
+    </div>
 }
 
 @if (showProductModal)
 {
     <div class="modal" tabindex="-1" role="dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">@selectedProduct.Name</h5>
-                    <button type="button" class="close custom-close" @onclick="CloseProductModal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <img src="@selectedProduct.ImageUrl" style="width:100%; height:auto;" />
-                    <p><strong>Price:</strong> $@selectedProduct.Price</p>
-                    <p><strong>Stock:</strong> @selectedProduct.Stock</p>
-                    <p><strong>Category:</strong> @selectedProduct.CategoryName</p>
-                    <p><strong>Description:</strong> @selectedProduct.Description</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" @onclick="CloseProductModal">Close</button>
-                    @if (selectedProduct.CartFlag)
-                    {
-                        <button type="button" class="btn btn-warning" @onclick="(() => AddToCart_Click(selectedProduct))">Remove from Cart</button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-primary" @onclick="(() => AddToCart_Click(selectedProduct))">Add to Cart</button>
-                    }
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@selectedProduct.Name</h5>
+                <button type="button" class="close custom-close" @onclick="CloseProductModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <div class="modal-body">
+                <img src="@selectedProduct.ImageUrl" alt="@selectedProduct.Name" />
+                <p><strong>Pris:</strong> @selectedProduct.Price Kr</p>
+                <p><strong>Kategori:</strong> @selectedProduct.CategoryName</p>
+                <p><strong>Beskrivelse:</strong> @selectedProduct.Description</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-btn cancel" @onclick="CloseProductModal">Luk</button>
+                <button type="button" class="modal-btn confirm" @onclick="(() => AddToCart_Click(selectedProduct))">Læg i kurv</button>
+            </div>
+        </div>
     </div>
 }
 
@@ -473,17 +405,17 @@ else
     <div class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Login Required</h5>
+                <h5 class="modal-title">Login påkrævet</h5>
                 <button type="button" class="close custom-close" @onclick="CloseLoginModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>You need to login to add items to your cart. Do you want to log in now?</p>
+                <p>Du skal logge ind for at tilføje varer til kurven. Vil du logge ind nu?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" @onclick="ConfirmLogin">Yes, log in</button>
-                <button type="button" class="btn btn-secondary" @onclick="CloseLoginModal">Cancel</button>
+                <button type="button" class="modal-btn cancel" @onclick="CloseLoginModal">Nej tak</button>
+                <button type="button" class="modal-btn confirm" @onclick="ConfirmLogin">Ja</button>
             </div>
         </div>
     </div>
@@ -492,10 +424,10 @@ else
 @code {
     [CascadingParameter]
     public EventCallback notify { get; set; }
+
     public List<ProductModel> products { get; set; }
     public bool IsUserLoggedIn = false;
     private UserModel user;
-    public bool cartFlag = false;
     public bool showProductModal = false;
     public ProductModel selectedProduct { get; set; }
     private bool showLoginModal = false;
@@ -509,9 +441,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        products = await webShopAppService.GetProductsAsync();
-        categories = await webShopAppService.GetCategoriesAsync(); // Fetch categories
-        await UpdateCartText(); 
+        if (products == null) // Fetch products if not already initialized
+        {
+            products = await webShopAppService.GetProductsAsync();
+        }
+
+        if (categories == null) // Fetch categories if not already initialized
+        {
+            categories = await webShopAppService.GetCategoriesAsync(); // Fetch categories
+        }
+
         filteredProducts = products; // Initialize with all products
     }
 
@@ -531,8 +470,11 @@ else
             }
             else
             {
+                IsUserLoggedIn = false;
                 navManager.NavigateTo("/");
             }
+            await UpdateCartText(); // Ensure cart count is updated
+            StateHasChanged();
         }
     }
 
@@ -561,7 +503,7 @@ else
     {
         showProductModal = false;
     }
-    
+
     private async Task AddToCart_Click(ProductModel productClicked)
     {
         if (!IsUserLoggedIn)
@@ -570,38 +512,41 @@ else
             StateHasChanged();
             return;
         }
-        var cartJson = await SecureStorage.Default.GetAsync("myCart");
-        myCart = string.IsNullOrEmpty(cartJson) ? new List<CartModel>() : JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
 
-        if (productClicked.CartFlag)
+        var cartJson = await SecureStorage.Default.GetAsync("myCart");
+        if (string.IsNullOrEmpty(cartJson))
         {
-            var existingProduct = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
-            if (existingProduct != null)
-            {
-                myCart.Remove(existingProduct);
-                cartCount--; // Decrement cart count
-            }
+            myCart = new List<CartModel>();
+        }else
+        {
+            myCart = string.IsNullOrEmpty(cartJson) ? new List<CartModel>() : JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
+        }
+     
+         var existingProduct = myCart.FirstOrDefault(x => x.ProductId == productClicked.Id);
+        if (existingProduct != null)
+        {
+            existingProduct.Quantity += 1;
         }
         else
         {
-            var cartItem = new CartModel
+            CartModel cm = new CartModel
                 {
                     ProductId = productClicked.Id,
                     Quantity = 1,
-                    AvailableStock = productClicked.Stock,
+                    AvailableStock = Convert.ToInt32(productClicked.Stock),
                     ProductName = productClicked.Name,
                     ProductImage = productClicked.ImageUrl,
                     Price = Convert.ToInt32(productClicked.Price)
                 };
-            myCart.Add(cartItem);
-            cartCount++; // Increment cart count
+            myCart.Add(cm);
         }
-
         // Save updated cart to secure storage
         await SecureStorage.Default.SetAsync("myCart", JsonConvert.SerializeObject(myCart));
-        await UpdateCartText(); 
-        await notify.InvokeAsync(); 
-        StateHasChanged(); 
+        await UpdateCartText();
+
+        cartCount = myCart.Sum(item => item.Quantity); // Calculate total quantity of items in the cart
+        await notify.InvokeAsync();
+        StateHasChanged();
     }
 
     private async Task UpdateCartText()
@@ -610,34 +555,9 @@ else
         if (!string.IsNullOrEmpty(cartJson))
         {
             myCart = JsonConvert.DeserializeObject<List<CartModel>>(cartJson);
-            cartCount = myCart.Count; // Ensure cart count is correct
-
-            // Reset CartFlag for all products
-            foreach (var product in products)
-            {
-                product.CartFlag = false;
-            }
-
-            // Set CartFlag to true for products that are in the cart
-            foreach (var cartItem in myCart)
-            {
-                var cartProduct = products.FirstOrDefault(x => x.Id == cartItem.ProductId);
-                if (cartProduct != null)
-                {
-                    cartProduct.CartFlag = true;
-                }
-            }
+            cartCount = myCart.Sum(item => item.Quantity);  // Update the cart count to reflect the total quantity of items
+            StateHasChanged();
         }
-        else
-        {
-            cartCount = 0; // Reset cart count if no items are in the cart
-            foreach (var product in products)
-            {
-                product.CartFlag = false;
-            }
-        }
-
-        StateHasChanged(); // Trigger UI refresh
     }
 
     private void CloseLoginModal()
@@ -673,16 +593,13 @@ else
         {
             filteredProducts = products;
         }
-
-        StateHasChanged(); // Trigger UI update
+        StateHasChanged(); 
     }
 
     private void FilterProducts()
     {
         string searchText = searchTerm?.ToLower() ?? string.Empty;
-        filteredProducts = products
-            .Where(p => p.Name.ToLower().Contains(searchText))
-            .ToList();
+        filteredProducts = products.Where(p => p.Name.ToLower().Contains(searchText)).ToList();
         StateHasChanged(); 
     }
 

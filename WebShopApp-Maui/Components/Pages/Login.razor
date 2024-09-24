@@ -6,7 +6,13 @@
 @inject NavigationManager navManager;
 
 <style>
-    /* Style for the container div */
+
+    .container {
+        max-width: 1200px;
+        background-color: transparent;
+        margin-top: 50px;
+    }
+
     .loginBox {
         display: flex;
         flex-direction: column;
@@ -108,6 +114,7 @@
             }
 </style>
 
+<div class="container">
     <div class="loginBox">
         <div class="box">
             <h1>Login</h1>
@@ -138,6 +145,7 @@
         <button @onclick="NavigateToRegister">Register</button>
     </div>
     </div>
+</div>
 
 @code {
     [CascadingParameter]

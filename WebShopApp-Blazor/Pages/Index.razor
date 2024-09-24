@@ -39,8 +39,8 @@
                 <div class="form-group filter-select">
                     <select class="form-control custom-select" @onchange="@SortByPrice">
                         <option value="0">Pris</option>
-                        <option value="1">Low - High</option>
-                        <option value="2">High - Low</option>
+                        <option value="1">Lav-Høj</option>
+                        <option value="2">Høj-Lav</option>
                     </select>
                 </div>
             </div>
@@ -320,9 +320,7 @@ else
     private void FilterProducts()
     {
         string searchText = searchTerm?.ToLower() ?? string.Empty;
-        filteredProducts = products
-            .Where(p => p.Name.ToLower().Contains(searchText))
-            .ToList();
+        filteredProducts = products.Where(p => p.Name.ToLower().Contains(searchText)).ToList();
         StateHasChanged();
     }
 
