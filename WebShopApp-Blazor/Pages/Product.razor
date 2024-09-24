@@ -252,7 +252,8 @@
             var imagePath = Path.Combine("wwwroot", "images", fileName);
             using var fileStream = new FileStream(imagePath, FileMode.Create);
             await stream.CopyToAsync(fileStream);
-            var imageUrl = $"/images/{fileName}";
+
+            var imageUrl = $"/Images/{fileName}";
             return imageUrl;
         }
         return null;
@@ -267,8 +268,8 @@
             var savedProduct = await webShopAppService.SaveProductAsync(productModel);
             if (savedProduct != null)
             {
-                await GetProducts(); 
-                ClearForm(); 
+                await GetProducts();
+                ClearForm();
             }
             else
             {
