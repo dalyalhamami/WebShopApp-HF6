@@ -6,119 +6,114 @@
 @inject NavigationManager navManager;
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f5;
-        margin: 0;
-        padding: 0;
+    .register-container {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+        flex-direction: column;
+        width: 90%;
+        max-width: 100%;
+        height: 770px;
+        background-color: white;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 0 auto 0;
+        font-family: 'Arial', sans-serif;
     }
 
-    .loginBox {
-        background-color: #ffffff;
-        width: 350px;
-        padding: 40px;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    .register-section h1 {
+        color: coral;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .register-section {
+        background-color: white;
+        width: 100%;
+        padding: 20px;
         text-align: center;
     }
 
-        .loginBox h1 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
+    .register-button {
         width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    input[type="submit"],
-    .btn-primary {
-        width: 100%;
-        padding: 10px;
-        margin-top: 15px;
+        padding: 12px;
+        background-color: coral;
         border: none;
         border-radius: 5px;
-        background-color: #007bff;
         color: white;
         font-size: 16px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+        margin-top: 10px;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-        input[type="submit"]:hover,
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-    .validation-message {
-        color: red;
-        font-size: 12px;
-        text-align: left;
+    .login-section p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+        color: coral;
+        font-family: 'Arial', sans-serif;
+        text-align: center;
     }
 
-    .register-link {
-        margin-top: 20px;
-        font-size: 14px;
-        color: #333;
+    .login-button {
+        width: 100%;
+        padding: 12px;
+        background-color: lightgray;
+        color: coral;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-        .register-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
+     /* Message Section */
+    .message-section {
+        margin-top: 10px;
+        font-size: 18px; 
+        text-align: center;
+    }
 
-            .register-link a:hover {
-                color: #0056b3;
-            }
+    .message-section p {
+        color: coral;
+        margin: 0;
+    }
 </style>
 
-    <div class="loginBox">
-        <div class="box">
-            <h1>Register</h1>
-            <EditForm Model="@userModel" OnValidSubmit="Register_Click">
-                <ValidationSummary />
-
-                <InputText type="text" name="name" placeholder="Name" class="email" @bind-Value="userModel.Name" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Name)" class="validation-message" />
-                <br />
-                <InputText type="email" name="email" placeholder="Email" class="email" @bind-Value="userModel.Email" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Email)" class="validation-message" />
-                <br />
-                <InputText type="text" name="mobile" placeholder="Mobile" class="email" @bind-Value="userModel.Mobile" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Mobile)" class="validation-message" />
-                <br />
-                <InputText type="password" name="password" placeholder="Password" class="password" @bind-Value="userModel.Password" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Password)" class="validation-message" />
-                <br />
-                <InputText type="password" name="confirmPassword" placeholder="Confirm Password" class="password" @bind-Value="userModel.ConfirmPassword" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.ConfirmPassword)" class="validation-message" />
-                <br />
-                <InputText type="text" name="address" placeholder="Address" class="email" @bind-Value="userModel.Address" autocomplete="off" />
-                <ValidationMessage For="@(() => userModel.Address)" class="validation-message" />
-                <br /> <br />
-                <input type="submit" class="btn-primary" value="Register" />
-            </EditForm>
-            <a href="login"><div class="btn-primary" style="margin-top: 10px;">Login</div></a>
-        </div>
-        <div>
+<div class="register-container">
+    <!-- Register Section -->
+    <div class="register-section">
+        <h1>Opret en profil</h1>
+        <EditForm Model="@userModel" OnValidSubmit="Register_Click">
+            <InputText type="text" name="name" placeholder="Navn" class="email" @bind-Value="userModel.Name" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;" />
             <br /><br />
-            <p style="color:#e52e50">
-                <h4>@alertMessage</h4>
-            </p>
+            <InputText type="email" name="email" placeholder="E-mail" class="email" @bind-Value="userModel.Email" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;" />
+            <br /><br />
+            <InputText type="text" name="mobile" placeholder="Mobil" class="email" @bind-Value="userModel.Mobile" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;" />
+            <br /><br />
+            <InputText type="password" name="password" placeholder="Adgangskode" class="password" @bind-Value="userModel.Password" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;" />
+            <br /><br />
+            <InputText type="password" name="confirmPassword" placeholder="Bekræft adgangskode" class="password" @bind-Value="userModel.ConfirmPassword" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;" />
+            <br /><br />
+            <InputText type="text" name="address" placeholder="Adresse" class="email" @bind-Value="userModel.Address" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 100%; padding:10px;" />
+            <br /><br />
+            <button type="submit" class="register-button">Gem</button>
+        </EditForm>
+        <br />
+        <!-- Login Section -->
+        <div class="login-section">
+            <p>Har du allerede en konto?</p>
+            <button class="login-button" @onclick="NavigateToLogin">Log ind</button>
         </div>
     </div>
+    <!-- Message Section -->
+    <div class="message-section" style="display: @(string.IsNullOrEmpty(alertMessage) ? "none" : "block")">
+        <p>@alertMessage</p>
+    </div>
+</div>
 
 @code {
     [CascadingParameter]
@@ -134,7 +129,7 @@
         // Validate Name
         if (string.IsNullOrEmpty(userModel.Name))
         {
-            alertMessage = "Name is required";
+            alertMessage = "Navn er påkrævet";
             StateHasChanged();
             return;
         }
@@ -142,7 +137,13 @@
         // Validate Email
         if (string.IsNullOrEmpty(userModel.Email))
         {
-            alertMessage = "Email is required";
+            alertMessage = "E-mail er påkrævet";
+            StateHasChanged();
+            return;
+        }
+        else if (!new EmailAddressAttribute().IsValid(userModel.Email))  // Using built-in validation
+        {
+            alertMessage = "Ugyldig e-mailadresse";
             StateHasChanged();
             return;
         }
@@ -150,7 +151,7 @@
         // Validate Mobile
         if (string.IsNullOrEmpty(userModel.Mobile))
         {
-            alertMessage = "Mobile is required";
+            alertMessage = "Mobilnummer er påkrævet";
             StateHasChanged();
             return;
         }
@@ -158,7 +159,15 @@
         // Validate Password
         if (string.IsNullOrEmpty(userModel.Password))
         {
-            alertMessage = "Password is required";
+            alertMessage = "Adgangskode er påkrævet";
+            StateHasChanged();
+            return;
+        }
+
+        // Validate Password Length
+        if (userModel.Password.Length < 6)
+        {
+            alertMessage = "Adgangskoden skal være mindst 6 tegn lang";
             StateHasChanged();
             return;
         }
@@ -174,7 +183,7 @@
         // Validate Confirm Password
         if (string.IsNullOrEmpty(userModel.ConfirmPassword))
         {
-            alertMessage = "Confirm Password is required";
+            alertMessage = "Bekræft adgangskode er påkrævet";
             StateHasChanged();
             return;
         }
@@ -182,7 +191,7 @@
         // Validate Password Match
         if (userModel.Password != userModel.ConfirmPassword)
         {
-            alertMessage = "Password and confirm password do not match";
+            alertMessage = "Adgangskode og bekræft adgangskode stemmer ikke overens";
             StateHasChanged();
             return;
         }
@@ -190,7 +199,7 @@
         // Validate Address
         if (string.IsNullOrEmpty(userModel.Address))
         {
-            alertMessage = "Address is required";
+            alertMessage = "Adresse er påkrævet";
             StateHasChanged();
             return;
         }
@@ -209,9 +218,18 @@
         }
         else
         {
-            alertMessage = result.errorMessage.Contains("Email already exists")
-                ? "Error: The email address already exists"
-                : $"Error: {result.errorMessage}";
+            if (result.errorMessage.Contains("Email already exists"))
+            {
+                alertMessage = "E-mail adressen findes allerede, Vælg venligst en anden e-mail";
+            }
+            else if (result.errorMessage.Contains("Please choose another password"))
+            {
+                alertMessage = "Vælg venligst en anden adgangskode";
+            }
+            else
+            {
+                alertMessage = $"Error: {result.errorMessage}";
+            }
         }
         StateHasChanged();
     }
@@ -228,5 +246,10 @@
             }
             return builder.ToString();
         }
+    }
+
+    private void NavigateToLogin()
+    {
+        navManager.NavigateTo("/login");
     }
 }
