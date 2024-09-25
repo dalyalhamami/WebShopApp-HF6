@@ -155,12 +155,12 @@
 
 .btn-clear {
     background-color: lightgray;
-    color: coral;
+    color: #ff6150;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn-save {
-    background-color: coral;
+    background-color: #ff6150;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
