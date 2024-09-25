@@ -158,15 +158,15 @@
                                         </tr>
                                         <tr>
                                             <th>Pris:</th>
-                                            <td>$@item.Price.00</td>
+                                            <td>@item.Price.00 Kr</td>
                                         </tr>
                                         <tr>
                                             <th>Fragt:</th>
-                                            <td>$@item.ShippingCharges.00</td>
+                                            <td>@item.ShippingCharges.00 Kr</td>
                                         </tr>
                                         <tr>
                                             <th>Total:</th>
-                                            <td>$@item.Total.00</td>
+                                            <td>@item.Total.00 Kr</td>
                                         </tr>
                                         <tr>
                                             <th>Betalingsmetode:</th>
@@ -221,13 +221,13 @@
         if (updatedUser != null)
         {
             ToggleEditPopup();
-            Message = "User Updated Successfully !!";
+            Message = "Bruger opdateret med succes !!";
             ToggleSuccessPopup();
             await GetUsers(); // Reload users after update
         }
         else
         {
-            Console.WriteLine("Failed to update user role");
+            Message = "Kunne ikke opdatere brugerdata";
             ToggleSuccessPopup();
         }
     }
