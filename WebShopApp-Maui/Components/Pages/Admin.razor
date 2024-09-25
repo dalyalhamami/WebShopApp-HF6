@@ -4,121 +4,85 @@
 <style>
     .container {
         max-width: 1200px;
-        background-color: transparent;
+        font-family: Arial, sans-serif;
         margin-top: 50px;
     }
 
     .clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.column {
-    width: 100%;
-    float: none;
-    padding: 0;
-}
-
-.menu {
-    background-color: white;
-    border-radius: 15px;
-    padding: 10px;
-}
-
-.vertical-menu {
-    border-radius: 10px;
-}
-
-    .vertical-menu a {
-        display: block;
-        padding: 12px;
-        text-decoration: none;
-        color: black;
-        background-color: #f1f1f1;
-        border-radius: 5px;
-        margin-bottom: 5px;
-        transition: background-color 0.3s ease;
+        content: "";
+        display: table;
+        clear: both;
     }
 
-        .vertical-menu a:hover {
-            background-color: #ddd;
-        }
-
-        .vertical-menu a.active {
-            background-color: olivedrab;
-            color: white;
-        }
-
-.content {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    margin-top: 20px;
-}
-
-
     .column {
-        width: 25%;
-        float: left;
+        width: 100%;
+        float: none;
+        padding: 0;
+    }
+
+    /* Menu styles */
+    .menu {
+        background-color: white;
+        border-radius: 15px;
         padding: 10px;
-    }
-
-    .content {
-        width: 70%;
-        float: right;
-    }
-
-
-
-    .column {
         width: 100%;
-        float: none;
     }
 
+    /* Vertical Menu */
+    .vertical-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    /* Menu Items */
+    .vertical-menu a {
+        background-color: #ffc1b3; /* Coral color */
+        color: white;
+        text-align: center;
+        padding: 12px 20px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        display: block;
+    }
+
+     /* Last menu item should not have a bottom margin */
+     .vertical-menu a:last-child {
+         margin-bottom: 0;
+     }
+
+     /* Hover and Active States */
+     .vertical-menu a:hover {
+         background-color: #ff8b75;
+     }
+
+     .vertical-menu a.active {
+         background-color: #ff6150;
+     }
+
+    /* Content Styling */
     .content {
         width: 100%;
-        float: none;
-        margin-top: 10px;
+        height: auto;
+        margin-bottom: 20px;
     }
-
-/* Button styles */
-.btn {
-    padding: 10px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: 10px;
-}
-
-    .btn:hover {
-        background-color: #45a049;
-    }
-
-h3 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 15px;
-}
-
-h4 {
-    font-size: 1.3rem;
-    color: #444;
-    margin-bottom: 10px;
-}
 </style>
 
-<Header></Header>
+<Header/>
 
+<div class="container">
     <div class="clearfix">
-        <div class="column menu container">
+        <div class="column menu">
             <div class="vertical-menu">
-                <a class="@(productFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Products"))'>Manage Products</a>
-                <a class="@(categoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Categories"))'>Manage Categories</a>
-                <a class="@(usersFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Users"))'>Manage Users</a>
+                <a class="@(productFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Products"))'>Administrer Produkter</a>
+                <a class="@(categoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Categories"))'>Administrer Kategorier</a>
+                <a class="@(usersFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("Users"))'>Administrer Brugere</a>
             </div>
         </div>
 
@@ -146,7 +110,7 @@ h4 {
             }
         </div>
     </div>
-
+</div>
 
 @code {
     private string headerText = "Products";
