@@ -8,11 +8,10 @@
 <style>
     .container {
         max-width: 1200px;
-        background-color: transparent;
+        font-family: Arial, sans-serif;
         margin-top: 50px;
     }
 
-    /* Layout adjustments */
     .clearfix::after {
         content: "";
         display: table;
@@ -30,195 +29,320 @@
         background-color: white;
         border-radius: 15px;
         padding: 10px;
+        width: 100%; 
     }
 
+    /* Vertical Menu */
     .vertical-menu {
-        border-radius: 10px;
-    }
-
-        .vertical-menu a {
-            display: block;
-            padding: 12px;
-            text-decoration: none;
-            color: black;
-            background-color: #eee;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-
-            .vertical-menu a:hover {
-                background-color: #ccc;
-            }
-
-            .vertical-menu a.active {
-                background-color: olivedrab;
-                color: white;
-            }
-
-    /* Content styles */
-    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch; 
+        width: 100%; 
         padding: 10px;
+        border-radius: 8px;
     }
 
-    /* Modal popup adjustments */
+    /* Menu Items */
+    .vertical-menu a {
+        background-color: #ffc1b3; /* Coral color */
+        color: white;
+        text-align: center;
+        padding: 12px 20px; 
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 10px; 
+        transition: background-color 0.3s ease;
+        display: block; 
+    }
+
+    /* Last menu item should not have a bottom margin */
+    .vertical-menu a:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Hover and Active States */
+    .vertical-menu a:hover {
+        background-color: #ff8b75;
+    }
+
+    .vertical-menu a.active {
+        background-color: #ff6150;
+    }
+
+/* Content Styling */
+.content {
+    width: 100%;
+    height: auto; 
+    margin-bottom: 20px; 
+}
+
+/* My Account Styling*/
+.profile-card {
+    background-color: #f7f7f7;
+    color: coral;
+    border-radius: 5px;
+    padding: 20px; 
+    width: 100%; 
+    margin: 0 auto; 
+    align-items: center;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Avatar Styling */
+.avatar-img {
+    border-radius: 50%;
+    width: 100px; 
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    margin-left:30%;
+}
+
+.profile-title {
+    margin-top: 10px; 
+    margin-bottom: 40px;
+}
+
+.profile-title h2 {
+    font-size: 20px; 
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.profile-details {
+    color: dimgray;
+    font-family: Arial, sans-serif;
+}
+
+.profile-details strong {
+    color: coral;
+    margin-left: 20px;
+}
+
+/* Edit Button Styling */
+.btn-edit {
+    background-color: #ff6150;
+    color: white;
+    border: none;
+    padding: 10px; 
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    margin-left: 33%;
+}
+
+/* Password Change Styling */
+.password-change-container {
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 100%;
+    height: 370px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.password-form {
+    margin: 30px auto 30px; 
+}
+
+/* Order History Styling */
+.order-history-card {
+    border: 1px solid #e5e5e5;
+    background-color: #f7f7f7;
+    border-radius: 5px;
+    padding: 10px 5px 10px;
+    width: 100%; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* margin-top: 10px;  */
+}
+
+.history-table {
+    width: 100%;
+    border: 1px solid gray;
+    margin-top: 10px; /* Reduced margin */
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid dimgray;
+    text-align: center;
+    vertical-align: top;
+    font-size: 14px; 
+}
+
+.button-cell {
+    align-content: center;
+}
+
+/* Empty Order History */
+.empty-history {
+    font-weight: bold;
+    text-align: center;
+    font-size: 22px; 
+    color: dimgray;
+    margin-top: 20%;
+}
+
+/* Order Details Modal */
+.card-body {
+    overflow-y: auto;
+    max-height: 300px; 
+    width: 300px;
+    font-family: Arial, sans-serif;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-image {
+    max-width: 50px; /* Reduced size for mobile */
+    max-height: auto;
+}
+
+.product-details p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Summary Table Styling */
+.summary-table {
+    width: 100%;
+    background-color: transparent;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray;
+    border-radius: 4px;
+}
+
+.summary-table td {
+    padding: .5rem; /* Reduced padding for mobile */
+    vertical-align: top;
+}
+
+/* Modal Styling */
     .modal {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 1000;
+        padding: 15px;
+        box-sizing: border-box;
     }
 
     .modal-content {
-        width: 90%;
-        max-width: 500px;
-        padding: 20px;
+        width: 100%;
+        max-width: 90%;
+        padding: 15px;
         background-color: white;
         border-radius: 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .modal-header {
+    .modal-header, .modal-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-        .modal-header h5 {
-            margin: 0;
-            font-size: 1.2rem;
-        }
+    .modal-header {
+        border-bottom: 1px solid #f1f1f1;
+        padding-bottom: 10px;
+    }
 
     .modal-body {
-        margin: 20px 0;
-        font-size: 1rem;
+        text-align: center;
+        padding: 15px 0; 
+    }
+
+    .modal-body p {
+        font-size: 0.9rem; 
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    /* User info section */
+    .user-info {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .user-info label {
+       width: 90px; 
+       padding: 8px; 
     }
 
     .modal-footer {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid #f1f1f1;
     }
 
-        .modal-footer .btn {
-            width: 45%;
-            font-size: 1rem;
-        }
-
-    .button-cell {
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    .custom-btn {
-        background-color: transparent;
+    .modal-btn {
         border: none;
-        padding: 0;
-        font-size: 0;
-        line-height: 1;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        height: auto;
-    }
-
-    /* Form group adjustments */
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-control {
-        width: 100%;
-        font-size: 1rem;
-    }
-
-    label {
-        font-size: 1rem;
-        margin-bottom: 5px;
-    }
-
-    /* Button adjustments */
-    .btn {
-        width: 100%;
-        font-size: 1rem;
-        margin-top: 10px;
-        padding: 10px;
-    }
-
-    .product-info {
-        display: flex;
-        align-items: center;
-    }
-
-    .product-image {
-        margin-right: 10px;
-    }
-
-    .product-info img {
-        width: 100%;
-        height: 50%;
-        border-radius: 1px;
-    }
-
-    .product-details p {
-        margin: 0;
-        font-size: 1rem;
-        color: #333;
-    }
-
-    .table-responsive, .summary-table {
-        width: 100%;
-    }
-
-        .summary-table td {
-            padding: 10px;
-            border: 1px solid #dee2e6;
-        }
-
-    /* Button styling */
-    .btn-secondary {
-        padding: 10px;
-        font-size: 14px;
-        background-color: #6c757d;
-        color: white;
-        border: none;
+        padding: 8px; 
+        font-size: 0.9em; 
         border-radius: 5px;
         cursor: pointer;
+        width: 40%; 
     }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-    .modal-content {
-        width: 100%;
-        max-width: 100%;
+    .confirm {
+        background-color: #ff6150;
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .modal-header h5 {
-        font-size: 1rem;
+    .cancel {
+        background-color: lightgray;
+        color: coral;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    .modal-body, .modal-footer .btn {
-        font-size: 0.9rem;
+    .custom-close {
+        background-color: transparent;
+        border: none;
+        font-size: 1.2rem; 
+        color: #000;
+        cursor: pointer;
+        position: relative;
+        top: -10px;
+        right: -10px;
     }
 
-    /* Make the product image smaller for mobile */
-    .product-img {
-        width: 50px;
-        height: auto;
-    }
-
-    .product-details p {
-        font-size: 0.9rem;
+    .close-btn {
+        border: none;
+        padding: 8px; 
+        font-size: 0.9em; 
+        border-radius: 5px;
+        cursor: pointer;
+        width: 40%;
+        background-color: #ff6150;
+        color: white;
     }
 </style>
 
-<Header></Header>
+<Header/>
 
 <div class="container">
     @if (user != null)
@@ -226,50 +350,52 @@
         <div class="clearfix">
             <div class="column menu">
                 <div class="vertical-menu">
-                    <a class="@(myAccountFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>My Account</a>
-                    <a class="@(changePasswordFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Change Password</a>
-                    <a class="@(orderHistoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Order History</a>
+                    <a class="@(myAccountFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>Min Profil</a>
+                    <a class="@(changePasswordFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Skift Adgangskode</a>
+                    <a class="@(orderHistoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Ordrehistorik</a>
                 </div>
             </div>
             <div class="column content">
-                <div>
-                    <h4>@headerText</h4>
-                </div>
                 <br />
+
                 @if (myAccountFlag)
                 {
-                    <div>
-                        <p><strong>Name:</strong> @user.Name</p>
-                        <p><strong>Email:</strong> @user.Email</p>
-                        <p><strong>Mobile:</strong> @user.Mobile</p>
-                        <p><strong>Address:</strong> @user.Address</p>
-                        <button class="btn btn-primary" @onclick="() => EditButtonClick(user)">Edit</button>
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <img src="/Images/useravatar.jpg" alt="Profile Image" class="avatar-img">
+                        </div>
+                       <div class="profile-title">
+                            <h2>Min Profil</h2> 
+                        </div>  
+                        <div class="profile-details">
+                            <p><strong>Navn:</strong> @user.Name</p>
+                            <p><strong>E-mail:</strong> @user.Email</p>
+                            <p><strong>Mobil:</strong> @user.Mobile</p>
+                            <p><strong>Adresse:</strong> @user.Address</p>
+                        </div>
+                       <button class="btn btn-edit" @onclick="() => EditButtonClick(user)">Rediger</button>
                     </div>
                 }
 
                 @if (changePasswordFlag)
                 {
-                    <div class="form-group">
+                    <div class="password-change-container">
                         <EditForm Model="@passwordModel" OnValidSubmit="ChangePassword_Click">
-                            <DataAnnotationsValidator />
-                            <div class="form-group">
-                                <label>Old Password:</label>
-                                <InputText type="password" class="form-control" id="oldpwd" @bind-Value="passwordModel.OldPassword" autocomplete="off"></InputText>
-                                <ValidationMessage For="@(() => passwordModel.OldPassword)"></ValidationMessage>
+
+                            <div class="password-form">
+                                <InputText type="password" name="password" placeholder="Nuværende adgangskode" class="password" @bind-Value="passwordModel.OldPassword" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 80%; padding:10px;" />
                             </div>
-                            <div class="form-group">
-                                <label>New Password:</label>
-                                <InputText type="password" class="form-control" id="newpwd" @bind-Value="passwordModel.Password" autocomplete="off"></InputText>
-                                <ValidationMessage For="@(() => passwordModel.Password)"></ValidationMessage>
+
+                            <div class="password-form">
+                                <InputText type="password" name="password" placeholder="Ny adgangskode" class="password" @bind-Value="passwordModel.Password" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 80%; padding:10px;" />
                             </div>
-                            <div class="form-group">
-                                <label>Confirm Password:</label>
-                                <InputText type="password" class="form-control" id="confirmpwd" @bind-Value="confirmPassword" autocomplete="off"></InputText>
-                                <ValidationMessage For="@(() => confirmPassword)"></ValidationMessage>
+
+                            <div class="password-form">
+                                <InputText type="password" name="confirmPassword" placeholder="Bekræft adgangskode" class="password" @bind-Value="confirmPassword" autocomplete="off" style="border: 1px solid #999; border-radius: 5px; height:50px; width: 80%; padding:10px;" />
                             </div>
-                            <br />
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+
+                            <div class="password-form">
+                                <button type="submit" class="modal-btn confirm">Gem</button>
                             </div>
                         </EditForm>
                     </div>
@@ -277,56 +403,59 @@
 
                 @if (orderHistoryFlag)
                 {
-                    @if (userOrders == null || userOrders.Count == 0)
+               @if (userOrders == null || userOrders.Count == 0)
                     {
-                        <p>No orders found</p>
+                        <p class="empty-history">Ingen ordrer fundet</p>
                     }
                     else
                     {
-                        <table class="table table-striped table-bordered bg-light">
-                            <thead>
-                                <tr>
-                                    <th>Order</th>
-                                    <th>Order Date</th>
-                                    <th style="width:80px;">Track</th>
-                                    <th style="width:80px;">Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var ord in userOrders)
-                                {
+                        <div class="order-history-card">
+                            <table class="table table-striped table-bordered bg-light history-table">
+                                <thead>
                                     <tr>
-                                        <td class="button-cell">@ord.OrderId</td>
-                                        <td class="button-cell">@ord.CreatedOn</td>
-                                        <td class="button-cell">
-                                            <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
-                                                <i class="fa fa-truck"></i>
-                                            </button>
-                                        </td>
-                                        <td class="button-cell">
-                                            <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
-                                                <i class="fa fa-info-circle"></i>
-                                            </button>
-                                        </td>
+                                        <th>Ordre</th>
+                                        <th>Ordredato</th>
+                                        <th style="width:80px;">Spor</th>
+                                        <th style="width:80px;">Detaljer</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ord in userOrders)
+                                    {
+                                        <tr>
+                                            <td class="button-cell">@ord.OrderId</td>
+                                            <td class="button-cell">@ord.CreatedOn</td>
+                                            <td class="button-cell">
+                                                <button class="btn custom-btn" @onclick="(() => Track_Click(ord.OrderId))">
+                                                    <i class="fa fa-truck"></i>
+                                                </button>
+                                            </td>
+                                            <td class="button-cell">
+                                                <button class="btn custom-btn" @onclick="(() => Detail_Click(ord.OrderId))">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>              
                     }
                 }
 
                 @if (showAlertMessage == true)
                 {
-                    <div class="modal">
+                 <div class="modal">
                         <div class="modal-content">
                             <div class="modal-header">
-                                Alert <span class="close" @onclick="ToggleSuccessPopup">&times;</span>
+                                <span></span>
+                                <button class="custom-close" @onclick="ToggleSuccessPopup">&times;</button>
                             </div>
                             <div class="modal-body">
                                 @Message
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleSuccessPopup" />
+                                <input type="button" class="close-btn" value="Luk" @onclick="ToggleSuccessPopup" />
                             </div>
                         </div>
                     </div>
@@ -337,130 +466,46 @@
                     <div class="modal">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5>Edit User</h5>
-                                <span class="close" @onclick="ToggleEditPopup">&times;</span>
+                                <h5>Rediger profil</h5>
+                                <button class="custom-close" @onclick="ToggleEditPopup">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <EditForm Model="@userToUpdate" OnValidSubmit="UpdateUser">
-                                    <DataAnnotationsValidator />
-                                    <div class="form-group">
-                                        <label>Name:</label>
+                                    <div class="user-info">
+                                        <label>Navn:</label>
                                         <InputText @bind-Value="userToUpdate.Name" class="form-control" />
-                                        <ValidationMessage For="@(() => userToUpdate.Name)" />
                                     </div>
-                                    <div class="form-group">
-                                        <label>Email:</label>
+                                    <div class="user-info">
+                                        <label>E-mail:</label>
                                         <InputText @bind-Value="userToUpdate.Email" class="form-control" />
-                                        <ValidationMessage For="@(() => userToUpdate.Email)" />
                                     </div>
-                                    <div class="form-group">
-                                        <label>Mobile:</label>
+                                    <div class="user-info">
+                                        <label>Mobil:</label>
                                         <InputText @bind-Value="userToUpdate.Mobile" class="form-control" />
-                                        <ValidationMessage For="@(() => userToUpdate.Mobile)" />
                                     </div>
-                                    <div class="form-group">
-                                        <label>Address:</label>
+                                    <div class="user-info">
+                                        <label>Adresse:</label>
                                         <InputText @bind-Value="userToUpdate.Address" class="form-control" />
-                                        <ValidationMessage For="@(() => userToUpdate.Address)" />
                                     </div>
                                     <br />
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                        <button type="button" class="btn btn-secondary" @onclick="ToggleEditPopup">Cancel</button>
+                                    <div class="modal-footer">
+                                        <button type="button" class="modal-btn cancel" @onclick="ToggleEditPopup">Annuller</button>
+                                        <button type="submit" class="modal-btn confirm">Gem</button>
                                     </div>
                                 </EditForm>
                             </div>
                         </div>
-                    </div>
-                }
-
-                @if (showOrderDetail == true)
-                {
-                    <div class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5>Order Details</h5>
-                                <span class="close" @onclick="ToggleOrderDetailPopup">&times;</span>
-                            </div>
-                            <div class="modal-body">
-                                @if (myCart != null && myCart.Count > 0)
-                                {
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="button-cell">Product</th>
-                                                        <th class="button-cell">Quantity</th>
-                                                        <th class="button-cell">Prise</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var cart in myCart)
-                                                    {
-                                                        <tr>
-                                                            <td class="button-cell">
-                                                                <div class="product-info">
-                                                                    <div class="product-image">
-                                                                        <img src="@cart.ProductImage" alt="Product" />
-                                                                    </div>
-                                                                    <div class="product-details">
-                                                                        <p>@cart.ProductName</p>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td class="button-cell">@cart.Quantity</td>
-                                                            <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <table class="summary-table">
-                                            <tr>
-                                                <td style="font-weight:bold;">Subtotal</td>
-                                                <td class="button-cell">$@subTotal.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Shipping Charges</td>
-                                                <td class="button-cell">$@shippingCharges.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Total</td>
-                                                <td class="button-cell">$@finalTotal.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Shipping Address</td>
-                                                <td class="button-cell">@shippingAddress</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="font-weight:bold;">Payment Mode</td>
-                                                <td class="button-cell">@paymentMode</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <p>No items found in the order.</p>
-                                }
-                            </div>
-                            <div class="modal-footer">
-                                <input type="button" class="btn btn-secondary" value="Close" @onclick="ToggleOrderDetailPopup" />
-                            </div>
-                        </div>
-                    </div>
-                }
+                    </div>                }
 
                 @if (showTrackOrder == true)
                 {
-                    <div class="modal">
+                      <div class="modal">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5>Track Order</h5>
-                                <span class="close" @onclick="ToggleTrackOrderPopup">&times;</span>
+                                <h5>Spor Ordre</h5>
+                                <span class="custom-close" @onclick="ToggleTrackOrderPopup">&times;</span>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="margin-left: 20px;">
                                 @if (shippingStatuses != null && shippingStatuses.Count > 0)
                                 {
                                     <table>
@@ -478,21 +523,93 @@
                                 }
                                 else
                                 {
-                                    <span>No update on order shipping. Please check after some time.</span>
+                                    <span>Ingen opdatering på ordrelevering. Venligst tjek igen senere</span>
                                 }
                             </div>
                             <div class="modal-footer">
-                                <input type="button" class="btn btn-primary" value="Close" @onclick="ToggleTrackOrderPopup" />
+                                <input type="button" class="close-btn" value="Luk" @onclick="ToggleTrackOrderPopup" />
                             </div>
                         </div>
                     </div>
                 }
+
+                @if (showOrderDetail == true)
+                {
+                       <div class="modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5>Ordredetaljer</h5>
+                                <button class="custom-close" @onclick="ToggleOrderDetailPopup">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                @if (myCart != null && myCart.Count > 0)
+                                {
+                                    <div class="card-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th class="button-cell">Produkt</th>
+                                                        <th class="button-cell">Antal</th>
+                                                        <th class="button-cell">Pris</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var cart in myCart)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <img class="product-image" src="@cart.ProductImage" alt="Product" />
+                                                            </td>
+                                                            <td class="button-cell">@cart.ProductName</td>
+                                                            <td class="button-cell">@cart.Quantity</td>
+                                                            <td class="button-cell">@(cart.Price * cart.Quantity) Kr</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        <table class="summary-table">
+                                            <tr>
+                                                <td style="font-weight:bold;">Subtotal</td>
+                                                <td class="button-cell">@subTotal.00 Kr</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Fragt</td>
+                                                <td class="button-cell">@shippingCharges.00 Kr</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Total</td>
+                                                <td class="button-cell">@finalTotal.00 Kr</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Adresse</td>
+                                                <td class="button-cell">@shippingAddress</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight:bold;">Betalingsmetode</td>
+                                                <td class="button-cell">@paymentMode</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p>Ingen varer fundet i ordren</p>
+                                }
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="close-btn" value="Luk" @onclick="ToggleOrderDetailPopup" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
             </div>
         </div>
     }
     else
     {
-        <p>No user data found. Please <a href="/login">login</a>.</p>
+        <p>Ingen brugerdata fundet. Venligst <a href="/login">log ind</a></p>
     }
 </div>
 
@@ -509,7 +626,6 @@
     public bool showTrackOrder = false;
     public bool showOrderDetail = false;
     // Page Menu and Navigation
-    private string headerText = "MyAccount";
     private bool myAccountFlag = true;
     private bool changePasswordFlag = false;
     private bool orderHistoryFlag = false;
@@ -544,7 +660,13 @@
             if (!string.IsNullOrEmpty(userJson))
             {
                 user = JsonConvert.DeserializeObject<UserModel>(userJson);
+                await GetOrderByUserID(user.Id);
             }
+            else
+            {
+                navManager.NavigateTo("/login");
+            }
+            StateHasChanged();
         }
         catch (Exception ex)
         {
@@ -555,7 +677,6 @@
 
     private async Task ChangeActiveMenu(string menu)
     {
-        headerText = menu;
         switch (menu)
         {
             case "MyAccount":
@@ -616,14 +737,14 @@
         {
             await SecureStorage.Default.SetAsync("User", JsonConvert.SerializeObject(updatedUser)); // Update SecureStorage
             ToggleEditPopup();
-            Message = "User Updated Successfully !!";
+            Message = "Bruger opdateret med succes !!";
             ToggleSuccessPopup();
             userToUpdate = new UserModel();
             user = updatedUser;
         }
         else
         {
-            Message = "Failed to update user!!";
+            Message = "Kunne ikke opdatere bruger !!";
             ToggleSuccessPopup();
         }
     }
@@ -645,9 +766,22 @@
 
     private async Task ChangePassword_Click()
     {
+        if (string.IsNullOrEmpty(passwordModel.OldPassword))
+        {
+            Message = "Nuværende Adgangskode er påkrævet";
+            ToggleAlertMessage();
+            return;
+        }
+        else if (string.IsNullOrEmpty(passwordModel.Password))
+        {
+            Message = "Ny Adgangskode er påkrævet";
+            ToggleAlertMessage();
+            return;
+        }
+
         if (passwordModel.Password != confirmPassword)
         {
-            Message = "Password & Confirm Password do not match";
+            Message = "Adgangskode og bekræft adgangskode stemmer ikke overens";
             ToggleAlertMessage();
             return;
         }
@@ -663,7 +797,7 @@
             {
                 passwordModel = new PasswordModel();
                 confirmPassword = string.Empty;
-                Message = "Password changed successfully";
+                Message = "Adgangskode ændret med succes";
             }
             else
             {

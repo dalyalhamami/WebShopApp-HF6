@@ -99,7 +99,7 @@ public class UserController : ControllerBase
 
         if (user == null)
         {
-            return NotFound("User not found");
+            return NotFound("Bruger ikke fundet");
         }
 
         return Ok(user);
@@ -117,7 +117,7 @@ public class UserController : ControllerBase
 
         if (existingUser == null)
         {
-            return NotFound("User not found");
+            return NotFound("Bruger ikke fundet");
         }
 
         // Update only the fields provided in the request
@@ -209,19 +209,19 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest("Invalid input");
+            return BadRequest("Ugyldigt input");
         }
 
         var user = await webShopAppDBContext.User.FirstOrDefaultAsync(u => u.Id == password.UserId);
         if (user == null)
         {
-            return NotFound("User not found");
+            return NotFound("Bruger ikke fundet");
         }
 
         // Check if the old password is correct
         if (user.Password != password.OldPassword)
         {
-            return BadRequest("Old password is incorrect");
+            return BadRequest("Den nuværende adgangskode er forkert");
         }
 
         // Check if the new password already exists
@@ -251,13 +251,13 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest("Invalid input");
+            return BadRequest("Ugyldigt input");
         }
 
         var user = await webShopAppDBContext.User.FirstOrDefaultAsync(u => u.Id == password.UserId);
         if (user == null)
         {
-            return NotFound("User not found");
+            return NotFound("Bruger ikke fundet");
         }
 
         // Check if the new password already exists

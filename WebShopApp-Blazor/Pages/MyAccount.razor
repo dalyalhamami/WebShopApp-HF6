@@ -12,7 +12,7 @@
     {
         <div class="clearfix">
             <div class="column menu">
-                <div class="vertical-menu">
+                <div class="horizontal-menu">
                     <a class="@(myAccountFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("MyAccount"))'>Min Profil</a>
                     <a class="@(changePasswordFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("ChangePassword"))'>Skift Adgangskode</a>
                     <a class="@(orderHistoryFlag ? "active" : "")" @onclick='(() => ChangeActiveMenu("OrderHistory"))'>Ordrehistorik</a>
@@ -20,6 +20,7 @@
             </div>
             <div class="column content">
                 <br />
+
                 @if (myAccountFlag)
                 {
                    
@@ -213,7 +214,6 @@
                                 @if (myCart != null && myCart.Count > 0)
                                 {
                                     <div class="card-body">
-                                        <div class="table-responsive">
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
@@ -232,12 +232,11 @@
                                                             </td>
                                                             <td class="button-cell">@cart.ProductName</td>
                                                             <td class="button-cell">@cart.Quantity</td>
-                                                            <td class="button-cell">$@(cart.Price * cart.Quantity).00</td>
+                                                            <td class="button-cell">@(cart.Price * cart.Quantity).00 Kr</td>
                                                         </tr>
                                                     }
                                                 </tbody>
                                             </table>
-                                        </div>
                                         <table class="summary-table">
                                             <tr>
                                                 <td style="font-weight:bold;">Subtotal</td>
