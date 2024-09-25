@@ -37,7 +37,7 @@
 }
 
 .horizontal-menu a.active {
-    background-color: #ff6150;
+    background-color: coral;
 }
 
 .content {
@@ -102,15 +102,15 @@
 
 .avatar-img {
     border-radius: 50%;
-    width: 110px;
-    height: 110px;
+    width: 90px;
+    height: 90px;
     object-fit: cover; 
     margin-bottom: 10px;
     background-color: #f0f0f0; 
 }
 
 .btn-edit {
-    background-color: #ff6150;
+    background-color: coral;
     color: white;
     border: none;
     padding: 10px;
@@ -195,7 +195,7 @@
 }
 
 .confirm {
-    background-color: #ff6150;
+    background-color: coral;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -228,7 +228,7 @@
     border-radius: 5px;
     cursor: pointer;
     width: 25%;
-    background-color: #ff6150;
+    background-color: coral;
     color: white;
 }
 
