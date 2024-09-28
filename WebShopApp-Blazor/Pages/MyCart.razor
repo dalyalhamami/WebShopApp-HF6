@@ -55,7 +55,7 @@
                     <td>@finalTotal.00 Kr</td>
                 </tr>
                 <tr>
-                    <td>Address</td>
+                    <td>Adresse</td>
                     <td>
                         <textarea rows="3" cols="30" name="shippingaddress" @bind="shippingAddress"></textarea>
                     </td>
@@ -198,7 +198,7 @@
         // Validate Address
         if (string.IsNullOrWhiteSpace(shippingAddress))
         {
-            alertMessage = "Address er påkrævet";
+            alertMessage = "Adresse er påkrævet";
             return;
         }
 

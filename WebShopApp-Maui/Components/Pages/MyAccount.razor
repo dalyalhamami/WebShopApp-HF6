@@ -339,6 +339,23 @@
         background-color: coral;
         color: white;
     }
+
+ /*Tracking order styling*/
+.shipping-status-container {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px; 
+    align-items: flex-start; 
+}
+
+.shipping-status-item {
+    display: flex;
+    align-items: center;
+}
+
+.shipping-status-item i {
+    margin-right: 10px; 
+}
 </style>
 
 <Header/>
@@ -507,18 +524,14 @@
                             <div class="modal-body" style="margin-left: 20px;">
                                 @if (shippingStatuses != null && shippingStatuses.Count > 0)
                                 {
-                                    <table>
-                                        <tbody>
-                                            @foreach (var status in shippingStatuses)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <i class="fa fa-check-circle" style="color: green;"></i> @status
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                                    <div class="shipping-status-container">
+                                        @foreach (var status in shippingStatuses)
+                                        {
+                                            <div class="shipping-status-item">
+                                                <i class="fa fa-check-circle" style="color: green;"></i> @status
+                                            </div>
+                                        }
+                                    </div>
                                 }
                                 else
                                 {

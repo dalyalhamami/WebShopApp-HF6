@@ -328,3 +328,20 @@
 .custom-btn:hover {
     color: coral;
 }
+
+/*Tracking order styling*/
+.shipping-status-container {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px; 
+    align-items: flex-start; 
+}
+
+.shipping-status-item {
+    display: flex;
+    align-items: center;
+}
+
+.shipping-status-item i {
+    margin-right: 10px; 
+}
