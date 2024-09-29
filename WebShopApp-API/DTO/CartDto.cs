@@ -1,6 +1,6 @@
-﻿namespace WebShopApp_API.Entities;
+﻿namespace WebShopApp_API.DTO;
 
-public class Cart
+public class CartDto
 {
     public int ProductId { get; set; }
     public string ProductName { get; set; }

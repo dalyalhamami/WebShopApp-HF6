@@ -106,7 +106,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("UpdateUser")]
-    public async Task<ActionResult<UserResponseDto>> UpdateUser([FromBody] UserUpdate userUpdate)
+    public async Task<ActionResult<UserResponseDto>> UpdateUser([FromBody] UserUpdateDto userUpdate)
     {
         if (userUpdate == null)
         {

@@ -1,6 +1,6 @@
-﻿namespace WebShopApp_API.Entities;
+﻿namespace WebShopApp_API.DTO;
 
-public class UserUpdate
+public class UserUpdateDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }

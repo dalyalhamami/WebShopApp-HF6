@@ -11,7 +11,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost("Checkout")]
-    public async Task<ActionResult<string>> Checkout(List<Cart> cartItems)
+    public async Task<ActionResult<string>> Checkout(List<CartDto> cartItems)
     {
         if (cartItems == null || !cartItems.Any())
         {
@@ -108,7 +108,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("GetOrderDetailForUser")]
-    public async Task<ActionResult<List<Cart>>> GetOrderDetailForUser(int userId, string orderNumber)
+    public async Task<ActionResult<List<CartDto>>> GetOrderDetailForUser(int userId, string orderNumber)
     {
         // Find the UserOrder for the given userId and orderNumber
         var userOrder = await webShopAppDBContext.UserOrder.FirstOrDefaultAsync(uo => uo.UserId == userId && uo.OrderId == orderNumber);
@@ -127,7 +127,7 @@ public class OrderController : ControllerBase
         }
 
         // Map OrderDetail to CartModel
-        var cart = orderDetails.Select(od => new Cart
+        var cart = orderDetails.Select(od => new CartDto
         {
             ProductId = od.ProductId,
             ProductName = webShopAppDBContext.Product.FirstOrDefault(p => p.Id == od.ProductId)?.Name,
